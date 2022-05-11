@@ -1,22 +1,24 @@
 import React from "react";
+import { palette } from "../../theme";
+import { Board } from "../board";
 import "./App.css";
 
-function App() {
+export const App: React.FC = () => {
   return (
-    <div className="App">
+    <div>
       <header className="App-header">
-        <p>Going to be making Morris</p>
+        <Board />
         <a
-          className="App-link"
           href="https://github.com/Cutaiar/morris"
           target="_blank"
           rel="noopener noreferrer"
+          style={{ color: palette.primary }}
         >
-          Learn more
+          github repo
         </a>
       </header>
     </div>
   );
-}
+};
 
 export default App;

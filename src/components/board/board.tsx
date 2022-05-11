@@ -14,22 +14,69 @@ export const Board: React.FC<BoardProps> = (props) => {
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <rect
-        x={(size - 0.8 * size) / 2}
-        y={(size - 0.8 * size) / 2}
-        width={0.8 * size}
-        height={0.8 * size}
-        rx="5"
-        fill={palette.neutral}
+      <MorrisSquare
+        size={size * 0.9}
+        vbsize={size}
+        fill={"grey"}
+        nodeFill={palette.primary}
       />
-      <rect
-        x={(size - 0.5 * size) / 2}
-        y={(size - 0.5 * size) / 2}
-        width={0.5 * size}
-        height={0.5 * size}
-        rx="5"
-        fill={palette.primary}
+      <MorrisSquare
+        size={size * 0.5}
+        vbsize={size}
+        fill={"lightgrey"}
+        nodeFill={palette.primary}
       />
     </svg>
+  );
+};
+
+type MorrisSquareProps = {
+  size: number;
+  vbsize: number;
+  fill: string;
+  nodeFill: string;
+};
+const MorrisSquare = (props: MorrisSquareProps) => {
+  const { size, vbsize, fill, nodeFill } = props;
+  const offset = vbsize - size;
+  const origin = offset / 2;
+
+  return (
+    <g>
+      <rect
+        x={origin}
+        y={origin}
+        width={size}
+        height={size}
+        rx="5"
+        fill={fill}
+      />
+      <circle cx={origin} cy={offset / 2} r="10" fill={nodeFill} />
+      <circle cx={origin + size / 2} cy={offset / 2} r="10" fill={nodeFill} />
+
+      <circle cx={size + offset / 2} cy={offset / 2} r="10" fill={nodeFill} />
+      <circle
+        cx={size + offset / 2}
+        cy={origin + size / 2}
+        r="10"
+        fill={nodeFill}
+      />
+
+      <circle
+        cx={size + offset / 2}
+        cy={size + origin}
+        r="10"
+        fill={nodeFill}
+      />
+      <circle
+        cx={origin + size / 2}
+        cy={size + origin}
+        r="10"
+        fill={nodeFill}
+      />
+
+      <circle cx={offset / 2} cy={size + origin} r="10" fill={nodeFill} />
+      <circle cx={offset / 2} cy={size / 2 + origin} r="10" fill={nodeFill} />
+    </g>
   );
 };

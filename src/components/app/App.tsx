@@ -7,14 +7,16 @@ export const App: React.FC = () => {
   return (
     <div>
       <header className="App-header">
+        <h2>Morris</h2>
         <Board />
+
         <a
           href="https://github.com/Cutaiar/morris"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ color: palette.primary }}
+          style={{ color: palette.primary, margin: ".83em 0" }}
         >
-          github repo
+          github
         </a>
       </header>
     </div>

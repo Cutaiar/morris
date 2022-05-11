@@ -1,4 +1,4 @@
 export const palette = {
   neutral: "grey",
-  primary: "darkred",
+  primary: "#D2042D",
 };

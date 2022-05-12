@@ -15,10 +15,14 @@ export interface BoardProps {
 export const Board: React.FC<BoardProps> = (props) => {
   const size = props.size ?? 400;
 
+  // Define 3 rings for 9 men morris
   const r0 = size * 0.3;
   const r1 = size * 0.6;
   const r2 = size * 0.9;
 
+  const pointRadius = size * 0.025;
+
+  // Render these three rings and the two sets of connections between them
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <Connections
@@ -33,23 +37,26 @@ export const Board: React.FC<BoardProps> = (props) => {
         vbsize={size}
         stroke={palette.neutral}
       />
-      <MorrisSquare
+      <Ring
         size={r0}
         vbsize={size}
         stroke={palette.neutral}
-        nodeFill={palette.primary}
+        pointFill={palette.primary}
+        pointRadius={pointRadius}
       />
-      <MorrisSquare
+      <Ring
         size={r1}
         vbsize={size}
         stroke={palette.neutral}
-        nodeFill={palette.primary}
+        pointFill={palette.primary}
+        pointRadius={pointRadius}
       />
-      <MorrisSquare
+      <Ring
         size={r2}
         vbsize={size}
         stroke={palette.neutral}
-        nodeFill={palette.primary}
+        pointFill={palette.primary}
+        pointRadius={pointRadius}
       />
     </svg>
   );
@@ -60,6 +67,11 @@ type ConnectionsProps = {
   vbsize: number;
   stroke: string;
 };
+
+/**
+ * Represents the 4 connecting lines between two rings (innerSize & outerSize)
+ *
+ */
 const Connections = (props: ConnectionsProps) => {
   const { outerSize, innerSize, vbsize, stroke } = props;
 
@@ -97,14 +109,19 @@ const Connections = (props: ConnectionsProps) => {
   );
 };
 
-type MorrisSquareProps = {
+type RingProps = {
   size: number;
   vbsize: number;
   stroke: string;
-  nodeFill: string;
+  pointFill: string;
+  pointRadius: number;
 };
-const MorrisSquare = (props: MorrisSquareProps) => {
-  const { size, vbsize, stroke, nodeFill } = props;
+
+/**
+ * Represents a single ring on the board. A square with 8 points
+ */
+const Ring = (props: RingProps) => {
+  const { size, vbsize, stroke, pointFill, pointRadius } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
 
@@ -119,32 +136,52 @@ const MorrisSquare = (props: MorrisSquareProps) => {
         fillOpacity={0}
         stroke={stroke}
       />
-      <circle cx={origin} cy={offset / 2} r="10" fill={nodeFill} />
-      <circle cx={origin + size / 2} cy={offset / 2} r="10" fill={nodeFill} />
+      <circle cx={origin} cy={offset / 2} r={pointRadius} fill={pointFill} />
+      <circle
+        cx={origin + size / 2}
+        cy={offset / 2}
+        r={pointRadius}
+        fill={pointFill}
+      />
 
-      <circle cx={size + offset / 2} cy={offset / 2} r="10" fill={nodeFill} />
+      <circle
+        cx={size + offset / 2}
+        cy={offset / 2}
+        r={pointRadius}
+        fill={pointFill}
+      />
       <circle
         cx={size + offset / 2}
         cy={origin + size / 2}
-        r="10"
-        fill={nodeFill}
+        r={pointRadius}
+        fill={pointFill}
       />
 
       <circle
         cx={size + offset / 2}
         cy={size + origin}
-        r="10"
-        fill={nodeFill}
+        r={pointRadius}
+        fill={pointFill}
       />
       <circle
         cx={origin + size / 2}
         cy={size + origin}
-        r="10"
-        fill={nodeFill}
+        r={pointRadius}
+        fill={pointFill}
       />
 
-      <circle cx={offset / 2} cy={size + origin} r="10" fill={nodeFill} />
-      <circle cx={offset / 2} cy={size / 2 + origin} r="10" fill={nodeFill} />
+      <circle
+        cx={offset / 2}
+        cy={size + origin}
+        r={pointRadius}
+        fill={pointFill}
+      />
+      <circle
+        cx={offset / 2}
+        cy={size / 2 + origin}
+        r={pointRadius}
+        fill={pointFill}
+      />
     </g>
   );
 };

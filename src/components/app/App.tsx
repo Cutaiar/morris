@@ -4,14 +4,18 @@ import { palette } from "../../theme";
 
 import { Board, maxRings, minRings, ringCountDefault } from "../board";
 import { Slider } from "../Slider";
+import { useGameState } from "../../hooks/useGameState";
 
 export const App: React.FC = () => {
   const [ringCount, setRingCount] = React.useState(ringCountDefault);
+  const [gameState, updateGameState] = useGameState();
 
   return (
     <div>
       <header className="App-header">
         <h2>Morris</h2>
+
+        {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
         <Board ringCount={ringCount} />
 
         {/* Temporarily adding a slider to control the number of rings */}

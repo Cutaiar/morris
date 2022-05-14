@@ -1,1 +1,1 @@
-export { Board } from "./board";
+export { Board, maxRings, minRings, ringCountDefault } from "./board";

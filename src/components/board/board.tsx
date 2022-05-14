@@ -4,63 +4,79 @@ import { palette } from "../../theme";
 export interface BoardProps {
   /** pixel size of the board */
   size?: number;
+  /** Number of rings the board should have (2 to 6) */
+  ringCount?: number;
 }
+
+const sizeDefault = 400;
+export const ringCountDefault = 3;
+
+export const maxRings = 6;
+export const minRings = 2; // TODO -- we can support 3 men morris (1 ring) by adding a center point
+
+/** Throws if ringCount is not in the supported range */
+const validateRingCount = (ringCount: number) => {
+  if (ringCount > maxRings || ringCount < minRings) {
+    throw new Error(
+      `ringCount of ${ringCount} was outside the supported range (${minRings} - ${maxRings})`
+    );
+  }
+};
 
 /**
  * Represents the morris board to be played on.
  *
- * Currently 3 rings for 9 men morris
- * Currently just messing around with declarative graphics
+ * Note: component should be used inside ErrorBoundary as it throws when props are not valid.
  */
 export const Board: React.FC<BoardProps> = (props) => {
-  const size = props.size ?? 400;
+  // Provide sensible defaults if props aren't provided
+  const size = props.size ?? sizeDefault;
+  const ringCount = props.ringCount ?? ringCountDefault;
 
-  // Define 3 rings for 9 men morris
-  const r0 = size * 0.3;
-  const r1 = size * 0.6;
-  const r2 = size * 0.9;
+  // Throw if ringCount is outside supported range (component should be used inside ErrorBoundary)
+  validateRingCount(ringCount);
+
+  // We use this in the ring size calculation to pad the outer ring from the edge of the svg
+  const paddedSize = size * 0.9;
+
+  // Build ring sizes based on ringCount
+  const rings = new Array(ringCount)
+    .fill(undefined)
+    .map((_, i) => paddedSize * (i + 1) * (1 / ringCount));
 
   const pointRadius = size * 0.025;
 
   // Render these three rings and the two sets of connections between them
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <Connections
-        innerSize={r0}
-        outerSize={r1}
-        vbsize={size}
-        stroke={palette.neutral}
-      />
-      <Connections
-        innerSize={r1}
-        outerSize={r2}
-        vbsize={size}
-        stroke={palette.neutral}
-      />
-      <Ring
-        size={r0}
-        vbsize={size}
-        stroke={palette.neutral}
-        pointFill={palette.primary}
-        pointRadius={pointRadius}
-      />
-      <Ring
-        size={r1}
-        vbsize={size}
-        stroke={palette.neutral}
-        pointFill={palette.primary}
-        pointRadius={pointRadius}
-      />
-      <Ring
-        size={r2}
-        vbsize={size}
-        stroke={palette.neutral}
-        pointFill={palette.primary}
-        pointRadius={pointRadius}
-      />
+      {rings.map((ring, i) => {
+        const nextRing = rings[i + 1];
+        // Short circuit if there is no outer ring to draw a connection to.
+        if (!nextRing) return undefined;
+
+        // Otherwise draw connections from the current ring to the next one out
+        return (
+          <Connections
+            innerSize={ring}
+            outerSize={nextRing}
+            vbsize={size}
+            stroke={palette.neutral}
+          />
+        );
+      })}
+      {rings.map((ring) => (
+        <Ring
+          size={ring}
+          vbsize={size}
+          stroke={palette.neutral}
+          pointFill={palette.primary}
+          pointRadius={pointRadius}
+        />
+      ))}
     </svg>
   );
 };
+
 type ConnectionsProps = {
   outerSize: number;
   innerSize: number;

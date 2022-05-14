@@ -1,0 +1,23 @@
+import React from "react";
+import "./Slider.css";
+
+export interface SliderProps
+  extends Pick<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    "min" | "max" | "value" | "onChange"
+  > {
+  ringCount: number;
+}
+
+export const Slider: React.FC<SliderProps> = (props) => {
+  const { ringCount, ...rest } = props;
+  const strings = {
+    ringsPlural: "rings",
+  };
+  return (
+    <div className="sliderContainer">
+      <input type="range" className="slider" name={"slider"} {...rest} />
+      <label htmlFor="ringCountInput">{`${ringCount} ${strings.ringsPlural}`}</label>
+    </div>
+  );
+};

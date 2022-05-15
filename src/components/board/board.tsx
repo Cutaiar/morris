@@ -1,11 +1,21 @@
 import React from "react";
+import {
+  GameState,
+  Occupancy,
+  PlayAction,
+  Point,
+  PointID,
+} from "../../hooks/useGameState";
 import { palette } from "../../theme";
 
 export interface BoardProps {
   /** pixel size of the board */
   size?: number;
-  /** Number of rings the board should have (2 to 6) */
-  ringCount?: number;
+
+  /** The current state of the game including adjacency, occupancy, and turn */
+  gameState: GameState;
+
+  onPlay: (play: PlayAction) => void;
 }
 
 const sizeDefault = 400;
@@ -31,7 +41,10 @@ const validateRingCount = (ringCount: number) => {
 export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
-  const ringCount = props.ringCount ?? ringCountDefault;
+  // const ringCount = props.ringCount ?? ringCountDefault;
+  const numberOfPointsInRing = 8;
+  const ringCount =
+    Object.keys(props.gameState.stateGraph).length / numberOfPointsInRing;
 
   // Throw if ringCount is outside supported range (component should be used inside ErrorBoundary)
   validateRingCount(ringCount);
@@ -39,12 +52,24 @@ export const Board: React.FC<BoardProps> = (props) => {
   // We use this in the ring size calculation to pad the outer ring from the edge of the svg
   const paddedSize = size * 0.9;
 
-  // Build ring sizes based on ringCount
-  const rings = new Array(ringCount)
-    .fill(undefined)
-    .map((_, i) => paddedSize * (i + 1) * (1 / ringCount));
-
   const pointRadius = size * 0.025;
+
+  // Build ring sizes based on ringCount
+  const rings = new Array(ringCount).fill(undefined).map((_, i) => ({
+    size: paddedSize * (i + 1) * (1 / ringCount),
+
+    // This distributes 8 points from the state graph to each ring, moving from inner to outer
+    points: Object.entries(props.gameState.stateGraph).slice(
+      i * numberOfPointsInRing,
+      (i + 1) * numberOfPointsInRing
+    ),
+  }));
+
+  // When any point is clicked, dispatch an action noting so. // TODO: Use from
+  const onClick = (pointID: PointID) => {
+    console.log(pointID);
+    props.onPlay({ type: "play", from: "a", to: pointID });
+  };
 
   // Render these three rings and the two sets of connections between them
   return (
@@ -57,20 +82,25 @@ export const Board: React.FC<BoardProps> = (props) => {
         // Otherwise draw connections from the current ring to the next one out
         return (
           <Connections
-            innerSize={ring}
-            outerSize={nextRing}
+            innerSize={ring.size}
+            outerSize={nextRing.size}
             vbsize={size}
             stroke={palette.neutral}
+            key={i}
           />
         );
       })}
-      {rings.map((ring) => (
+
+      {/* Currently have to reverse because rings must be drawn outer to inner to support click events */}
+      {rings.reverse().map((ring) => (
         <Ring
-          size={ring}
+          size={ring.size}
           vbsize={size}
           stroke={palette.neutral}
-          pointFill={palette.primary}
           pointRadius={pointRadius}
+          onClick={onClick}
+          key={ring.size}
+          points={ring.points}
         />
       ))}
     </svg>
@@ -129,17 +159,35 @@ type RingProps = {
   size: number;
   vbsize: number;
   stroke: string;
-  pointFill: string;
   pointRadius: number;
+  points: [string, Point][]; // Points in the ring from top-left clockwise as object.entries
+  onClick?: (pointID: PointID) => void;
 };
 
 /**
  * Represents a single ring on the board. A square with 8 points
  */
 const Ring = (props: RingProps) => {
-  const { size, vbsize, stroke, pointFill, pointRadius } = props;
+  const { size, vbsize, stroke, pointRadius, onClick, points } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
+
+  const pointFill = (occupancy?: Occupancy) => {
+    if (!occupancy) return palette.neutral;
+    return occupancy === "a" ? palette.primary : palette.secondary;
+  };
+
+  // Centers for square 6 man morris starting top-left going clockwise
+  const centers = [
+    { cx: origin, cy: offset / 2 },
+    { cx: origin + size / 2, cy: offset / 2 },
+    { cx: size + offset / 2, cy: offset / 2 },
+    { cx: size + offset / 2, cy: origin + size / 2 },
+    { cx: size + offset / 2, cy: size + origin },
+    { cx: origin + size / 2, cy: size + origin },
+    { cx: offset / 2, cy: size + origin },
+    { cx: offset / 2, cy: size / 2 + origin },
+  ];
 
   return (
     <g>
@@ -152,52 +200,15 @@ const Ring = (props: RingProps) => {
         fillOpacity={0}
         stroke={stroke}
       />
-      <circle cx={origin} cy={offset / 2} r={pointRadius} fill={pointFill} />
-      <circle
-        cx={origin + size / 2}
-        cy={offset / 2}
-        r={pointRadius}
-        fill={pointFill}
-      />
-
-      <circle
-        cx={size + offset / 2}
-        cy={offset / 2}
-        r={pointRadius}
-        fill={pointFill}
-      />
-      <circle
-        cx={size + offset / 2}
-        cy={origin + size / 2}
-        r={pointRadius}
-        fill={pointFill}
-      />
-
-      <circle
-        cx={size + offset / 2}
-        cy={size + origin}
-        r={pointRadius}
-        fill={pointFill}
-      />
-      <circle
-        cx={origin + size / 2}
-        cy={size + origin}
-        r={pointRadius}
-        fill={pointFill}
-      />
-
-      <circle
-        cx={offset / 2}
-        cy={size + origin}
-        r={pointRadius}
-        fill={pointFill}
-      />
-      <circle
-        cx={offset / 2}
-        cy={size / 2 + origin}
-        r={pointRadius}
-        fill={pointFill}
-      />
+      {points.map((point, i) => (
+        <circle
+          {...centers[i]}
+          r={pointRadius}
+          fill={pointFill(point[1].occupancy)}
+          onClick={() => onClick?.(point[0])}
+          id={point[0]}
+        />
+      ))}
     </g>
   );
 };

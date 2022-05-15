@@ -1,8 +1,9 @@
 import React from "react";
 
-type Occupancy = "a" | "b";
-type PointID = string;
-type Point = {
+type Player = "a" | "b";
+export type Occupancy = Player;
+export type PointID = string;
+export type Point = {
   neighbors: PointID[];
   occupancy?: Occupancy;
 };
@@ -11,7 +12,7 @@ type StateGraph = Record<PointID, Point>;
 // Initial state graph just defines adjacency. occupancy is omitted as there are no pieces to start
 // This state graph represents the adjacency for 6 man morris (2 rings)
 const initialStateGraph: StateGraph = {
-  // outer ring
+  // inner ring
   a: { neighbors: ["b", "h"] },
   b: { neighbors: ["a", "c", "j"] },
   c: { neighbors: ["b", "d"] },
@@ -21,7 +22,7 @@ const initialStateGraph: StateGraph = {
   g: { neighbors: ["f", "h"] },
   h: { neighbors: ["g", "a", "p"] },
 
-  // inner ring
+  // outer ring
   i: { neighbors: ["l", "p"] },
   j: { neighbors: ["i", "k", "b"] },
   k: { neighbors: ["j", "l"] },
@@ -32,33 +33,71 @@ const initialStateGraph: StateGraph = {
   p: { neighbors: ["o", "i", "h"] },
 };
 
-const initialState: GameState = { turn: 0, stateGraph: initialStateGraph };
+const initialState: GameState = {
+  turn: { count: 0, player: "a" },
+  stateGraph: initialStateGraph,
+};
 
-interface GameState {
-  turn: number;
+export interface GameState {
+  turn: { count: number; player: Player };
   stateGraph: StateGraph;
 }
 
-interface Action {
+export interface PlayAction extends BaseAction {
+  type: "play";
+  from: PointID;
+  to: PointID;
+}
+
+interface ResetAction extends BaseAction {
+  type: "reset";
+}
+
+type ActionType = "play" | "reset";
+interface BaseAction {
   type: ActionType;
 }
 
-type ActionType = "incrementTurn" | "decrementTurn";
+type Action = PlayAction | ResetAction;
 
-function reducer(state: GameState, action: Action) {
+const otherPlayer = (player: Player): Player => {
+  return player === "a" ? "b" : "a";
+};
+
+const reducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
-    case "incrementTurn":
-      return { ...state, turn: state.turn + 1 };
-    case "decrementTurn":
-      return { ...state, turn: state.turn - 1 };
-    // TODO: Add actions which update stateGraph
+    case "play":
+      const player = state.turn.player;
+      // TODO: check for win
+      return {
+        stateGraph: {
+          ...state.stateGraph,
+
+          // Occupy the "to" location with the player who made this play
+          // TODO: make sure to move the from and check that it was valid
+          [action.to]: {
+            ...state.stateGraph[action.to],
+            occupancy: player,
+          },
+        },
+        // When a play is made, the count increments and it becomes the other players turn
+        turn: {
+          player: otherPlayer(player),
+          count: state.turn.count + 1,
+        },
+      };
+    case "reset":
+      return initialState;
     default:
       throw new Error(
         `Unsupported action in encountered in useGameState: ${action}`
       );
   }
-}
+};
 
+/**
+ * A reducer like hook which holds the entire state of the game
+ */
 export const useGameState = () => {
   return React.useReducer(reducer, initialState);
 };

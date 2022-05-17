@@ -2,6 +2,7 @@ import React from "react";
 import {
   GameState,
   Occupancy,
+  PlaceAction,
   PlayAction,
   Point,
   PointID,
@@ -15,7 +16,7 @@ export interface BoardProps {
   /** The current state of the game including adjacency, occupancy, and turn */
   gameState: GameState;
 
-  onPlay: (play: PlayAction) => void;
+  onPlay: (play: PlayAction | PlaceAction) => void;
 }
 
 const sizeDefault = 400;
@@ -68,7 +69,7 @@ export const Board: React.FC<BoardProps> = (props) => {
   // When any point is clicked, dispatch an action noting so. // TODO: Use from
   const onClick = (pointID: PointID) => {
     console.log(pointID);
-    props.onPlay({ type: "play", from: "a", to: pointID });
+    props.onPlay({ type: "place", to: pointID });
   };
 
   // Render these three rings and the two sets of connections between them

@@ -1,10 +1,24 @@
-.App-header {
+.App {
   background-color: #212121;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: lightgrey;
+  gap: 20px;
+}
+
+.Controls {
+  background-color: #121212; /* palette.neutralDarker */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  border-radius: 10px;
 }

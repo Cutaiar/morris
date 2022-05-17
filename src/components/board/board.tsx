@@ -13,14 +13,14 @@ export interface BoardProps {
   /** pixel size of the board */
   size?: number;
 
-  /** The current state of the game including adjacency, occupancy, and turn */
+  /** The current state of the game including adjacency, occupancy, turn, and more */
   gameState: GameState;
 
+  /** Callback for when a player makes a play using the board */
   onPlay: (play: PlayAction | PlaceAction) => void;
 }
 
 const sizeDefault = 400;
-export const ringCountDefault = 3;
 
 export const maxRings = 6;
 export const minRings = 2; // TODO -- we can support 3 men morris (1 ring) by adding a center point
@@ -37,12 +37,13 @@ const validateRingCount = (ringCount: number) => {
 /**
  * Represents the morris board to be played on.
  *
- * Note: component should be used inside ErrorBoundary as it throws when props are not valid.
+ * Note: component should be used inside ErrorBoundary as it and other components inside throw.
  */
 export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
-  // const ringCount = props.ringCount ?? ringCountDefault;
+
+  // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
   const ringCount =
     Object.keys(props.gameState.stateGraph).length / numberOfPointsInRing;

@@ -10,10 +10,47 @@ export type Point = {
 };
 type StateGraph = Record<PointID, Point>;
 
+type Turn = { count: number; player: Player; type: "remove" | "regular" };
+
 interface Mill {
   points: PointID[];
   occupancy?: Occupancy;
 }
+export interface GameState {
+  phase: Phase;
+  turn: Turn;
+  remainingMen: Record<Player, number>;
+  stateGraph: StateGraph;
+  mills: Mill[];
+}
+
+interface BaseAction {
+  type: ActionType;
+}
+
+export interface PlaceAction extends BaseAction {
+  type: "place";
+  to: PointID;
+}
+
+export interface MoveAction extends BaseAction {
+  type: "move";
+  from: PointID;
+  to: PointID;
+}
+
+export interface RemoveAction extends BaseAction {
+  type: "remove";
+  to: PointID;
+}
+
+interface ResetAction extends BaseAction {
+  type: "reset";
+}
+
+type ActionType = "place" | "move" | "remove" | "reset";
+
+export type Action = PlaceAction | MoveAction | RemoveAction | ResetAction;
 
 // Initial state graph just defines adjacency. occupancy is omitted as there are no pieces to start
 // This state graph represents the adjacency for 6 man morris (2 rings)
@@ -55,84 +92,22 @@ const initialMills: Mill[] = [
   { points: ["o", "p", "i"] },
 ];
 
+/**
+ * Initial state of the game
+ */
 const initialState: GameState = {
   phase: 1,
-  turn: { count: 0, player: "a" },
+  turn: { count: 0, player: "a", type: "regular" },
   stateGraph: initialStateGraph,
   remainingMen: { a: 6, b: 6 },
   mills: initialMills,
 };
 
-export interface GameState {
-  phase: Phase;
-  turn: { count: number; player: Player };
-  remainingMen: Record<Player, number>;
-  stateGraph: StateGraph;
-  mills: Mill[];
-}
-
-export interface MoveAction extends BaseAction {
-  type: "move";
-  from: PointID;
-  to: PointID;
-}
-
-export interface PlaceAction extends BaseAction {
-  type: "place";
-  to: PointID;
-}
-
-interface ResetAction extends BaseAction {
-  type: "reset";
-}
-
-type ActionType = "move" | "reset" | "place";
-interface BaseAction {
-  type: ActionType;
-}
-
-export type Action = MoveAction | ResetAction | PlaceAction;
-
-const getOtherPlayer = (player: Player): Player => {
+/**
+ * Given a player, get the opponent
+ */
+const getOpponent = (player: Player): Player => {
   return player === "a" ? "b" : "a";
-};
-
-/**
- * Validate a place action.
- * Expected scenarios:
- * - location must not be occupied
- *
- * Unexpected scenarios:
- * - current player must have >= 1 remaining man
- * - The game is not in phase 1
- */
-const validatePlace = (action: PlaceAction, state: GameState): boolean => {
-  const currentPlayer = state.turn.player;
-  return (
-    state.stateGraph[action.to].occupancy === undefined &&
-    state.remainingMen[currentPlayer] >= 1 &&
-    state.phase === 1
-  );
-};
-
-/**
- * Validate a move action.
- * Expected scenarios:
- * - location must not be occupied
- * - Can only move the current players man
- *
- * Unexpected scenarios:
- * - current player must have no remaining man
- * - The game is not in phase 2
- */
-const validateMove = (action: MoveAction, state: GameState): boolean => {
-  const currentPlayer = state.turn.player;
-  return (
-    state.stateGraph[action.to].occupancy === undefined &&
-    state.stateGraph[action.from].occupancy === state.turn.player &&
-    state.remainingMen[currentPlayer] === 0 &&
-    state.phase === 2
-  );
 };
 
 /**
@@ -170,6 +145,9 @@ const isNextPhase = (state: GameState): boolean => {
   }
 };
 
+/**
+ * Increment `phase`, throwing if an invalid increment was attempted
+ */
 const incrementPhase = (phase: Phase): Phase => {
   const nextPhase = phase + 1;
 
@@ -215,14 +193,59 @@ const updateMills = (state: GameState): { newMill: boolean; mills: Mill[] } => {
   return { newMill: newMill, mills: newMills };
 };
 
+/**
+ * Validate a place action.
+ * Expected scenarios:
+ * - location must not be occupied
+ *
+ * Unexpected scenarios:
+ * - current player must have >= 1 remaining man
+ * - The game is not in phase 1
+ */
+const isValidPlace = (action: PlaceAction, state: GameState): boolean => {
+  const currentPlayer = state.turn.player;
+  return (
+    state.stateGraph[action.to].occupancy === undefined &&
+    state.remainingMen[currentPlayer] >= 1 &&
+    state.phase === 1
+  );
+};
+
+/**
+ * Validate a move action.
+ * Expected scenarios:
+ * - location must not be occupied
+ * - Can only move the current players man
+ *
+ * Unexpected scenarios:
+ * - current player must have no remaining man
+ * - The game is not in phase 2
+ */
+const isValidMove = (action: MoveAction, state: GameState): boolean => {
+  const currentPlayer = state.turn.player;
+  return (
+    state.stateGraph[action.to].occupancy === undefined &&
+    state.stateGraph[action.from].occupancy === state.turn.player &&
+    state.remainingMen[currentPlayer] === 0 &&
+    state.phase === 2
+  );
+};
+
+/**
+ * TODO
+ */
+const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
+  return true;
+};
+
 const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   const currentPlayer = state.turn.player;
-  const otherPlayer = getOtherPlayer(currentPlayer);
+  const opponent = getOpponent(currentPlayer);
 
   // Validate the place action
   // TODO: How do we communicate the correct thing to do?
   // TODO Should we validate before even allowing the action?
-  if (!validatePlace(action, state)) {
+  if (!isValidPlace(action, state)) {
     console.log("Invalid place action");
     return state;
   }
@@ -241,7 +264,8 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
     },
     // When a play is made, the count increments and it becomes the other players turn
     turn: {
-      player: otherPlayer,
+      ...state.turn,
+      player: opponent,
       count: state.turn.count + 1,
     },
 
@@ -255,7 +279,7 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   // Update the mills in game state
   // TODO - use mills to determine if current player can remove an opponents man
   const { newMill, mills } = updateMills(nextState);
-  if (newMill) console.log("newmill");
+  if (newMill) console.log("new mill");
   const newState = newMill ? { ...nextState, mills: mills } : nextState;
 
   // Check if the new state moves the game into the next phase
@@ -266,12 +290,12 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
 
 const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   const currentPlayer = state.turn.player;
-  const otherPlayer = getOtherPlayer(currentPlayer);
+  const opponent = getOpponent(currentPlayer);
 
   // Validate the move action
   // TODO: How do we communicate the correct thing to do?
   // TODO Should we validate before even allowing the action?
-  if (!validateMove(action, state)) {
+  if (!isValidMove(action, state)) {
     console.log("Invalid move action");
     return state;
   }
@@ -294,7 +318,8 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
     },
     // When a play is made, the count increments and it becomes the other players turn
     turn: {
-      player: otherPlayer,
+      ...state.turn,
+      player: opponent,
       count: state.turn.count + 1,
     },
   };
@@ -302,13 +327,18 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   // Update the mills in game state
   // TODO - use mills to determine if current player can remove an opponents man
   const { newMill, mills } = updateMills(nextState);
-  if (newMill) console.log("newmill");
+  if (newMill) console.log("new mill");
   const newState = newMill ? { ...nextState, mills: mills } : nextState;
 
   // Check if the new state moves the game into the next phase
   return isNextPhase(newState)
     ? { ...newState, phase: incrementPhase(state.phase) }
     : newState;
+};
+
+const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
+  // TODO
+  return state;
 };
 
 const reducer = (state: GameState, action: Action): GameState => {
@@ -319,8 +349,13 @@ const reducer = (state: GameState, action: Action): GameState => {
     // A move in phase 2
     case "move":
       return nextStateAfterMove(state, action);
+    // A removal in the case a player made a mill and removes an opponents man
+    case "remove":
+      return nextStateAfterRemove(state, action);
+    // We support resetting the game entirely
     case "reset":
       return initialState;
+    // If a different action came in here, bail
     default:
       throw new Error(
         `Unsupported action in encountered in useGameState: ${action}`
@@ -329,7 +364,7 @@ const reducer = (state: GameState, action: Action): GameState => {
 };
 
 /**
- * A reducer like hook which holds the entire state of the game
+ * A reducer-like hook which holds the entire state of the game
  */
 export const useGameState = () => {
   return React.useReducer(reducer, initialState);

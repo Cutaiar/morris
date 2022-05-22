@@ -33,9 +33,31 @@ export const App: React.FC = () => {
           6 Man Morris
         </label>
 
-        <label style={{ fontSize: "medium" }}>{`phase: ${gameState.phase} ${
-          gameState.phase === 2 ? "(not implemented)" : ""
-        }`}</label>
+        <label
+          style={{ fontSize: "medium" }}
+        >{`phase: ${gameState.phase}`}</label>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            fontSize: "medium",
+            gap: 10,
+          }}
+        >
+          <label>{"player: "}</label>
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 10,
+              background:
+                gameState.turn.player === "a"
+                  ? palette.primary
+                  : palette.secondary,
+            }}
+          />
+        </div>
 
         <label style={{ fontSize: "medium" }}>Remaining men:</label>
         <RemainingMen

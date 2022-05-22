@@ -33,6 +33,7 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
           cy={"50%"}
           r={radius}
           fill={player === "a" ? palette.primary : palette.secondary}
+          key={i}
         />
       ))}
     </svg>

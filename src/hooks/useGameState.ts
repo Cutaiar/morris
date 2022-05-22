@@ -71,8 +71,8 @@ export interface GameState {
   mills: Mill[];
 }
 
-export interface PlayAction extends BaseAction {
-  type: "play";
+export interface MoveAction extends BaseAction {
+  type: "move";
   from: PointID;
   to: PointID;
 }
@@ -86,12 +86,12 @@ interface ResetAction extends BaseAction {
   type: "reset";
 }
 
-type ActionType = "play" | "reset" | "place";
+type ActionType = "move" | "reset" | "place";
 interface BaseAction {
   type: ActionType;
 }
 
-type Action = PlayAction | ResetAction | PlaceAction;
+export type Action = MoveAction | ResetAction | PlaceAction;
 
 const getOtherPlayer = (player: Player): Player => {
   return player === "a" ? "b" : "a";
@@ -113,6 +113,36 @@ const validatePlace = (action: PlaceAction, state: GameState): boolean => {
     state.remainingMen[currentPlayer] >= 1 &&
     state.phase === 1
   );
+};
+
+/**
+ * Validate a move action.
+ * Expected scenarios:
+ * - location must not be occupied
+ * - Can only move the current players man
+ *
+ * Unexpected scenarios:
+ * - current player must have no remaining man
+ * - The game is not in phase 2
+ */
+const validateMove = (action: MoveAction, state: GameState): boolean => {
+  const currentPlayer = state.turn.player;
+  return (
+    state.stateGraph[action.to].occupancy === undefined &&
+    state.stateGraph[action.from].occupancy === state.turn.player &&
+    state.remainingMen[currentPlayer] === 0 &&
+    state.phase === 2
+  );
+};
+
+/**
+ * Tell whether or not the selection of `pointID` is valid. To be used externally by UI to allow/disallow the selection of a point
+ */
+export const isValidSelection = (
+  pointID: PointID,
+  state: GameState
+): boolean => {
+  return state.stateGraph[pointID].occupancy === state.turn.player;
 };
 
 /**
@@ -152,6 +182,7 @@ const incrementPhase = (phase: Phase): Phase => {
   return nextPhase as Phase;
 };
 
+// TODO -- this is not detecting repeat mills
 const updateMills = (state: GameState): { newMill: boolean; mills: Mill[] } => {
   let newMill = false;
   const newMills = state.mills.map((mill) => {
@@ -184,80 +215,110 @@ const updateMills = (state: GameState): { newMill: boolean; mills: Mill[] } => {
   return { newMill: newMill, mills: newMills };
 };
 
-const reducer = (state: GameState, action: Action): GameState => {
+const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   const currentPlayer = state.turn.player;
   const otherPlayer = getOtherPlayer(currentPlayer);
 
+  // Validate the place action
+  // TODO: How do we communicate the correct thing to do?
+  // TODO Should we validate before even allowing the action?
+  if (!validatePlace(action, state)) {
+    console.log("Invalid place action");
+    return state;
+  }
+
+  const nextState = {
+    ...state,
+    stateGraph: {
+      ...state.stateGraph,
+
+      // Occupy the "to" location with the player who made this play
+      // TODO: check that it was valid
+      [action.to]: {
+        ...state.stateGraph[action.to],
+        occupancy: currentPlayer,
+      },
+    },
+    // When a play is made, the count increments and it becomes the other players turn
+    turn: {
+      player: otherPlayer,
+      count: state.turn.count + 1,
+    },
+
+    // Remove 1 man from the current players remaining men
+    remainingMen: {
+      ...state.remainingMen,
+      [currentPlayer]: state.remainingMen[currentPlayer] - 1,
+    },
+  };
+
+  // Update the mills in game state
+  // TODO - use mills to determine if current player can remove an opponents man
+  const { newMill, mills } = updateMills(nextState);
+  if (newMill) console.log("newmill");
+  const newState = newMill ? { ...nextState, mills: mills } : nextState;
+
+  // Check if the new state moves the game into the next phase
+  return isNextPhase(newState)
+    ? { ...newState, phase: incrementPhase(state.phase) }
+    : newState;
+};
+
+const nextStateAfterMove = (state: GameState, action: MoveAction) => {
+  const currentPlayer = state.turn.player;
+  const otherPlayer = getOtherPlayer(currentPlayer);
+
+  // Validate the move action
+  // TODO: How do we communicate the correct thing to do?
+  // TODO Should we validate before even allowing the action?
+  if (!validateMove(action, state)) {
+    console.log("Invalid move action");
+    return state;
+  }
+
+  // TODO: check for win
+  const nextState = {
+    ...state,
+    stateGraph: {
+      ...state.stateGraph,
+
+      // Occupy the "to" location with the player who made this play
+      [action.to]: {
+        ...state.stateGraph[action.to],
+        occupancy: currentPlayer,
+      },
+      [action.from]: {
+        ...state.stateGraph[action.from],
+        occupancy: undefined,
+      },
+    },
+    // When a play is made, the count increments and it becomes the other players turn
+    turn: {
+      player: otherPlayer,
+      count: state.turn.count + 1,
+    },
+  };
+
+  // Update the mills in game state
+  // TODO - use mills to determine if current player can remove an opponents man
+  const { newMill, mills } = updateMills(nextState);
+  if (newMill) console.log("newmill");
+  const newState = newMill ? { ...nextState, mills: mills } : nextState;
+
+  // Check if the new state moves the game into the next phase
+  return isNextPhase(newState)
+    ? { ...newState, phase: incrementPhase(state.phase) }
+    : newState;
+};
+
+const reducer = (state: GameState, action: Action): GameState => {
   switch (action.type) {
-    // A play in phase 1
+    // A placement in phase 1
     case "place":
-      // Validate the place action
-      // TODO: How do we communicate the correct thing to do?
-      // TODO Should we validate before even allowing the action?
-      if (!validatePlace(action, state)) {
-        console.log("Invalid place action");
-        return state;
-      }
-
-      const nextState = {
-        ...state,
-        stateGraph: {
-          ...state.stateGraph,
-
-          // Occupy the "to" location with the player who made this play
-          // TODO: check that it was valid
-          [action.to]: {
-            ...state.stateGraph[action.to],
-            occupancy: currentPlayer,
-          },
-        },
-        // When a play is made, the count increments and it becomes the other players turn
-        turn: {
-          player: otherPlayer,
-          count: state.turn.count + 1,
-        },
-
-        // Remove 1 man from the current players remaining men
-        remainingMen: {
-          ...state.remainingMen,
-          [currentPlayer]: state.remainingMen[currentPlayer] - 1,
-        },
-      };
-
-      // Update the mills in game state
-      // TODO - use mills to determine if current player can remove an opponents man
-      const { newMill, mills } = updateMills(nextState);
-      if (newMill) console.log("newmill");
-      const newState = newMill ? { ...nextState, mills: mills } : nextState;
-
-      // Check if the new state moves the game into the next phase
-      return isNextPhase(newState)
-        ? { ...newState, phase: incrementPhase(state.phase) }
-        : newState;
-
-    // A play in phase 2
-    case "play":
-      // TODO: check for win
-      return {
-        ...state,
-        stateGraph: {
-          ...state.stateGraph,
-
-          // Occupy the "to" location with the player who made this play
-          // TODO: make sure to move the from and check that it was valid
-          [action.to]: {
-            ...state.stateGraph[action.to],
-            occupancy: currentPlayer,
-          },
-        },
-        // When a play is made, the count increments and it becomes the other players turn
-        turn: {
-          player: otherPlayer,
-          count: state.turn.count + 1,
-        },
-      };
-    // TODO Check if the new state moves the game into the next phase
-
+      return nextStateAfterPlace(state, action);
+    // A move in phase 2
+    case "move":
+      return nextStateAfterMove(state, action);
     case "reset":
       return initialState;
     default:

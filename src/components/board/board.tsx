@@ -3,9 +3,10 @@ import {
   GameState,
   Occupancy,
   PlaceAction,
-  PlayAction,
+  MoveAction,
   Point,
   PointID,
+  isValidSelection,
 } from "../../hooks/useGameState";
 import { palette } from "../../theme";
 
@@ -17,7 +18,7 @@ export interface BoardProps {
   gameState: GameState;
 
   /** Callback for when a player makes a play using the board */
-  onPlay: (play: PlayAction | PlaceAction) => void;
+  onPlay: (play: MoveAction | PlaceAction) => void;
 }
 
 const sizeDefault = 400;
@@ -43,6 +44,8 @@ export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
 
+  const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
+
   // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
   const ringCount =
@@ -67,10 +70,24 @@ export const Board: React.FC<BoardProps> = (props) => {
     ),
   }));
 
-  // When any point is clicked, dispatch an action noting so. // TODO: Use from
+  // When any point is clicked, dispatch an action noting so.
+  // Action depends on the phase of the game -- should tis rule be external to board?
   const onClick = (pointID: PointID) => {
-    console.log(pointID);
-    props.onPlay({ type: "place", to: pointID });
+    if (props.gameState.phase === 1) {
+      props.onPlay({ type: "place", to: pointID });
+    }
+
+    if (props.gameState.phase === 2) {
+      // If there is a selection, must be the second click, dispatch a move and reset selection
+      if (selectedPoint) {
+        props.onPlay({ type: "move", from: selectedPoint, to: pointID });
+        setSelectedPoint(undefined);
+      }
+      // Otherwise, if it's valid, this is their selection
+      if (isValidSelection(pointID, props.gameState)) {
+        setSelectedPoint(pointID);
+      }
+    }
   };
 
   // Render these three rings and the two sets of connections between them
@@ -103,6 +120,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           onClick={onClick}
           key={ring.size}
           points={ring.points}
+          selectedPoint={selectedPoint}
         />
       ))}
     </svg>
@@ -164,20 +182,17 @@ type RingProps = {
   pointRadius: number;
   points: [string, Point][]; // Points in the ring from top-left clockwise as object.entries
   onClick?: (pointID: PointID) => void;
+  selectedPoint?: PointID;
 };
 
 /**
  * Represents a single ring on the board. A square with 8 points
  */
 const Ring = (props: RingProps) => {
-  const { size, vbsize, stroke, pointRadius, onClick, points } = props;
+  const { size, vbsize, stroke, pointRadius, onClick, points, selectedPoint } =
+    props;
   const offset = vbsize - size;
   const origin = offset / 2;
-
-  const pointFill = (occupancy?: Occupancy) => {
-    if (!occupancy) return palette.neutral;
-    return occupancy === "a" ? palette.primary : palette.secondary;
-  };
 
   // Centers for square 6 man morris starting top-left going clockwise
   const centers = [
@@ -203,14 +218,49 @@ const Ring = (props: RingProps) => {
         stroke={stroke}
       />
       {points.map((point, i) => (
-        <circle
+        <SVGPoint
           {...centers[i]}
           r={pointRadius}
-          fill={pointFill(point[1].occupancy)}
-          onClick={() => onClick?.(point[0])}
+          point={point[1]}
           id={point[0]}
+          onClick={() => onClick?.(point[0])}
+          selected={point[0] === selectedPoint}
+          key={point[0]}
         />
       ))}
     </g>
+  );
+};
+
+interface SVGPointProps {
+  cx: number;
+  cy: number;
+  r: number;
+  point: Point;
+  id: string;
+  onClick: () => void;
+  selected?: boolean;
+}
+
+const SVGPoint: React.FC<SVGPointProps> = (props) => {
+  const [hovered, setHovered] = React.useState(false);
+  const { point, selected, ...rest } = props;
+
+  const pointFill = (occupancy?: Occupancy) => {
+    if (hovered) return "white";
+    if (!occupancy) return palette.neutral;
+    return occupancy === "a" ? palette.primary : palette.secondary;
+  };
+
+  const pointStroke = selected ? "white" : undefined;
+
+  return (
+    <circle
+      {...rest}
+      stroke={pointStroke}
+      fill={pointFill(point.occupancy)}
+      onMouseOver={() => setHovered(true)}
+      onMouseOut={() => setHovered(false)}
+    />
   );
 };

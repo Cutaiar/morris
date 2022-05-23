@@ -29,7 +29,7 @@ export const App: React.FC = () => {
           ringCount={ringCount}
         /> */}
 
-        <label style={{ color: palette.primary, fontSize: "larger" }}>
+        <label style={{ color: palette.neutral, fontSize: "larger" }}>
           6 Man Morris
         </label>
 

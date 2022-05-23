@@ -15,6 +15,7 @@ type Turn = { count: number; player: Player; type: "remove" | "regular" };
 interface Mill {
   points: PointID[];
   occupancy?: Occupancy;
+  active?: boolean;
 }
 export interface GameState {
   phase: Phase;
@@ -160,37 +161,94 @@ const incrementPhase = (phase: Phase): Phase => {
   return nextPhase as Phase;
 };
 
-// TODO -- this is not detecting repeat mills
-const updateMills = (state: GameState): { newMill: boolean; mills: Mill[] } => {
-  let newMill = false;
-  const newMills = state.mills.map((mill) => {
-    // Leave occupied mills as is
-    if (mill.occupancy) {
-      return mill;
-    }
-
+/**
+ * Given the current state of the game, calculate the next mills
+ * This includes:
+ * - deactivating mills from the last turn
+ * - activating and occupying mills formed this turn
+ */
+const nextMills = (state: GameState): Mill[] => {
+  return state.mills.map((mill) => {
     // Grab the stateGraph occupancy of the first point in the mill
     const firstOcc = state.stateGraph[mill.points[0]].occupancy;
 
-    // There can be no mill if the first point in the line is unoccupied, leave it as is
-    if (!firstOcc) {
-      return mill;
-    }
-
-    // Then let's check if the stateGraph has the same occupancy as first along the millLine
+    // Lets see if the potential mill is still a mill
+    // Do this by seeing if the stateGraph has the same occupancy as first (if defined) along the millLine
     const isMill = mill.points.every((pointID) => {
-      return state.stateGraph[pointID].occupancy === firstOcc;
+      return firstOcc && state.stateGraph[pointID].occupancy === firstOcc;
     });
 
-    // Remember that we found a new mill so we can report it for return
+    // Mill is still qualified
     if (isMill) {
-      newMill = isMill;
+      if (mill.occupancy) {
+        // If this occupied mill is active, deactivate it, it must have been "used" already
+        if (mill.active) {
+          return { ...mill, active: undefined };
+        }
+        // If this occupied mill is not active, let it be, its just a "resting" mill
+        return mill;
+      }
+      // Mill is not occupied
+      else {
+        // Bail is something weird happens
+        if (mill.active) {
+          throw new Error(
+            "Found an active, unoccupied, but qualified mill when calculating next mills"
+          );
+        }
+        // We found a new mill
+        console.log("new mill for " + firstOcc);
+        return { ...mill, occupancy: firstOcc, active: true };
+      }
     }
+    // Mill is not qualified
+    else {
+      // If this unqualified mill is still occupied, it must have been broken. It should no longer be occupied
+      if (mill.occupancy) {
+        return { ...mill, occupancy: undefined, active: undefined };
+      }
 
-    // If we found a new mill, update the mill list
-    return isMill ? { ...mill, occupancy: firstOcc } : mill;
+      // Unqualified mill is not occupied
+      else {
+        // Bail is something weird happens
+        if (mill.active) {
+          throw new Error(
+            "Found an active, unoccupied, unqualified mill when calculating next mills"
+          );
+        }
+        // These are just potential mills that need no update
+        return mill;
+      }
+    }
   });
-  return { newMill: newMill, mills: newMills };
+};
+
+/**
+ * Given the game state, calculate the next turn.
+ * This involves:
+ * - deciding if the next turn is a removal turn
+ * - who it goes to
+ * - incrementing the count
+ *
+ * Note: `nextTurn` should be called on a game state which has already had its mills updated
+ */
+const nextTurn = (state: GameState): Turn => {
+  const currentPlayer = state.turn.player;
+  const opponent = getOpponent(currentPlayer);
+
+  // Next turn is a removal if:
+  // current turn is not a removal and
+  // current player has an active mill
+  const isRemoval =
+    state.turn.type !== "remove" &&
+    state.mills.some((mill) => mill.occupancy === currentPlayer && mill.active);
+
+  return {
+    ...state.turn,
+    type: isRemoval ? "remove" : "regular",
+    player: isRemoval ? currentPlayer : opponent,
+    count: state.turn.count + 1,
+  };
 };
 
 /**
@@ -225,22 +283,34 @@ const isValidMove = (action: MoveAction, state: GameState): boolean => {
   const currentPlayer = state.turn.player;
   return (
     state.stateGraph[action.to].occupancy === undefined &&
-    state.stateGraph[action.from].occupancy === state.turn.player &&
+    state.stateGraph[action.from].occupancy === currentPlayer &&
     state.remainingMen[currentPlayer] === 0 &&
     state.phase === 2
   );
 };
 
 /**
- * TODO
+ * Validate a remove action.
+ * Expected scenarios:
+ * - location must be occupied
+ * - Can only remove the opponents man
+ * - TODO can only remove a man in a mill if there is no other option
+ *
+ * Unexpected scenarios:
+ * - turn must be of type removal
  */
 const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
-  return true;
+  const occ = state.stateGraph[action.to].occupancy;
+  return (
+    occ !== undefined &&
+    occ !== state.turn.player &&
+    state.turn.type === "remove"
+    // TODO can only remove a man in a mill if there is no other option
+  );
 };
 
 const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   const currentPlayer = state.turn.player;
-  const opponent = getOpponent(currentPlayer);
 
   // Validate the place action
   // TODO: How do we communicate the correct thing to do?
@@ -250,25 +320,17 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
     return state;
   }
 
-  const nextState = {
+  // Update state with the action
+  let nextState = {
     ...state,
     stateGraph: {
       ...state.stateGraph,
-
       // Occupy the "to" location with the player who made this play
-      // TODO: check that it was valid
       [action.to]: {
         ...state.stateGraph[action.to],
         occupancy: currentPlayer,
       },
     },
-    // When a play is made, the count increments and it becomes the other players turn
-    turn: {
-      ...state.turn,
-      player: opponent,
-      count: state.turn.count + 1,
-    },
-
     // Remove 1 man from the current players remaining men
     remainingMen: {
       ...state.remainingMen,
@@ -277,20 +339,21 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   };
 
   // Update the mills in game state
-  // TODO - use mills to determine if current player can remove an opponents man
-  const { newMill, mills } = updateMills(nextState);
-  if (newMill) console.log("new mill");
-  const newState = newMill ? { ...nextState, mills: mills } : nextState;
+  nextState = { ...nextState, mills: nextMills(nextState) };
+
+  // Update the turn (which is dependent on the updated mills)
+  nextState = { ...nextState, turn: nextTurn(nextState) };
+
+  // TODO: Check for win? Can you win in this phase?
 
   // Check if the new state moves the game into the next phase
-  return isNextPhase(newState)
-    ? { ...newState, phase: incrementPhase(state.phase) }
-    : newState;
+  return isNextPhase(nextState)
+    ? { ...nextState, phase: incrementPhase(state.phase) }
+    : nextState;
 };
 
 const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   const currentPlayer = state.turn.player;
-  const opponent = getOpponent(currentPlayer);
 
   // Validate the move action
   // TODO: How do we communicate the correct thing to do?
@@ -300,12 +363,11 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
     return state;
   }
 
-  // TODO: check for win
-  const nextState = {
+  // Update state with the action
+  let nextState = {
     ...state,
     stateGraph: {
       ...state.stateGraph,
-
       // Occupy the "to" location with the player who made this play
       [action.to]: {
         ...state.stateGraph[action.to],
@@ -316,29 +378,58 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
         occupancy: undefined,
       },
     },
-    // When a play is made, the count increments and it becomes the other players turn
-    turn: {
-      ...state.turn,
-      player: opponent,
-      count: state.turn.count + 1,
-    },
   };
 
   // Update the mills in game state
-  // TODO - use mills to determine if current player can remove an opponents man
-  const { newMill, mills } = updateMills(nextState);
-  if (newMill) console.log("new mill");
-  const newState = newMill ? { ...nextState, mills: mills } : nextState;
+  nextState = { ...nextState, mills: nextMills(nextState) };
 
-  // Check if the new state moves the game into the next phase
-  return isNextPhase(newState)
-    ? { ...newState, phase: incrementPhase(state.phase) }
-    : newState;
+  // Update the turn (which is dependent on the updated mills)
+  nextState = { ...nextState, turn: nextTurn(nextState) };
+
+  // TODO: Check for win
+
+  // Check if the next state moves the game into the next phase
+  return isNextPhase(nextState)
+    ? { ...nextState, phase: incrementPhase(state.phase) }
+    : nextState;
 };
 
 const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
-  // TODO
-  return state;
+  // Validate the remove action
+  // TODO: How do we communicate the correct thing to do?
+  // TODO Should we validate before even allowing the action?
+  if (!isValidRemove(action, state)) {
+    console.log("Invalid remove action");
+    return state;
+  }
+
+  // Update state with the action
+  let nextState = {
+    ...state,
+    stateGraph: {
+      ...state.stateGraph,
+
+      // Remove the man at "to" location
+      [action.to]: {
+        ...state.stateGraph[action.to],
+        occupancy: undefined,
+      },
+    },
+  };
+
+  // Update the mills in game state (because it is possible that this removal broke a mill)
+  nextState = { ...nextState, mills: nextMills(nextState) };
+
+  // Update the turn (which is dependent on the updated mills? Maybe not for a remove)
+  nextState = { ...nextState, turn: nextTurn(nextState) };
+
+  // TODO: Check for win
+
+  // Check if the new state moves the game into the next phase
+  // TODO -- Do we need to do this here?
+  return isNextPhase(nextState)
+    ? { ...nextState, phase: incrementPhase(state.phase) }
+    : nextState;
 };
 
 const reducer = (state: GameState, action: Action): GameState => {

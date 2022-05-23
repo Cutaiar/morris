@@ -2,11 +2,10 @@ import React from "react";
 import {
   GameState,
   Occupancy,
-  PlaceAction,
-  MoveAction,
   Point,
   PointID,
   isValidSelection,
+  Action,
 } from "../../hooks/useGameState";
 import { palette } from "../../theme";
 
@@ -18,7 +17,7 @@ export interface BoardProps {
   gameState: GameState;
 
   /** Callback for when a player makes a play using the board */
-  onPlay: (play: MoveAction | PlaceAction) => void;
+  onPlay: (play: Action) => void;
 }
 
 const sizeDefault = 400;
@@ -43,13 +42,14 @@ const validateRingCount = (ringCount: number) => {
 export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
+  const { onPlay, gameState } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
 
   // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
   const ringCount =
-    Object.keys(props.gameState.stateGraph).length / numberOfPointsInRing;
+    Object.keys(gameState.stateGraph).length / numberOfPointsInRing;
 
   // Throw if ringCount is outside supported range (component should be used inside ErrorBoundary)
   validateRingCount(ringCount);
@@ -64,29 +64,41 @@ export const Board: React.FC<BoardProps> = (props) => {
     size: paddedSize * (i + 1) * (1 / ringCount),
 
     // This distributes 8 points from the state graph to each ring, moving from inner to outer
-    points: Object.entries(props.gameState.stateGraph).slice(
+    points: Object.entries(gameState.stateGraph).slice(
       i * numberOfPointsInRing,
       (i + 1) * numberOfPointsInRing
     ),
   }));
 
   // When any point is clicked, dispatch an action noting so.
-  // Action depends on the phase of the game -- should tis rule be external to board?
+  // Action depends on the phase of the game and type of turn -- should tis rule be external to board?
   const onClick = (pointID: PointID) => {
-    if (props.gameState.phase === 1) {
-      props.onPlay({ type: "place", to: pointID });
+    // If the turn is a "remove" turn, dispatch a removal
+    if (gameState.turn.type === "remove") {
+      onPlay({ type: "remove", to: pointID });
+      return;
     }
 
-    if (props.gameState.phase === 2) {
+    // If the game is in phase 1, dispatch a place
+    if (gameState.phase === 1) {
+      onPlay({ type: "place", to: pointID });
+      return;
+    }
+
+    // If the game is in phase 2, let the user create a selection, and dispatch a move
+    if (gameState.phase === 2) {
       // If there is a selection, must be the second click, dispatch a move and reset selection
       if (selectedPoint) {
-        props.onPlay({ type: "move", from: selectedPoint, to: pointID });
+        onPlay({ type: "move", from: selectedPoint, to: pointID });
         setSelectedPoint(undefined);
+        return;
       }
       // Otherwise, if it's valid, this is their selection
-      if (isValidSelection(pointID, props.gameState)) {
+      if (isValidSelection(pointID, gameState)) {
         setSelectedPoint(pointID);
+        return;
       }
+      return;
     }
   };
 

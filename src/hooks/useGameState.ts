@@ -197,7 +197,6 @@ const nextMills = (state: GameState): Mill[] => {
           );
         }
         // We found a new mill
-        console.log("new mill for " + firstOcc);
         return { ...mill, occupancy: firstOcc, active: true };
       }
     }
@@ -316,7 +315,7 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   // TODO: How do we communicate the correct thing to do?
   // TODO Should we validate before even allowing the action?
   if (!isValidPlace(action, state)) {
-    console.log("Invalid place action");
+    console.warn("Invalid place action");
     return state;
   }
 
@@ -359,7 +358,7 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   // TODO: How do we communicate the correct thing to do?
   // TODO Should we validate before even allowing the action?
   if (!isValidMove(action, state)) {
-    console.log("Invalid move action");
+    console.warn("Invalid move action");
     return state;
   }
 
@@ -399,7 +398,7 @@ const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
   // TODO: How do we communicate the correct thing to do?
   // TODO Should we validate before even allowing the action?
   if (!isValidRemove(action, state)) {
-    console.log("Invalid remove action");
+    console.warn("Invalid remove action");
     return state;
   }
 

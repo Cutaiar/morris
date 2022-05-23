@@ -10,6 +10,11 @@ import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import { confetti } from "../../theme/theme";
 
+import GithubCorner from "react-github-corner";
+
+// TODO: Move to utils or something
+const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
+
 export const App: React.FC = () => {
   const [gameState, updateGameState] = useGameState();
 
@@ -72,6 +77,14 @@ export const App: React.FC = () => {
           </div>
         </>
       )}
+      <GithubCorner
+        href="https://github.com/Cutaiar/morris"
+        bannerColor={palette.neutral}
+        octoColor={palette.background}
+        size={80}
+        direction="right"
+        {...openInNewTab}
+      />
       <div className="App">
         {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
         <Board
@@ -121,7 +134,7 @@ export const App: React.FC = () => {
             />
           </div>
 
-          <label style={{ fontSize: "medium" }}>Remaining men:</label>
+          <label style={{ fontSize: "medium" }}>remaining men:</label>
           <RemainingMen
             remainingMenCount={gameState.remainingMen.a}
             player={"a"}
@@ -145,15 +158,6 @@ export const App: React.FC = () => {
           >
             Reset
           </button>
-
-          <a
-            href="https://github.com/Cutaiar/morris"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: palette.primary, fontSize: "medium" }}
-          >
-            github
-          </a>
         </div>
 
         {/* Show raw Game State for debug */}

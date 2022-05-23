@@ -1,4 +1,5 @@
 export const palette = {
+  background: "#212121",
   neutral: "grey",
   neutralLight: "lightgray",
   neutralDark: "#121212",

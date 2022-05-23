@@ -23,6 +23,7 @@ export interface GameState {
   remainingMen: Record<Player, number>;
   stateGraph: StateGraph;
   mills: Mill[];
+  winner?: Player;
 }
 
 interface BaseAction {
@@ -102,6 +103,7 @@ const initialState: GameState = {
   stateGraph: initialStateGraph,
   remainingMen: { a: 6, b: 6 },
   mills: initialMills,
+  winner: undefined,
 };
 
 /**
@@ -159,6 +161,49 @@ const incrementPhase = (phase: Phase): Phase => {
     );
   }
   return nextPhase as Phase;
+};
+
+/**
+ * Check if the game has been won, return by whom, or undefined if not won.
+ * Winning criterion:
+ * - Opponent has 2 men on the board
+ * - TODO Opponent has no legal move
+ * Note: Should be called after all updates to game state that effect winning are made
+ *
+ * TODO: Can a win happen in phase 1? If so, it's a little harder to detect since initially, players have < 3 men as they place
+ * especially if a third turn mill is formed and the opponent is reduced to 2 pieces
+ */
+const getWinner = (state: GameState) => {
+  // We are explicitly disallowing a win in phase 1
+  // TODO: Not sure if this is true to the game or not, but it causes issues at this point
+  if (state.phase === 1) {
+    return undefined;
+  }
+
+  // Count the number of men still on the board for a given occupancy
+  // TODO: Move this out to utils or something
+  const countMenOnBoard = (state: GameState, occupancy: Occupancy) =>
+    Object.values(state.stateGraph).reduce((accumulator, point) => {
+      if (point.occupancy === occupancy) {
+        return accumulator + 1;
+      }
+
+      return accumulator;
+    }, 0);
+
+  // Do we need to generalize for n players?
+  const players: Occupancy[] = ["a", "b"];
+
+  // TODO Check for opponent has no legal move
+  // For now, a winner opponent of the player with 2 men on the board
+  const loser = players.find((player) => countMenOnBoard(state, player) < 3);
+  // If there is no loser, there is no winner
+  if (!loser) {
+    return undefined;
+  }
+
+  // If there was as loser, the opponent is the winner
+  return getOpponent(loser);
 };
 
 /**
@@ -344,6 +389,8 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   nextState = { ...nextState, turn: nextTurn(nextState) };
 
   // TODO: Check for win? Can you win in this phase?
+  // I don't think so, and at this point, it causes issues to allow a win in phase 1
+  // so we wont check for it here, and we will explicitly disallow it in `getWinner`
 
   // Check if the new state moves the game into the next phase
   return isNextPhase(nextState)
@@ -385,7 +432,8 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   // Update the turn (which is dependent on the updated mills)
   nextState = { ...nextState, turn: nextTurn(nextState) };
 
-  // TODO: Check for win
+  // Check to see if there is winner
+  nextState = { ...nextState, winner: getWinner(nextState) };
 
   // Check if the next state moves the game into the next phase
   return isNextPhase(nextState)
@@ -422,7 +470,8 @@ const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
   // Update the turn (which is dependent on the updated mills? Maybe not for a remove)
   nextState = { ...nextState, turn: nextTurn(nextState) };
 
-  // TODO: Check for win
+  // Check to see if there is winner
+  nextState = { ...nextState, winner: getWinner(nextState) };
 
   // Check if the new state moves the game into the next phase
   // TODO -- Do we need to do this here?

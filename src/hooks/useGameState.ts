@@ -68,6 +68,7 @@ const initialStateGraph: StateGraph = {
   h: { neighbors: ["g", "a", "p"] },
 
   // outer ring
+  // TODO something here is not correct
   i: { neighbors: ["l", "p"] },
   j: { neighbors: ["i", "k", "b"] },
   k: { neighbors: ["j", "l"] },
@@ -317,8 +318,9 @@ const isValidPlace = (action: PlaceAction, state: GameState): boolean => {
  * Validate a move action.
  * Expected scenarios:
  * - location must not be occupied
+ * - Can only move to adjacent spots
  * - Can only move the current players man
- * - TODO: Can only move to adjacent spots
+ * TODO - phase three has flying
  *
  * Unexpected scenarios:
  * - current player must have no remaining man
@@ -328,8 +330,8 @@ const isValidMove = (action: MoveAction, state: GameState): boolean => {
   const currentPlayer = state.turn.player;
   return (
     state.stateGraph[action.to].occupancy === undefined &&
+    state.stateGraph[action.from].neighbors.includes(action.to) &&
     state.stateGraph[action.from].occupancy === currentPlayer &&
-    // TODO: Can only move to adjacent spots
     state.remainingMen[currentPlayer] === 0 &&
     state.phase === 2
   );

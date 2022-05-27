@@ -12,11 +12,19 @@ import { confetti } from "../../theme/theme";
 
 import GithubCorner from "react-github-corner";
 
+import { useOpponent } from "../../hooks/useOpponent";
+
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
 
 export const App: React.FC = () => {
   const [gameState, updateGameState] = useGameState();
+
+  const { status: opponentStatus } = useOpponent(
+    gameState,
+    "b",
+    updateGameState
+  );
 
   const { width, height } = useWindowSize();
 
@@ -143,6 +151,11 @@ export const App: React.FC = () => {
             remainingMenCount={gameState.remainingMen.b}
             player={"b"}
           />
+
+          <label style={{ fontSize: "medium" }}>
+            {`opponent is `}
+            <i style={{ color: palette.secondary }}>{opponentStatus}</i>
+          </label>
 
           {/* Temporarily add reset button for testing */}
           <button

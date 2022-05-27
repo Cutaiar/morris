@@ -353,6 +353,22 @@ const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
   );
 };
 
+/**
+ * Validate an action in general
+ */
+export const isValidAction = (action: Action, state: GameState): boolean => {
+  switch (action.type) {
+    case "place":
+      return isValidPlace(action, state);
+    case "move":
+      return isValidMove(action, state);
+    case "remove":
+      return isValidRemove(action, state);
+    case "reset":
+      return true;
+  }
+};
+
 const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   const currentPlayer = state.turn.player;
 

@@ -318,6 +318,7 @@ const isValidPlace = (action: PlaceAction, state: GameState): boolean => {
  * Expected scenarios:
  * - location must not be occupied
  * - Can only move the current players man
+ * - TODO: Can only move to adjacent spots
  *
  * Unexpected scenarios:
  * - current player must have no remaining man
@@ -328,6 +329,7 @@ const isValidMove = (action: MoveAction, state: GameState): boolean => {
   return (
     state.stateGraph[action.to].occupancy === undefined &&
     state.stateGraph[action.from].occupancy === currentPlayer &&
+    // TODO: Can only move to adjacent spots
     state.remainingMen[currentPlayer] === 0 &&
     state.phase === 2
   );

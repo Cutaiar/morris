@@ -68,12 +68,11 @@ const initialStateGraph: StateGraph = {
   h: { neighbors: ["g", "a", "p"] },
 
   // outer ring
-  // TODO something here is not correct
-  i: { neighbors: ["l", "p"] },
+  i: { neighbors: ["j", "p"] },
   j: { neighbors: ["i", "k", "b"] },
   k: { neighbors: ["j", "l"] },
   l: { neighbors: ["k", "m", "d"] },
-  m: { neighbors: ["l", "m"] },
+  m: { neighbors: ["l", "n"] },
   n: { neighbors: ["m", "o", "f"] },
   o: { neighbors: ["n", "p"] },
   p: { neighbors: ["o", "i", "h"] },

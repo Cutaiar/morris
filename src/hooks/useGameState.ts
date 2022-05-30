@@ -268,6 +268,22 @@ const nextMills = (state: GameState): Mill[] => {
 };
 
 /**
+ * Tells whether `point` is part of an occupied mill
+ */
+const isPartOfMill = (point: PointID, state: GameState): boolean => {
+  const occ = state.stateGraph[point].occupancy;
+
+  // Point can't be part of an occupied mill if it is not occupied
+  if (!occ) {
+    return false;
+  }
+
+  return state.mills
+    .filter((mill) => mill.points.some((p) => p === point)) // Interested in mills which contain the point in question
+    .some((mill) => mill.occupancy === occ); // Any of the potential mills are occupied
+};
+
+/**
  * Given the game state, calculate the next turn.
  * This involves:
  * - deciding if the next turn is a removal turn
@@ -341,7 +357,7 @@ const isValidMove = (action: MoveAction, state: GameState): boolean => {
  * Expected scenarios:
  * - location must be occupied
  * - Can only remove the opponents man
- * - TODO can only remove a man in a mill if there is no other option
+ * - Can only remove a man in a mill if there is no other option
  *
  * Unexpected scenarios:
  * - turn must be of type removal
@@ -351,9 +367,28 @@ const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
   return (
     occ !== undefined &&
     occ !== state.turn.player &&
+    testMillCaveat(action, state) &&
     state.turn.type === "remove"
-    // TODO can only remove a man in a mill if there is no other option
   );
+};
+
+/**
+ * Represents  the following rule:
+ *
+ * "with the caveat that a piece in an opponent's mill can only be removed if no other pieces are available"
+ *
+ * returning whether of not the removal is valid according to this caveat
+ */
+const testMillCaveat = (action: RemoveAction, state: GameState): boolean => {
+  const noOtherPieceAvailable = () => {
+    return false; // TODO actually code this
+  };
+
+  // Cant remove a man in a mill...
+  if (isPartOfMill(action.to, state)) {
+    return noOtherPieceAvailable(); //  ...unless no other pieces are available
+  }
+  return true;
 };
 
 /**

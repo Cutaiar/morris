@@ -7,6 +7,7 @@ import {
   isValidSelection,
   Action,
 } from "../../hooks/useGameState";
+import { useDebug } from "../../hooks/useDebug";
 import { palette } from "../../theme";
 
 export interface BoardProps {
@@ -258,6 +259,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [hovered, setHovered] = React.useState(false);
   const { point, selected, ...rest } = props;
 
+  const [debug] = useDebug(); // TODO how can we use this and be portable?
+
   const pointFill = (occupancy?: Occupancy) => {
     if (hovered) return "white";
     if (!occupancy) return palette.neutral;
@@ -267,12 +270,27 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const pointStroke = selected ? "white" : undefined;
 
   return (
-    <circle
-      {...rest}
-      stroke={pointStroke}
-      fill={pointFill(point.occupancy)}
-      onMouseOver={() => setHovered(true)}
-      onMouseOut={() => setHovered(false)}
-    />
+    <g>
+      <circle
+        {...rest}
+        stroke={pointStroke}
+        fill={pointFill(point.occupancy)}
+        onMouseOver={() => setHovered(true)}
+        onMouseOut={() => setHovered(false)}
+      />
+      {debug && (
+        <text
+          x={props.cx}
+          y={props.cy}
+          text-anchor="middle"
+          stroke={palette.neutralDark}
+          fill={palette.neutralDark}
+          alignment-baseline="middle"
+          fontSize={props.r}
+        >
+          {props.id}
+        </text>
+      )}
+    </g>
   );
 };

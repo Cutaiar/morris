@@ -13,6 +13,8 @@ import { confetti } from "../../theme/theme";
 import GithubCorner from "react-github-corner";
 
 import { useOpponent } from "../../hooks/useOpponent";
+import { useDebug } from "../../hooks/useDebug";
+import { useMount } from "react-use";
 
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
@@ -27,6 +29,10 @@ export const App: React.FC = () => {
   );
 
   const { width, height } = useWindowSize();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [debug, _, syncDebug] = useDebug();
+  useMount(() => syncDebug());
 
   return (
     <>
@@ -174,14 +180,14 @@ export const App: React.FC = () => {
         </div>
 
         {/* Show raw Game State for debug */}
-        {window.location.search.includes("debug") && (
+        {debug && (
           <div
             style={{
               height: "100%",
               overflow: "auto",
               position: "absolute",
               top: 0,
-              right: 20,
+              left: 20,
             }}
           >
             <label>Game State</label>
@@ -191,7 +197,7 @@ export const App: React.FC = () => {
                 whiteSpace: "pre-wrap",
               }}
             >
-              {JSON.stringify(gameState, null, 2)}
+              {JSON.stringify(gameState, null, 4)}
             </p>
           </div>
         )}

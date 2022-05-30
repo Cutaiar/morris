@@ -6,18 +6,21 @@ import reportWebVitals from "./reportWebVitals";
 import { App } from "./components/app";
 import { ErrorFallback } from "./components/error";
 import { ErrorBoundary } from "react-error-boundary";
+import { DebugProvider } from "./hooks/useDebug";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ErrorBoundary
-      FallbackComponent={ErrorFallback}
-      onReset={() => window.location.reload()}
-    >
-      <App />
-    </ErrorBoundary>
+    <DebugProvider>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onReset={() => window.location.reload()}
+      >
+        <App />
+      </ErrorBoundary>
+    </DebugProvider>
   </React.StrictMode>
 );
 

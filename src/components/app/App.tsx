@@ -12,9 +12,9 @@ import { confetti } from "../../theme/theme";
 
 import GithubCorner from "react-github-corner";
 
-import { useOpponent } from "../../hooks/useOpponent";
 import { useDebug } from "../../hooks/useDebug";
 import { useMount } from "react-use";
+import { Opponent } from "../opponent/opponent";
 
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
@@ -22,17 +22,13 @@ const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
 export const App: React.FC = () => {
   const [gameState, updateGameState] = useGameState();
 
-  const { status: opponentStatus } = useOpponent(
-    gameState,
-    "b",
-    updateGameState
-  );
-
   const { width, height } = useWindowSize();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [debug, _, syncDebug] = useDebug();
   useMount(() => syncDebug());
+
+  const [opponentControlled, setOpponentControlled] = React.useState(false);
 
   return (
     <>
@@ -158,10 +154,20 @@ export const App: React.FC = () => {
             player={"b"}
           />
 
-          <label style={{ fontSize: "medium" }}>
-            {`opponent is `}
-            <i style={{ color: palette.secondary }}>{opponentStatus}</i>
-          </label>
+          <input
+            type={"checkbox"}
+            checked={opponentControlled}
+            onChange={(e) => setOpponentControlled(e.target.checked)}
+          />
+          {!opponentControlled ? (
+            <Opponent
+              state={gameState}
+              player={"b"}
+              updateGameState={updateGameState}
+            />
+          ) : (
+            <label>Opponent is Controlled</label>
+          )}
 
           {/* Temporarily add reset button for testing */}
           <button

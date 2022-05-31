@@ -14,9 +14,9 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
   const { state, player, updateGameState } = props;
   const { status } = useOpponent(state, player, updateGameState);
   return (
-    <label style={{ fontSize: "medium" }}>
+    <span style={{ fontSize: "medium" }}>
       {`opponent is `}
       <i style={{ color: palette.secondary }}>{status}</i>
-    </label>
+    </span>
   );
 };

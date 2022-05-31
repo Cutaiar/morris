@@ -154,11 +154,17 @@ export const App: React.FC = () => {
             player={"b"}
           />
 
-          <input
-            type={"checkbox"}
-            checked={opponentControlled}
-            onChange={(e) => setOpponentControlled(e.target.checked)}
-          />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <input
+              id={"opponentControlled"}
+              type={"checkbox"}
+              checked={opponentControlled}
+              onChange={(e) => setOpponentControlled(e.target.checked)}
+            />
+            <label style={{ fontSize: "medium" }} htmlFor="opponentControlled">
+              control opponent
+            </label>
+          </div>
           {!opponentControlled ? (
             <Opponent
               state={gameState}
@@ -166,7 +172,7 @@ export const App: React.FC = () => {
               updateGameState={updateGameState}
             />
           ) : (
-            <label>Opponent is Controlled</label>
+            <label style={{ fontSize: "medium" }}>opponent is controlled</label>
           )}
 
           {/* Temporarily add reset button for testing */}

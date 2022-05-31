@@ -1,4 +1,5 @@
 import React from "react";
+import { partition } from "../components/utils/utils";
 
 export type Phase = 1 | 2 | 3;
 export type Player = "a" | "b";
@@ -357,7 +358,7 @@ const isValidMove = (action: MoveAction, state: GameState): boolean => {
  * Expected scenarios:
  * - location must be occupied
  * - Can only remove the opponents man
- * - Can only remove a man in a mill if there is no other option
+ * - Can only remove a man in a mill if there is no other option (mill removal caveat)
  *
  * Unexpected scenarios:
  * - turn must be of type removal
@@ -367,7 +368,7 @@ const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
   return (
     occ !== undefined &&
     occ !== state.turn.player &&
-    testMillCaveat(action, state) &&
+    satisfiesMillRemovalCaveat(action, state) &&
     state.turn.type === "remove"
   );
 };
@@ -379,15 +380,27 @@ const isValidRemove = (action: RemoveAction, state: GameState): boolean => {
  *
  * returning whether of not the removal is valid according to this caveat
  */
-const testMillCaveat = (action: RemoveAction, state: GameState): boolean => {
-  const noOtherPieceAvailable = () => {
-    return false; // TODO actually code this
-  };
+const satisfiesMillRemovalCaveat = (
+  action: RemoveAction,
+  state: GameState
+): boolean => {
+  const opp = getOpponent(state.turn.player);
 
-  // Cant remove a man in a mill...
-  if (isPartOfMill(action.to, state)) {
-    return noOtherPieceAvailable(); //  ...unless no other pieces are available
+  // Split the stategraph into 2 arrays, one holding the points which are a part of an opponents occupied mill, and other not.
+  const [milledOpponentPoints, nonMilledOpponentPoints] = partition(
+    Object.keys(state.stateGraph).filter(
+      (point) => state.stateGraph[point].occupancy === opp
+    ),
+    (point) => isPartOfMill(point, state)
+  );
+
+  // If the attempted removal is on a man in a mill
+  if (milledOpponentPoints.includes(action.to)) {
+    // Its valid only if there is no other man to take
+    return nonMilledOpponentPoints.length === 0;
   }
+
+  // If the attempted removal was not on a milled man, this rule is trivially satisfied
   return true;
 };
 

@@ -282,10 +282,10 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         <text
           x={props.cx}
           y={props.cy}
-          text-anchor="middle"
+          textAnchor="middle"
           stroke={palette.neutralDark}
           fill={palette.neutralDark}
-          alignment-baseline="middle"
+          alignmentBaseline="middle"
           fontSize={props.r}
           cursor={"default"}
           pointerEvents={"none"}

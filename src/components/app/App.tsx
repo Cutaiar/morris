@@ -147,6 +147,7 @@ export const App: React.FC = () => {
                     : palette.secondary,
               }}
             />
+            {gameState.turn.type === "remove" && <i>{" (to remove)"}</i>}
           </div>
 
           <label style={{ fontSize: "medium" }}>remaining men:</label>

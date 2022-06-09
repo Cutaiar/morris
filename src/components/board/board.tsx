@@ -70,7 +70,7 @@ export const Board: React.FC<BoardProps> = (props) => {
   // We use this in the ring size calculation to pad the outer ring from the edge of the svg
   const paddedSize = size * 0.9;
 
-  const pointRadius = size * 0.025;
+  const pointRadius = size * 0.035;
 
   // Build ring sizes based on ringCount
   const rings = new Array(ringCount).fill(undefined).map((_, i) => ({

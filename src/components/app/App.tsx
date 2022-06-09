@@ -28,6 +28,10 @@ export const App: React.FC = () => {
   const [debug, _, syncDebug] = useDebug();
   useMount(() => syncDebug());
 
+  // Whether the game is muted or not
+  const [mute, setMute] = React.useState(false);
+
+  // Whether the opponent is controlled by the keyboard or not
   const [opponentControlled, setOpponentControlled] = React.useState(false);
 
   return (
@@ -102,6 +106,7 @@ export const App: React.FC = () => {
           onPlay={(play) => {
             updateGameState(play);
           }}
+          sound={!mute}
         />
 
         <div className="Controls">
@@ -153,7 +158,17 @@ export const App: React.FC = () => {
             remainingMenCount={gameState.remainingMen.b}
             player={"b"}
           />
-
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <input
+              id={"mute"}
+              type={"checkbox"}
+              checked={mute}
+              onChange={(e) => setMute(e.target.checked)}
+            />
+            <label style={{ fontSize: "medium" }} htmlFor="mute">
+              mute
+            </label>
+          </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
               id={"opponentControlled"}

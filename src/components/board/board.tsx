@@ -10,7 +10,18 @@ import {
 import { useDebug } from "../../hooks/useDebug";
 import { palette } from "../../theme";
 
-export interface BoardProps {
+import { useSound } from "use-sound";
+
+import clickSound from "../../sound/blip/6.mp3";
+import hoverSound from "../../sound/blip/3.mp3";
+
+/** Extend this interface to allow your component to support optional sound */
+export interface HasSound {
+  /** Whether or not to play sound fx */
+  sound?: boolean;
+}
+
+export interface BoardProps extends HasSound {
   /** pixel size of the board */
   size?: number;
 
@@ -43,6 +54,7 @@ const validateRingCount = (ringCount: number) => {
 export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
+  const sound = props.sound ?? false;
   const { onPlay, gameState } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
@@ -134,6 +146,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           key={ring.size}
           points={ring.points}
           selectedPoint={selectedPoint}
+          sound={sound}
         />
       ))}
     </svg>
@@ -188,7 +201,7 @@ const Connections = (props: ConnectionsProps) => {
   );
 };
 
-type RingProps = {
+interface RingProps extends HasSound {
   size: number;
   vbsize: number;
   stroke: string;
@@ -196,12 +209,13 @@ type RingProps = {
   points: [string, Point][]; // Points in the ring from top-left clockwise as object.entries
   onClick?: (pointID: PointID) => void;
   selectedPoint?: PointID;
-};
+}
 
 /**
  * Represents a single ring on the board. A square with 8 points
  */
 const Ring = (props: RingProps) => {
+  const sound = props.sound ?? false;
   const { size, vbsize, stroke, pointRadius, onClick, points, selectedPoint } =
     props;
   const offset = vbsize - size;
@@ -239,13 +253,14 @@ const Ring = (props: RingProps) => {
           onClick={() => onClick?.(point[0])}
           selected={point[0] === selectedPoint}
           key={point[0]}
+          sound={sound}
         />
       ))}
     </g>
   );
 };
 
-interface SVGPointProps {
+interface SVGPointProps extends HasSound {
   cx: number;
   cy: number;
   r: number;
@@ -257,7 +272,8 @@ interface SVGPointProps {
 
 const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [hovered, setHovered] = React.useState(false);
-  const { point, selected, ...rest } = props;
+  const { point, selected, onClick, sound: propsSound, ...rest } = props;
+  const sound = propsSound ?? false;
 
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
@@ -269,14 +285,26 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
 
   const pointStroke = selected ? "white" : undefined;
 
+  const [playHover] = useSound(hoverSound);
+  const [playClick] = useSound(clickSound);
+
   return (
     <g>
       <circle
         {...rest}
         stroke={pointStroke}
         fill={pointFill(point.occupancy)}
-        onMouseOver={() => setHovered(true)}
+        onMouseOver={() => {
+          // TODO: Should be informed by what kind of hover (empty valid, empty invalid, opponent, self, phase)
+          sound && playHover();
+          setHovered(true);
+        }}
         onMouseOut={() => setHovered(false)}
+        // TODO: Should be informed by what kind of click (empty valid, empty invalid, opponent, self, place, move)
+        onClick={() => {
+          sound && playClick();
+          onClick();
+        }}
       />
       {debug && (
         <text

@@ -12,7 +12,7 @@ import { palette } from "../../theme";
 
 import { useSound } from "use-sound";
 
-import clickSound from "../../sound/blip/6.mp3";
+import clickSound from "../../sound/blip/1.mp3";
 import hoverSound from "../../sound/blip/3.mp3";
 
 /** Extend this interface to allow your component to support optional sound */

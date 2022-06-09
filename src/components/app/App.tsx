@@ -185,6 +185,7 @@ export const App: React.FC = () => {
               state={gameState}
               player={"b"}
               updateGameState={updateGameState}
+              sound={!mute}
             />
           ) : (
             <label style={{ fontSize: "medium" }}>opponent is controlled</label>

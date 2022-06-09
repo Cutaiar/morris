@@ -47,7 +47,7 @@ export const getNextMove = (state: GameState): Action | undefined => {
 export const useOpponent = (
   state: GameState,
   player: Player,
-  updateGameState: React.Dispatch<Action>
+  onDecision: (action: Action) => void
 ): useOpponentReturn => {
   const opponentThinkingTime = 1000;
   const [status, setStatus] = React.useState<OpponentStatus>("waiting");
@@ -61,7 +61,7 @@ export const useOpponent = (
       timer = setTimeout(() => {
         const action = getNextMove(state);
         if (action) {
-          updateGameState(action);
+          onDecision(action);
           setStatus("waiting");
         }
       }, opponentThinkingTime);
@@ -73,7 +73,7 @@ export const useOpponent = (
         clearTimeout(timer);
       }
     };
-  }, [player, state, state.turn.player, updateGameState]);
+  }, [player, state, state.turn.player, onDecision]);
 
   return { status: status };
 };

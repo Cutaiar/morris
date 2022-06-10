@@ -12,8 +12,8 @@ import { palette } from "../../theme";
 
 import { useSound } from "use-sound";
 
-import clickSound from "../../sound/blip/1.mp3";
-import hoverSound from "../../sound/blip/3.mp3";
+import clickSound from "../../sound/octave-tap/tap-warm.mp3";
+import hoverSound from "../../sound/octave-tap/tap-toothy.mp3";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
@@ -288,6 +288,11 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [playHover] = useSound(hoverSound);
   const [playClick] = useSound(clickSound);
 
+  // Calc big r and small r for animation
+  const { r } = rest;
+  const br = 1.2 * r;
+  const sr = 0.8 * r;
+
   return (
     <g>
       <circle
@@ -302,10 +307,48 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         onMouseOut={() => setHovered(false)}
         // TODO: Should be informed by what kind of click (empty valid, empty invalid, opponent, self, place, move)
         onClick={() => {
-          sound && playClick();
           onClick();
         }}
-      />
+        onMouseDown={() => {
+          sound && playClick();
+        }}
+        onMouseUp={() => {
+          sound && playClick({ playbackRate: 1.5 });
+        }}
+      >
+        <animate
+          attributeName="r"
+          from={r}
+          to={br}
+          dur={"50ms"}
+          begin="mouseenter"
+          fill="freeze"
+        />
+        <animate
+          attributeName="r"
+          from={br}
+          to={r}
+          dur={"50ms"}
+          begin="mouseleave"
+          fill="freeze"
+        />
+        <animate
+          attributeName="r"
+          to={sr}
+          from={br}
+          dur={"50ms"}
+          begin="mousedown"
+          fill="freeze"
+        />
+        <animate
+          attributeName="r"
+          from={sr}
+          to={r}
+          dur={"50ms"}
+          begin="mouseup"
+          fill="freeze"
+        />
+      </circle>
       {debug && (
         <text
           x={props.cx}

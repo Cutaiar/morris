@@ -6,6 +6,7 @@ import {
   PointID,
   isValidSelection,
   Action,
+  Player,
 } from "../../hooks/useGameState";
 import { useDebug } from "../../hooks/useDebug";
 import { palette } from "../../theme";
@@ -30,6 +31,9 @@ export interface BoardProps extends HasSound {
 
   /** Callback for when a player makes a play using the board */
   onPlay: (play: Action) => void;
+
+  /** The player controlling the game, maybe this should be combined with gameState */
+  player?: Player;
 }
 
 const sizeDefault = 400;
@@ -55,7 +59,9 @@ export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
   const sound = props.sound ?? false;
-  const { onPlay, gameState } = props;
+  const { onPlay, gameState, player } = props;
+
+  const disabled = player !== gameState.turn.player;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
 
@@ -147,6 +153,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           points={ring.points}
           selectedPoint={selectedPoint}
           sound={sound}
+          disabled={disabled}
         />
       ))}
     </svg>
@@ -209,6 +216,7 @@ interface RingProps extends HasSound {
   points: [string, Point][]; // Points in the ring from top-left clockwise as object.entries
   onClick?: (pointID: PointID) => void;
   selectedPoint?: PointID;
+  disabled?: boolean;
 }
 
 /**
@@ -216,8 +224,16 @@ interface RingProps extends HasSound {
  */
 const Ring = (props: RingProps) => {
   const sound = props.sound ?? false;
-  const { size, vbsize, stroke, pointRadius, onClick, points, selectedPoint } =
-    props;
+  const {
+    size,
+    vbsize,
+    stroke,
+    pointRadius,
+    onClick,
+    points,
+    selectedPoint,
+    disabled,
+  } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
 
@@ -254,6 +270,7 @@ const Ring = (props: RingProps) => {
           selected={point[0] === selectedPoint}
           key={point[0]}
           sound={sound}
+          disabled={disabled}
         />
       ))}
     </g>
@@ -268,16 +285,25 @@ interface SVGPointProps extends HasSound {
   id: string;
   onClick: () => void;
   selected?: boolean;
+  disabled?: boolean;
 }
 
 const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [hovered, setHovered] = React.useState(false);
-  const { point, selected, onClick, sound: propsSound, ...rest } = props;
+  const {
+    point,
+    selected,
+    onClick,
+    sound: propsSound,
+    disabled,
+    ...rest
+  } = props;
   const sound = propsSound ?? false;
 
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
   const pointFill = (occupancy?: Occupancy) => {
+    if (disabled) return palette.neutralDark;
     if (hovered) return "white";
     if (!occupancy) return palette.neutral;
     return occupancy === "a" ? palette.primary : palette.secondary;
@@ -300,6 +326,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         stroke={pointStroke}
         fill={pointFill(point.occupancy)}
         onMouseOver={() => {
+          if (disabled) return;
           // TODO: Should be informed by what kind of hover (empty valid, empty invalid, opponent, self, phase)
           sound && playHover();
           setHovered(true);
@@ -307,12 +334,15 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         onMouseOut={() => setHovered(false)}
         // TODO: Should be informed by what kind of click (empty valid, empty invalid, opponent, self, place, move)
         onClick={() => {
+          if (disabled) return;
           onClick();
         }}
         onMouseDown={() => {
+          if (disabled) return;
           sound && playClick();
         }}
         onMouseUp={() => {
+          if (disabled) return;
           sound && playClick({ playbackRate: 1.5 });
         }}
       >

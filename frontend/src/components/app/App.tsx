@@ -3,7 +3,7 @@ import "./App.css";
 import { palette } from "../../theme";
 
 import { Board } from "../board";
-import { useGameState } from "../../hooks/useGameState";
+import { Player, useGameState } from "../../hooks/useGameState";
 import { RemainingMen } from "../RemainingMen/RemainingMen";
 
 import useWindowSize from "react-use/lib/useWindowSize";
@@ -15,12 +15,15 @@ import GithubCorner from "react-github-corner";
 import { useDebug } from "../../hooks/useDebug";
 import { useMount } from "react-use";
 import { Opponent } from "../opponent/opponent";
+import { useSocketGameState } from "../../hooks/useSocketGameState";
+import { MultiplayerPanel } from "../mutliplayer/multiplayerPanel";
 
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
 
 export const App: React.FC = () => {
-  const [gameState, updateGameState] = useGameState();
+  // const [gameState, updateGameState] = useGameState();
+  const [gameState, updateGameState, player] = useSocketGameState();
 
   const { width, height } = useWindowSize();
 
@@ -107,6 +110,7 @@ export const App: React.FC = () => {
             updateGameState(play);
           }}
           sound={!mute}
+          player={player}
         />
 
         <div className="Controls">
@@ -136,6 +140,27 @@ export const App: React.FC = () => {
             }}
           >
             <label>{"player: "}</label>
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: 10,
+                background:
+                  player === "a" ? palette.primary : palette.secondary,
+              }}
+            />
+            {gameState.turn.type === "remove" && <i>{" (to remove)"}</i>}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontSize: "medium",
+              gap: 10,
+            }}
+          >
+            <label>{"turn: "}</label>
             <div
               style={{
                 width: 20,
@@ -207,6 +232,7 @@ export const App: React.FC = () => {
             Reset
           </button>
         </div>
+        {/* <MultiplayerPanel /> */}
 
         {/* Show raw Game State for debug */}
         {debug && (

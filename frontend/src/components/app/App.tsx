@@ -1,31 +1,33 @@
 import React from "react";
+
+// Style
 import "./App.css";
 import { palette } from "../../theme";
 
-import { Board } from "../board";
+// State
 import { Player, useGameState } from "../../hooks/useGameState";
-import { RemainingMen } from "../RemainingMen/RemainingMen";
 
-import useWindowSize from "react-use/lib/useWindowSize";
-import Confetti from "react-confetti";
-import { confetti } from "../../theme/theme";
-
+// Components
+import { Board } from "../board";
+import { Opponent } from "../opponent/opponent";
+import { TopNav } from "../topnav/topnav";
+import { DebugGameState } from "../debug/debugGameState";
+import { WinnerModal } from "../winnerModal.tsx/winnerModal";
+import { PlayerCard } from "../playerCard/playerCard";
 import GithubCorner from "react-github-corner";
 
+// Hooks
 import { useDebug } from "../../hooks/useDebug";
 import { useMount } from "react-use";
-import { Opponent } from "../opponent/opponent";
 import { useSocketGameState } from "../../hooks/useSocketGameState";
-import { MultiplayerPanel } from "../mutliplayer/multiplayerPanel";
 
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
 
 export const App: React.FC = () => {
+  // TODO: Don't use online state all the time, just when online mode is true
   // const [gameState, updateGameState] = useGameState();
   const [gameState, updateGameState, player] = useSocketGameState();
-
-  const { width, height } = useWindowSize();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [debug, _, syncDebug] = useDebug();
@@ -34,65 +36,134 @@ export const App: React.FC = () => {
   // Whether the game is muted or not
   const [mute, setMute] = React.useState(false);
 
+  // If advanced controls are open or not
+  const [isAdvanced, setIsAdvanced] = React.useState(false);
+
   // Whether the opponent is controlled by the keyboard or not
   const [opponentControlled, setOpponentControlled] = React.useState(false);
 
   return (
     <>
-      {gameState.winner && (
-        <>
-          <Confetti
-            width={width}
-            height={height}
-            colors={
-              gameState.winner === "a" ? confetti.primary : confetti.secondary
-            }
-          />
-          <div
-            style={{
-              position: "absolute",
-              width: "100vw",
-              height: "100vh",
-              background: "transparent",
-              zIndex: 100000,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "column",
-                width: 800,
-                height: 200,
-                borderRadius: 10,
-                backgroundColor:
-                  gameState.winner === "a"
-                    ? palette.primary
-                    : palette.secondary,
-              }}
-              className="fade-in"
-            >
-              <h1>{`${gameState.winner} wins.`}</h1>
-              <button
-                style={{
-                  minWidth: 60,
-                  minHeight: 30,
-                  backgroundColor: palette.neutralLight,
-                  color: palette.neutralDark,
-                  borderRadius: 5,
-                  borderStyle: "none",
-                }}
-                onClick={() => updateGameState({ type: "reset" })}
+      <div className="App">
+        <TopNav />
+        <div className="Page">
+          <div className="Controls">
+            {/* TODO: These controls will be for the OOTB Opponent experience */}
+            {/* <button>Play AI</button>
+            <button>Play local</button>
+            <button>Play online</button> */}
+            <PlayerCard
+              player={player === "a" ? "b" : "a"}
+              remove={gameState.turn.type === "remove"}
+              turn={gameState.turn.player}
+              name="Opponent"
+              remainingMen={player ? gameState.remainingMen[player] : 0}
+            />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <input
+                id={"opponentControlled"}
+                type={"checkbox"}
+                checked={opponentControlled}
+                onChange={(e) => setOpponentControlled(e.target.checked)}
+              />
+              <label
+                style={{ fontSize: "medium" }}
+                htmlFor="opponentControlled"
               >
-                Play again
-              </button>
+                control opponent
+              </label>
             </div>
+            {!opponentControlled ? (
+              <Opponent
+                state={gameState}
+                player={"b"}
+                updateGameState={updateGameState}
+                sound={!mute}
+              />
+            ) : (
+              <label style={{ fontSize: "medium" }}>
+                opponent is controlled
+              </label>
+            )}
           </div>
-        </>
+
+          {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
+          <Board
+            gameState={gameState}
+            onPlay={(play) => {
+              updateGameState(play);
+            }}
+            sound={!mute}
+            player={player}
+          />
+
+          <div className="Controls">
+            <PlayerCard
+              player={player}
+              remove={gameState.turn.type === "remove"}
+              turn={gameState.turn.player}
+              name={"Me"}
+              remainingMen={player ? gameState.remainingMen[player] : 0}
+            />
+
+            <span
+              style={{ fontSize: "medium", textDecoration: "underline" }}
+              onClick={() => setIsAdvanced((prev) => !prev)}
+            >
+              Advanced
+            </span>
+            {isAdvanced && (
+              <div>
+                <label
+                  style={{ fontSize: "medium" }}
+                >{`phase: ${gameState.phase}`}</label>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    id={"mute"}
+                    type={"checkbox"}
+                    checked={mute}
+                    onChange={(e) => setMute(e.target.checked)}
+                  />
+                  <label style={{ fontSize: "medium" }} htmlFor="mute">
+                    mute
+                  </label>
+                  {/* TODO: Disable motion toggle */}
+                </div>
+
+                <button
+                  style={{
+                    minWidth: 60,
+                    minHeight: 30,
+                    backgroundColor: palette.primary,
+                    color: palette.neutralLight,
+                    borderRadius: 5,
+                    borderStyle: "none",
+                  }}
+                  onClick={() => updateGameState({ type: "reset" })}
+                >
+                  Reset
+                </button>
+                {/* Temporarily adding a slider to control the number of rings */}
+                {/* <Slider
+                  min={minRings}
+                  max={maxRings}
+                  value={ringCount}
+                  onChange={(e) => setRingCount(Number(e.target.value))}
+                  ringCount={ringCount}
+                /> */}
+              </div>
+            )}
+          </div>
+
+          {/* Show raw Game State for debug */}
+          {debug && <DebugGameState gameState={gameState} />}
+        </div>
+      </div>
+      {gameState.winner && (
+        <WinnerModal
+          onPlayAgain={() => updateGameState({ type: "reset" })}
+          winner={gameState.winner}
+        />
       )}
       <GithubCorner
         href="https://github.com/Cutaiar/morris"
@@ -102,161 +173,6 @@ export const App: React.FC = () => {
         direction="right"
         {...openInNewTab}
       />
-      <div className="App">
-        {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
-        <Board
-          gameState={gameState}
-          onPlay={(play) => {
-            updateGameState(play);
-          }}
-          sound={!mute}
-          player={player}
-        />
-
-        <div className="Controls">
-          {/* Temporarily adding a slider to control the number of rings */}
-          {/* <Slider
-      min={minRings}
-      max={maxRings}
-      value={ringCount}
-      onChange={(e) => setRingCount(Number(e.target.value))}
-      ringCount={ringCount}
-    /> */}
-
-          <label style={{ color: palette.neutral, fontSize: "larger" }}>
-            6 Man Morris
-          </label>
-
-          <label
-            style={{ fontSize: "medium" }}
-          >{`phase: ${gameState.phase}`}</label>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "medium",
-              gap: 10,
-            }}
-          >
-            <label>{"player: "}</label>
-            <div
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                background:
-                  player === "a" ? palette.primary : palette.secondary,
-              }}
-            />
-            {gameState.turn.type === "remove" && <i>{" (to remove)"}</i>}
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              fontSize: "medium",
-              gap: 10,
-            }}
-          >
-            <label>{"turn: "}</label>
-            <div
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: 10,
-                background:
-                  gameState.turn.player === "a"
-                    ? palette.primary
-                    : palette.secondary,
-              }}
-            />
-            {gameState.turn.type === "remove" && <i>{" (to remove)"}</i>}
-          </div>
-
-          <label style={{ fontSize: "medium" }}>remaining men:</label>
-          <RemainingMen
-            remainingMenCount={gameState.remainingMen.a}
-            player={"a"}
-          />
-          <RemainingMen
-            remainingMenCount={gameState.remainingMen.b}
-            player={"b"}
-          />
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <input
-              id={"mute"}
-              type={"checkbox"}
-              checked={mute}
-              onChange={(e) => setMute(e.target.checked)}
-            />
-            <label style={{ fontSize: "medium" }} htmlFor="mute">
-              mute
-            </label>
-          </div>
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <input
-              id={"opponentControlled"}
-              type={"checkbox"}
-              checked={opponentControlled}
-              onChange={(e) => setOpponentControlled(e.target.checked)}
-            />
-            <label style={{ fontSize: "medium" }} htmlFor="opponentControlled">
-              control opponent
-            </label>
-          </div>
-          {!opponentControlled ? (
-            <Opponent
-              state={gameState}
-              player={"b"}
-              updateGameState={updateGameState}
-              sound={!mute}
-            />
-          ) : (
-            <label style={{ fontSize: "medium" }}>opponent is controlled</label>
-          )}
-
-          {/* Temporarily add reset button for testing */}
-          <button
-            style={{
-              minWidth: 60,
-              minHeight: 30,
-              backgroundColor: palette.primary,
-              color: palette.neutralLight,
-              borderRadius: 5,
-              borderStyle: "none",
-            }}
-            onClick={() => updateGameState({ type: "reset" })}
-          >
-            Reset
-          </button>
-        </div>
-        {/* <MultiplayerPanel /> */}
-
-        {/* Show raw Game State for debug */}
-        {debug && (
-          <div
-            style={{
-              height: "100%",
-              overflow: "auto",
-              position: "absolute",
-              top: 0,
-              left: 20,
-            }}
-          >
-            <label>Game State</label>
-            <p
-              style={{
-                fontSize: "small",
-                whiteSpace: "pre-wrap",
-              }}
-            >
-              {JSON.stringify(gameState, null, 4)}
-            </p>
-          </div>
-        )}
-      </div>
     </>
   );
 };

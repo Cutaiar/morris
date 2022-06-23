@@ -28,3 +28,18 @@ export const confetti = {
     "#d2e9ff",
   ],
 };
+
+export const fontSizes = {
+  tiny: "10px",
+  small: "12px",
+  medium: "14px",
+  large: "18px",
+  hero: "48px",
+};
+
+export const fontWeights = {
+  thin: 200,
+  regular: 400,
+  semibold: 600,
+  bold: 800,
+};

@@ -6,7 +6,6 @@ import {
   PointID,
   isValidSelection,
   Action,
-  Player,
 } from "../../hooks/useGameState";
 import { useDebug } from "../../hooks/useDebug";
 import { palette } from "../../theme";
@@ -33,7 +32,7 @@ export interface BoardProps extends HasSound {
   onPlay: (play: Action) => void;
 
   /** The player controlling the game, maybe this should be combined with gameState */
-  player?: Player;
+  disabled?: boolean;
 }
 
 const sizeDefault = 400;
@@ -59,9 +58,7 @@ export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
   const size = props.size ?? sizeDefault;
   const sound = props.sound ?? false;
-  const { onPlay, gameState, player } = props;
-
-  const disabled = player !== gameState.turn.player;
+  const { onPlay, gameState, disabled } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
 

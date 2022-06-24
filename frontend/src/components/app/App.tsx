@@ -5,7 +5,7 @@ import "./App.css";
 import { palette } from "../../theme";
 
 // State
-import { Player, useGameState } from "../../hooks/useGameState";
+// import { Player, useGameState } from "../../hooks/useGameState";
 
 // Components
 import {
@@ -16,11 +16,13 @@ import {
   TopNav,
   Opponent,
   Board,
-} from "components";
+  OpponentSelector,
+  OpponentType,
+} from "../../components";
 import GithubCorner from "react-github-corner";
 
 // Hooks
-import { useDebug, useSocketGameState } from "hooks";
+import { useDebug, useSocketGameState } from "../../hooks";
 import { useMount } from "react-use";
 
 // TODO: Move to utils or something
@@ -42,7 +44,9 @@ export const App: React.FC = () => {
   const [isAdvanced, setIsAdvanced] = React.useState(false);
 
   // Whether the opponent is controlled by the keyboard or not
-  const [opponentControlled, setOpponentControlled] = React.useState(false);
+  const [opponentType, setOpponentType] = React.useState<
+    OpponentType | undefined
+  >(undefined);
 
   return (
     <>
@@ -50,42 +54,26 @@ export const App: React.FC = () => {
         <TopNav />
         <div className="Page">
           <div className="Controls">
-            {/* TODO: These controls will be for the OOTB Opponent experience */}
-            {/* <button>Play AI</button>
-            <button>Play local</button>
-            <button>Play online</button> */}
-            <PlayerCard
-              player={player === "a" ? "b" : "a"}
-              remove={gameState.turn.type === "remove"}
-              turn={gameState.turn.player}
-              name="Opponent"
-              remainingMen={player ? gameState.remainingMen[player] : 0}
-            />
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <input
-                id={"opponentControlled"}
-                type={"checkbox"}
-                checked={opponentControlled}
-                onChange={(e) => setOpponentControlled(e.target.checked)}
+            {!opponentType && <OpponentSelector onDecision={setOpponentType} />}
+            {opponentType && (
+              <PlayerCard
+                player={player === "a" ? "b" : "a"}
+                remove={gameState.turn.type === "remove"}
+                turn={gameState.turn.player}
+                name="Opponent"
+                remainingMen={player ? gameState.remainingMen[player] : 0}
               />
-              <label
-                style={{ fontSize: "medium" }}
-                htmlFor="opponentControlled"
-              >
-                control opponent
-              </label>
-            </div>
-            {!opponentControlled ? (
+            )}
+            {opponentType === "ai" && (
               <Opponent
                 state={gameState}
                 player={"b"}
                 updateGameState={updateGameState}
                 sound={!mute}
               />
-            ) : (
-              <label style={{ fontSize: "medium" }}>
-                opponent is controlled
-              </label>
+            )}
+            {opponentType === "local" && (
+              <label style={{ fontSize: "medium" }}>opponent is local</label>
             )}
           </div>
 
@@ -96,7 +84,10 @@ export const App: React.FC = () => {
               updateGameState(play);
             }}
             sound={!mute}
-            player={player}
+            disabled={
+              // Disable the board if the opponent is online or ai and it's not their turn
+              opponentType !== "local" && player !== gameState.turn.player
+            }
           />
 
           <div className="Controls">
@@ -116,6 +107,22 @@ export const App: React.FC = () => {
             </span>
             {isAdvanced && (
               <div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    id={"opponentControlled"}
+                    type={"checkbox"}
+                    checked={opponentType === "local"}
+                    onChange={(e) =>
+                      setOpponentType(e.target.checked ? "local" : "ai")
+                    }
+                  />
+                  <label
+                    style={{ fontSize: "medium" }}
+                    htmlFor="opponentControlled"
+                  >
+                    control opponent
+                  </label>
+                </div>
                 <label
                   style={{ fontSize: "medium" }}
                 >{`phase: ${gameState.phase}`}</label>

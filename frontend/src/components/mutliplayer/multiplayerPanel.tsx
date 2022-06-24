@@ -1,7 +1,7 @@
 import React from "react";
 import { useSocket } from "../../context";
 
-export const MultiplayerPanel = (props) => {
+export const MultiplayerPanel = () => {
   const { socket } = useSocket();
 
   const [roomId, setRoomId] = React.useState<string>();

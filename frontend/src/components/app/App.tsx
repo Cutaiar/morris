@@ -8,18 +8,20 @@ import { palette } from "../../theme";
 import { Player, useGameState } from "../../hooks/useGameState";
 
 // Components
-import { Board } from "../board";
-import { Opponent } from "../opponent/opponent";
-import { TopNav } from "../topnav/topnav";
-import { DebugGameState } from "../debug/debugGameState";
-import { WinnerModal } from "../winnerModal.tsx/winnerModal";
-import { PlayerCard } from "../playerCard/playerCard";
+import {
+  Button,
+  PlayerCard,
+  WinnerModal,
+  DebugGameState,
+  TopNav,
+  Opponent,
+  Board,
+} from "components";
 import GithubCorner from "react-github-corner";
 
 // Hooks
-import { useDebug } from "../../hooks/useDebug";
+import { useDebug, useSocketGameState } from "hooks";
 import { useMount } from "react-use";
-import { useSocketGameState } from "../../hooks/useSocketGameState";
 
 // TODO: Move to utils or something
 const openInNewTab = { target: "_blank", rel: "noopener noreferrer" };
@@ -130,19 +132,9 @@ export const App: React.FC = () => {
                   {/* TODO: Disable motion toggle */}
                 </div>
 
-                <button
-                  style={{
-                    minWidth: 60,
-                    minHeight: 30,
-                    backgroundColor: palette.primary,
-                    color: palette.neutralLight,
-                    borderRadius: 5,
-                    borderStyle: "none",
-                  }}
-                  onClick={() => updateGameState({ type: "reset" })}
-                >
+                <Button onClick={() => updateGameState({ type: "reset" })}>
                   Reset
-                </button>
+                </Button>
                 {/* Temporarily adding a slider to control the number of rings */}
                 {/* <Slider
                   min={minRings}

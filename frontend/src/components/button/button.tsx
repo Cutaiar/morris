@@ -1,6 +1,6 @@
 import React from "react";
 import { palette } from "../../theme";
-
+import "./button.css";
 export interface ButtonProps
   extends React.PropsWithChildren<{
     onClick?: () => void;
@@ -16,6 +16,7 @@ export const Button = (props: ButtonProps) => {
   return (
     <button
       disabled={disabled}
+      className={"button-component"}
       style={{
         minWidth: 60,
         minHeight: 30,

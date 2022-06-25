@@ -20,6 +20,9 @@ import {
 import { useDebug, usePrefs, useSocketGameState } from "../../hooks";
 import { useMount } from "react-use";
 
+// Style
+import { palette } from "../../theme";
+
 export const Game = () => {
   // TODO: Don't use online state all the time, just when online mode is true
   // const [gameState, updateGameState] = useGameState();
@@ -65,7 +68,9 @@ export const Game = () => {
             />
           )}
           {opponentType === "local" && (
-            <label style={{ fontSize: "medium" }}>opponent is local</label>
+            <label style={{ fontSize: "medium", color: palette.neutral }}>
+              opponent is local
+            </label>
           )}
         </div>
 
@@ -92,13 +97,20 @@ export const Game = () => {
           />
 
           <span
-            style={{ fontSize: "medium", textDecoration: "underline" }}
+            style={{
+              fontSize: "medium",
+              textDecoration: "underline",
+              color: palette.neutral,
+            }}
             onClick={() => setIsAdvanced((prev) => !prev)}
           >
             Advanced
           </span>
           {isAdvanced && (
-            <div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <label
+                style={{ fontSize: "medium" }}
+              >{`phase: ${gameState.phase}`}</label>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
                   id={"opponentControlled"}
@@ -115,9 +127,6 @@ export const Game = () => {
                   control opponent
                 </label>
               </div>
-              <label
-                style={{ fontSize: "medium" }}
-              >{`phase: ${gameState.phase}`}</label>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
                   id={"mute"}

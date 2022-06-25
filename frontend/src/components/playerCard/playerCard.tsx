@@ -48,7 +48,9 @@ export const PlayerCard = (props: PlayerCardProps) => {
         />
         {isRemove && <i>{" (to remove)"}</i>}
       </div>
-      <label style={{ fontSize: "medium" }}>remaining men:</label>
+      <label style={{ fontSize: "medium", color: palette.neutral }}>
+        remaining men:
+      </label>
       {/* TODO: Shimmer */}
       {player && (
         <RemainingMen remainingMenCount={remainingMen} player={player} />

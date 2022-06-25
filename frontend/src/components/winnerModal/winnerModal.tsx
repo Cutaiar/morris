@@ -1,15 +1,19 @@
 import React from "react";
+
 import { Player } from "../../hooks/useGameState";
-import { confetti, palette } from "../../theme/theme";
-import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 import "./winnerModal.css";
-import { useWindowSize } from "react-use";
+import { confetti, palette } from "../../theme/theme";
+
+import Confetti from "react-confetti";
+import { Button } from "../../components";
 
 export interface WinnerModalProps {
   onPlayAgain: () => void;
   winner: Player;
 }
+
 export const WinnerModal = (props: WinnerModalProps) => {
   const { onPlayAgain, winner } = props;
 
@@ -25,6 +29,8 @@ export const WinnerModal = (props: WinnerModalProps) => {
       <div
         style={{
           position: "absolute",
+          top: 0,
+          left: 0,
           width: "100vw",
           height: "100vh",
           background: "transparent",
@@ -49,19 +55,7 @@ export const WinnerModal = (props: WinnerModalProps) => {
           className="fade-in"
         >
           <h1>{`${winner} wins.`}</h1>
-          <button
-            style={{
-              minWidth: 60,
-              minHeight: 30,
-              backgroundColor: palette.neutralLight,
-              color: palette.neutralDark,
-              borderRadius: 5,
-              borderStyle: "none",
-            }}
-            onClick={onPlayAgain}
-          >
-            Play again
-          </button>
+          <Button onClick={onPlayAgain}>Play again</Button>
         </div>
       </div>
     </>

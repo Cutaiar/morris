@@ -11,15 +11,19 @@ export interface OpponentSelectorProps {
 export const OpponentSelector = (props: OpponentSelectorProps) => {
   const { onDecision } = props;
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <h1 style={{ fontSize: "large", color: palette.neutralLight }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <h1 style={{ fontSize: "large", color: palette.neutral, margin: 0 }}>
         Choose your opponent
       </h1>
       <div style={{ display: "flex", gap: 20 }}>
-        <Button onClick={() => onDecision?.("ai")}>Play AI</Button>
-        <Button onClick={() => onDecision?.("local")}>Play local</Button>
+        <Button primary onClick={() => onDecision?.("ai")}>
+          Play AI
+        </Button>
+        <Button primary onClick={() => onDecision?.("local")}>
+          Play local
+        </Button>
         {/* TODO: enable online mode nad enable this button */}
-        <Button onClick={() => onDecision?.("online")} disabled>
+        <Button primary onClick={() => onDecision?.("online")} disabled>
           Play online
         </Button>
       </div>

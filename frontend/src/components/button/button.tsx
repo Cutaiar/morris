@@ -5,13 +5,20 @@ export interface ButtonProps
   extends React.PropsWithChildren<{
     onClick?: () => void;
     disabled?: boolean;
+    primary?: boolean;
   }> {}
 
 export const Button = (props: ButtonProps) => {
-  const { onClick, disabled } = props;
+  const { onClick, disabled, primary } = props;
 
   // TODO: Better support for disabled
-  const bgColor = disabled ? "grey" : palette.primary;
+  const bgColor = disabled
+    ? "grey"
+    : primary
+    ? palette.primary
+    : palette.neutralLight;
+
+  const textColor = primary ? palette.neutralLight : palette.neutralDark;
 
   return (
     <button
@@ -21,7 +28,7 @@ export const Button = (props: ButtonProps) => {
         minWidth: 60,
         minHeight: 30,
         backgroundColor: bgColor,
-        color: palette.neutralLight,
+        color: textColor,
         borderRadius: 5,
         borderStyle: "none",
       }}

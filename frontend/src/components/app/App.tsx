@@ -1,7 +1,7 @@
 import React from "react";
 
 // Style
-import "./App.css";
+import "./app.css";
 import { palette } from "../../theme";
 
 // State
@@ -18,7 +18,7 @@ import {
   Board,
   OpponentSelector,
   OpponentType,
-} from "../../components";
+} from "..";
 import GithubCorner from "react-github-corner";
 
 // Hooks
@@ -175,5 +175,3 @@ export const App: React.FC = () => {
     </>
   );
 };
-
-export default App;

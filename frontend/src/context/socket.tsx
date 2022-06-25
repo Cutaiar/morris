@@ -27,7 +27,7 @@ export const useSocket = () => {
  * Connects to a socket using socket.io
  */
 export const SocketProvider = (props: React.PropsWithChildren<{}>) => {
-  const [socket, _] = React.useState(() => io(uri));
+  const [socket] = React.useState(() => io(uri));
 
   return (
     <SocketContext.Provider value={{ socket: socket }}>

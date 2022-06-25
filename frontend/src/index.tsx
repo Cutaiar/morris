@@ -1,13 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
-import { App } from "./components";
-import { ErrorFallback } from "./components/error";
+import "./index.css";
+
 import { ErrorBoundary } from "react-error-boundary";
-import { DebugProvider } from "./hooks/useDebug";
-import { SocketProvider } from "./context";
+import { App, ErrorFallback } from "./components";
+import { DebugProvider } from "./hooks";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -21,10 +20,7 @@ root.render(
       FallbackComponent={ErrorFallback}
       onReset={() => window.location.reload()}
     >
-      {/* Maybe we don't want to have a socket provider here, we only want to if this is multiplayer */}
-      <SocketProvider>
-        <App />
-      </SocketProvider>
+      <App />
     </ErrorBoundary>
   </DebugProvider>
   // </React.StrictMode>

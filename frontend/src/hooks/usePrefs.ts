@@ -6,7 +6,7 @@ interface Prefs {
   name?: string;
 }
 
-const defaultPrefs = {
+export const defaultPrefs = {
   mute: false,
   motion: true,
   name: "Dillon",

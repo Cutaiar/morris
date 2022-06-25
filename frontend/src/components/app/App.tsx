@@ -9,7 +9,7 @@ import GithubCorner from "react-github-corner";
 import { Game } from "../../components";
 
 // Hooks
-import { PrefsProvider } from "../../hooks";
+import { defaultPrefs, PrefsProvider } from "../../hooks";
 
 // Context;
 import { SocketProvider } from "../../context";
@@ -19,14 +19,15 @@ import { openInNewTabProps } from "../../util";
 
 export const App: React.FC = () => {
   return (
-    <PrefsProvider>
+    // TODO: get initial prefs from the cache and cache any updates
+    <PrefsProvider initialValue={defaultPrefs}>
       <SocketProvider>
         <Game />
         <GithubCorner
           href="https://github.com/Cutaiar/morris"
           bannerColor={palette.neutral}
           octoColor={palette.background}
-          size={80}
+          size={85}
           direction="right"
           {...openInNewTabProps}
         />

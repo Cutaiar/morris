@@ -39,6 +39,7 @@ export const Game = () => {
   const [prefs, setPref] = usePrefs();
   const mute = prefs.mute;
   const setMute = (mute: boolean) => setPref("mute", mute);
+  const name = prefs.name ?? "Me";
 
   return (
     <div className="App">
@@ -86,7 +87,7 @@ export const Game = () => {
             player={player}
             remove={gameState.turn.type === "remove"}
             turn={gameState.turn.player}
-            name={"Me"}
+            name={name}
             remainingMen={player ? gameState.remainingMen[player] : 0}
           />
 

@@ -1,8 +1,5 @@
 import React from "react";
 
-// State
-// import { Player, useGameState } from "../../hooks/useGameState";
-
 // Components
 import {
   Button,
@@ -17,16 +14,26 @@ import {
 } from "..";
 
 // Hooks
+import { useGameState } from "../../hooks/useGameState";
 import { useDebug, usePrefs, useSocketGameState } from "../../hooks";
 import { useMount } from "react-use";
 
 // Style
 import { palette } from "../../theme";
 
+// Context
+import { useSocket } from "../../context";
+
 export const Game = () => {
-  // TODO: Don't use online state all the time, just when online mode is true
-  // const [gameState, updateGameState] = useGameState();
-  const [gameState, updateGameState, player] = useSocketGameState();
+  // TODO: Figure out how to switch between online state and non-online state
+  const [socketGameState, updateSocketGameState, playerFromSocket] =
+    useSocketGameState();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { socket, connect } = useSocket();
+
+  const [localGameState, updateLocalGameState] = useGameState();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [debug, _, syncDebug] = useDebug();
   useMount(() => syncDebug());
@@ -43,6 +50,26 @@ export const Game = () => {
   const mute = prefs.mute;
   const setMute = (mute: boolean) => setPref("mute", mute);
   const name = prefs.name ?? "Me";
+
+  // Online related construction
+  // - tell socket context to connect
+  // - TODO: Somehow use networked game state rather than local game state (just keep both for now)
+  // - set the player when the player event comes back
+  const player = opponentType === "online" ? playerFromSocket : "a";
+  const gameState =
+    opponentType === "online" ? socketGameState : localGameState;
+  const updateGameState =
+    opponentType === "online" ? updateSocketGameState : updateLocalGameState;
+
+  // If the user selects online opponent, connect
+  const [connected, setConnected] = React.useState(false); // TODO: base connected off event from server
+  React.useEffect(() => {
+    if (!connected && opponentType === "online") {
+      console.log("connecting");
+      connect();
+      setConnected(true);
+    }
+  }, [opponentType, connect, connected]);
 
   return (
     <div className="App">

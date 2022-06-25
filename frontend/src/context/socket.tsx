@@ -5,7 +5,8 @@ import { io, Socket } from "socket.io-client";
 const uri = "http://localhost:1337";
 
 interface SocketContextValue {
-  socket: Socket;
+  socket?: Socket;
+  connect: () => void;
 }
 
 const SocketContext = React.createContext<SocketContextValue | undefined>(
@@ -27,10 +28,12 @@ export const useSocket = () => {
  * Connects to a socket using socket.io
  */
 export const SocketProvider = (props: React.PropsWithChildren<{}>) => {
-  const [socket] = React.useState(() => io(uri));
+  const [socket, setSocket] = React.useState<Socket | undefined>();
+
+  const connect = () => setSocket(io(uri));
 
   return (
-    <SocketContext.Provider value={{ socket: socket }}>
+    <SocketContext.Provider value={{ socket: socket, connect }}>
       {props.children}
     </SocketContext.Provider>
   );

@@ -9,7 +9,7 @@ export const MultiplayerPanel = () => {
   const [typingRoomId, setTypingRoomId] = React.useState(false);
 
   React.useEffect(() => {
-    socket.on("joined", (room) => {
+    socket?.on("joined", (room) => {
       console.log("joined: " + room);
       setRoomId(room);
     });
@@ -24,7 +24,7 @@ export const MultiplayerPanel = () => {
           <button
             onClick={() => {
               const id = randomRoomId();
-              socket.emit("createRoom", id);
+              socket?.emit("createRoom", id);
             }}
           >
             Create Room
@@ -37,7 +37,7 @@ export const MultiplayerPanel = () => {
                 value={roomToJoin}
                 onChange={(e) => setRoomToJoin(e.target.value)}
               ></input>
-              <button onClick={() => socket.emit("join", roomToJoin)}>
+              <button onClick={() => socket?.emit("join", roomToJoin)}>
                 Join Room
               </button>
             </>

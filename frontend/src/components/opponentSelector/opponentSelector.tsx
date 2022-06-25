@@ -22,8 +22,7 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
         <Button primary onClick={() => onDecision?.("local")}>
           Play local
         </Button>
-        {/* TODO: enable online mode nad enable this button */}
-        <Button primary onClick={() => onDecision?.("online")} disabled>
+        <Button primary onClick={() => onDecision?.("online")}>
           Play online
         </Button>
       </div>

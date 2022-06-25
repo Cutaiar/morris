@@ -1,5 +1,4 @@
 import React from "react";
-import { useMount } from "react-use";
 import { useSocket } from "../context";
 import { Action, GameState, Player, useGameState } from "./useGameState";
 
@@ -14,20 +13,22 @@ export const useSocketGameState = (): [
 
   const socketUpdateGameState = (action: Action) => {
     console.log("emitting dispatch");
-    socket.emit("dispatch", action);
+    socket?.emit("dispatch", action);
   };
 
-  useMount(() => {
-    socket.on("player", (player) => {
-      console.log("connected");
-      setPlayer(player);
-    });
+  React.useEffect(() => {
+    if (socket) {
+      socket.on("player", (player) => {
+        console.log("connected");
+        setPlayer(player);
+      });
 
-    socket.on("dispatch", (action) => {
-      console.log("got dispatch");
-      updateGameState(action);
-    });
-  });
+      socket.on("dispatch", (action) => {
+        console.log("got dispatch");
+        updateGameState(action);
+      });
+    }
+  }, [socket, updateGameState]);
 
   return [gameState, socketUpdateGameState, player];
 };

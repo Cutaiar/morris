@@ -1,15 +1,11 @@
 import React from "react";
 
-import { palette } from "../../theme";
-
 import "./loader.css";
 
 export interface LoaderProps
-  extends Pick<React.HTMLAttributes<HTMLDivElement>, "style" | "className"> {
-  color?: string;
-}
+  extends Pick<React.HTMLAttributes<HTMLDivElement>, "style" | "className"> {}
 export const Loader = (props: LoaderProps) => {
-  const { className, color } = props;
+  const { className } = props;
   const style = {
     width: 30,
     height: 30,

@@ -1,15 +1,19 @@
 import React from "react";
+
 import { palette } from "../../theme";
 import "./button.css";
+
+import { Loader } from "../../components";
 export interface ButtonProps
   extends React.PropsWithChildren<{
     onClick?: () => void;
     disabled?: boolean;
     primary?: boolean;
+    loading?: boolean;
   }> {}
 
 export const Button = (props: ButtonProps) => {
-  const { onClick, disabled, primary } = props;
+  const { onClick, disabled, primary, loading } = props;
 
   // TODO: Better support for disabled
   const bgColor = disabled
@@ -31,10 +35,14 @@ export const Button = (props: ButtonProps) => {
         color: textColor,
         borderRadius: 5,
         borderStyle: "none",
+        padding: 8,
       }}
       onClick={onClick}
     >
-      {props.children}
+      <div style={{ display: "flex", gap: 8 }}>
+        {props.children}
+        {loading && <Loader />}
+      </div>
     </button>
   );
 };

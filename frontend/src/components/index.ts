@@ -1,4 +1,5 @@
 export { Button } from "./button/button";
+export { Loader } from "./loader/loader";
 
 export { App } from "./app/app";
 export { Game } from "./game/game";

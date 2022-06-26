@@ -11,28 +11,32 @@ import {
   Board,
   OpponentSelector,
   OpponentType,
+  Loader,
 } from "..";
 
 // Hooks
-import { useGameState } from "../../hooks/useGameState";
-import { useDebug, usePrefs, useSocketGameState } from "../../hooks";
+import {
+  useDebug,
+  useMultiplayer,
+  usePrefs,
+  useSocketGameState,
+  useGameState,
+} from "../../hooks";
 import { useMount } from "react-use";
 
 // Style
 import { palette } from "../../theme";
 
-// Context
-import { useSocket } from "../../context";
+// TODO these should import from somewhere else
+import { Player } from "../../hooks/useGameState";
 
 export const Game = () => {
   // TODO: Figure out how to switch between online state and non-online state
-  const [socketGameState, updateSocketGameState, playerFromSocket] =
-    useSocketGameState();
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { socket, connect } = useSocket();
-
+  const [socketGameState, updateSocketGameState] = useSocketGameState();
   const [localGameState, updateLocalGameState] = useGameState();
+
+  // Get multiplayer functionalities
+  const [connect] = useMultiplayer();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [debug, _, syncDebug] = useDebug();
@@ -46,6 +50,8 @@ export const Game = () => {
     OpponentType | undefined
   >(undefined);
 
+  const [player, setPlayer] = React.useState<Player | undefined>(undefined);
+
   const [prefs, setPref] = usePrefs();
   const mute = prefs.mute;
   const setMute = (mute: boolean) => setPref("mute", mute);
@@ -55,28 +61,38 @@ export const Game = () => {
   // - tell socket context to connect
   // - TODO: Somehow use networked game state rather than local game state (just keep both for now)
   // - set the player when the player event comes back
-  const player = opponentType === "online" ? playerFromSocket : "a";
+  // const player = opponentType === "online" ? playerFromSocket : "a";
   const gameState =
     opponentType === "online" ? socketGameState : localGameState;
   const updateGameState =
     opponentType === "online" ? updateSocketGameState : updateLocalGameState;
 
-  // If the user selects online opponent, connect
-  const [connected, setConnected] = React.useState(false); // TODO: base connected off event from server
-  React.useEffect(() => {
-    if (!connected && opponentType === "online") {
-      console.log("connecting");
-      connect();
-      setConnected(true);
+  const [connecting, setConnecting] = React.useState(false);
+  const handleOpponentSelected = async (type: OpponentType) => {
+    if (type === "online") {
+      setOpponentType(type);
+      if (!connecting) {
+        console.log("connecting");
+        setConnecting(true);
+        const player = await connect();
+        setPlayer(player);
+        setConnecting(false);
+        return;
+      }
+      return;
     }
-  }, [opponentType, connect, connected]);
+    setOpponentType(type);
+    setPlayer("a");
+  };
 
   return (
     <div className="App">
       <TopNav />
       <div className="Page">
         <div className="Controls">
-          {!opponentType && <OpponentSelector onDecision={setOpponentType} />}
+          {!opponentType && (
+            <OpponentSelector onDecision={handleOpponentSelected} />
+          )}
           {opponentType && (
             <PlayerCard
               player={player === "a" ? "b" : "a"}
@@ -86,6 +102,7 @@ export const Game = () => {
               remainingMen={player ? gameState.remainingMen[player] : 0}
             />
           )}
+          {connecting && <Loader />}
           {opponentType === "ai" && (
             <Opponent
               state={gameState}

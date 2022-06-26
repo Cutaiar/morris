@@ -1,15 +1,17 @@
 import React from "react";
 import { useSocket } from "../context";
-import { Action, GameState, Player, useGameState } from "./useGameState";
+import { Action, GameState, useGameState } from "./useGameState";
 
-export const useSocketGameState = (): [
-  GameState,
-  React.Dispatch<Action>,
-  Player | undefined
-] => {
+/**
+ * Exactly the same as useGameState, but will route dispatches through the socket context,
+ * emitting them and then listening for their echo before dispatching the action to local state.
+ * This way, players connected to the server get each others dispatches.
+ *
+ * Note: Must be used in a `SocketProvider`.
+ */
+export const useSocketGameState = (): [GameState, React.Dispatch<Action>] => {
   const [gameState, updateGameState] = useGameState();
-  const [player, setPlayer] = React.useState<Player | undefined>();
-  const { socket } = useSocket();
+  const [socket] = useSocket();
 
   const socketUpdateGameState = (action: Action) => {
     console.log("emitting dispatch");
@@ -18,17 +20,12 @@ export const useSocketGameState = (): [
 
   React.useEffect(() => {
     if (socket) {
-      socket.on("player", (player) => {
-        console.log("connected");
-        setPlayer(player);
-      });
-
       socket.on("dispatch", (action) => {
-        console.log("got dispatch");
+        console.log("received dispatch from server");
         updateGameState(action);
       });
     }
   }, [socket, updateGameState]);
 
-  return [gameState, socketUpdateGameState, player];
+  return [gameState, socketUpdateGameState];
 };

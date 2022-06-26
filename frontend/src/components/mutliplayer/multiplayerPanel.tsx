@@ -2,7 +2,7 @@ import React from "react";
 import { useSocket } from "../../context";
 
 export const MultiplayerPanel = () => {
-  const { socket } = useSocket();
+  const [socket] = useSocket();
 
   const [roomId, setRoomId] = React.useState<string>();
   const [roomToJoin, setRoomToJoin] = React.useState<string>();

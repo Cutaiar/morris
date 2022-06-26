@@ -6,7 +6,7 @@ const uri = "http://localhost:1337";
 
 interface SocketContextValue {
   socket?: Socket;
-  connect: () => void;
+  connect: () => Socket;
 }
 
 const SocketContext = React.createContext<SocketContextValue | undefined>(
@@ -16,12 +16,12 @@ const SocketContext = React.createContext<SocketContextValue | undefined>(
 /**
  * Provides access to the socket object produced when the SocketProvider connected
  */
-export const useSocket = () => {
+export const useSocket = (): [Socket | undefined, () => Socket] => {
   const sc = React.useContext(SocketContext);
   if (!sc) {
     throw new Error("No SocketProvider found when calling useSocket");
   }
-  return sc;
+  return [sc.socket, sc.connect];
 };
 
 /**
@@ -30,7 +30,11 @@ export const useSocket = () => {
 export const SocketProvider = (props: React.PropsWithChildren<{}>) => {
   const [socket, setSocket] = React.useState<Socket | undefined>();
 
-  const connect = () => setSocket(io(uri));
+  const connect = () => {
+    const socket = io(uri);
+    setSocket(socket);
+    return socket;
+  };
 
   return (
     <SocketContext.Provider value={{ socket: socket, connect }}>

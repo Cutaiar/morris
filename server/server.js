@@ -11,28 +11,27 @@ const io = new Server(httpServer, {
 });
 
 const players = { a: null, b: null };
-let player = "a";
-
-function reset() {
-  // todo dispatch reset action
-}
 
 /**
  * When a player connects to the server, we store them in `players`.
  * The first player to connect is a, second is b.
  *
  * We then emit the connected event, letting the player know if they are a or b.
+ * Emit an opponentConnected event to let the other player know when they have an opponent
  */
 io.on("connection", function (socket) {
   // TODO player should tell us who they are
-  console.log("player connected");
 
   if (players["a"] == null) {
     players["a"] = socket;
+    console.log("a connected");
     socket.emit("connected", "a");
   } else if (players["b"] == null) {
     players["b"] = socket;
+    console.log("b connected");
     socket.emit("connected", "b");
+    socket.emit("opponentConnected"); // Tell b that a is already connected
+    players.a.emit("opponentConnected"); // Tell a that b connected
   } else {
     socket.disconnect();
   }
@@ -84,7 +83,6 @@ io.on("connection", function (socket) {
   });
 });
 
-reset();
 const port = 1337;
 httpServer.listen(port);
 console.log("Listening on port " + port + "...");

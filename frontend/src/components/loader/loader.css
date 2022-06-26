@@ -5,9 +5,9 @@
 
 .loading::after {
   content: "";
-  width: 20px;
-  height: 20px;
-  border: 3px solid #dddddd;
+  width: 15px;
+  height: 15px;
+  border: 2px solid grey; /* palette.neutral*/
   border-top-color: #d2042d; /* palette.primary */
   border-radius: 50%;
   animation: loading 1s ease infinite;

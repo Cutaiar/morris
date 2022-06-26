@@ -36,7 +36,10 @@ export const Game = () => {
   const [localGameState, updateLocalGameState] = useGameState();
 
   // Get multiplayer functionalities
-  const [connect] = useMultiplayer();
+  const [connect] = useMultiplayer(() => {
+    console.log("opponent connected");
+    setOpponent(player === "a" ? "b" : "a");
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [debug, _, syncDebug] = useDebug();
@@ -51,6 +54,7 @@ export const Game = () => {
   >(undefined);
 
   const [player, setPlayer] = React.useState<Player | undefined>(undefined);
+  const [opponent, setOpponent] = React.useState<Player | undefined>(undefined);
 
   const [prefs, setPref] = usePrefs();
   const mute = prefs.mute;
@@ -82,6 +86,7 @@ export const Game = () => {
       return;
     }
     setOpponentType(type);
+    setOpponent("b");
     setPlayer("a");
   };
 
@@ -95,18 +100,20 @@ export const Game = () => {
           )}
           {opponentType && (
             <PlayerCard
-              player={player === "a" ? "b" : "a"}
+              player={opponent}
               remove={gameState.turn.type === "remove"}
               turn={gameState.turn.player}
               name="Opponent"
-              remainingMen={player ? gameState.remainingMen[player] : 0}
+              remainingMen={opponent ? gameState.remainingMen[opponent] : 0}
             />
           )}
-          {connecting && <Loader />}
-          {opponentType === "ai" && (
+          {((opponentType === "online" && !opponent) || connecting) && (
+            <Loader text="waiting for opponent..." />
+          )}
+          {opponent && opponentType === "ai" && (
             <Opponent
               state={gameState}
-              player={"b"}
+              player={opponent}
               updateGameState={updateGameState}
               sound={!mute}
             />
@@ -126,8 +133,9 @@ export const Game = () => {
           }}
           sound={!mute}
           disabled={
-            // Disable the board if the opponent is online or ai and it's not their turn
-            opponentType !== "local" && player !== gameState.turn.player
+            // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
+            (opponentType !== "local" && player !== gameState.turn.player) ||
+            !opponent
           }
         />
 

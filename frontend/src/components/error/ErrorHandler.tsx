@@ -1,7 +1,8 @@
 import { FallbackProps } from "react-error-boundary";
-import { palette } from "../../theme";
 
-export const ErrorFallback: React.FC<FallbackProps> = (props) => {
+import { Button } from "../../components";
+
+export const ErrorFallback = (props: FallbackProps) => {
   const { error, resetErrorBoundary } = props;
   return (
     <div
@@ -18,19 +19,9 @@ export const ErrorFallback: React.FC<FallbackProps> = (props) => {
     >
       <b>An error occurred:</b>
       <pre>{error.message}</pre>
-      <button
-        style={{
-          minWidth: 60,
-          minHeight: 30,
-          backgroundColor: palette.primary,
-          color: palette.neutralLight,
-          borderRadius: 5,
-          borderStyle: "none",
-        }}
-        onClick={resetErrorBoundary}
-      >
+      <Button primary onClick={resetErrorBoundary}>
         Refresh
-      </button>
+      </Button>
     </div>
   );
 };

@@ -1,0 +1,12 @@
+.MPPanel {
+  background-color: #121212; /* palette.neutralDarker */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  border-radius: 10px;
+}

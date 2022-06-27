@@ -1,0 +1,20 @@
+.loading {
+  display: flex;
+  justify-content: center;
+}
+
+.loading::after {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border: 2px solid grey; /* palette.neutral*/
+  border-top-color: #d2042d; /* palette.primary */
+  border-radius: 50%;
+  animation: loading 1s ease infinite;
+}
+
+@keyframes loading {
+  to {
+    transform: rotate(1turn);
+  }
+}

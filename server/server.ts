@@ -1,7 +1,14 @@
 //Todo: use TS: https://socket.io/docs/v4/typescript/
 
-const { createServer } = require("http");
-const { Server } = require("socket.io");
+import { Socket } from "socket.io";
+
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+interface Players {
+  a: Socket | null;
+  b: Socket | null;
+}
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -10,7 +17,7 @@ const io = new Server(httpServer, {
   },
 });
 
-const players = { a: null, b: null };
+const players: Players = { a: null, b: null };
 
 /**
  * When a player connects to the server, we store them in `players`.
@@ -19,15 +26,15 @@ const players = { a: null, b: null };
  * We then emit the connected event, letting the player know if they are a or b.
  * Emit an opponentConnected event to let the other player know when they have an opponent
  */
-io.on("connection", function (socket) {
+io.on("connection", function (socket: Socket) {
   // TODO player should tell us who they are
 
-  if (players["a"] == null) {
-    players["a"] = socket;
+  if (players.a == null) {
+    players.a = socket;
     console.log("a connected");
     socket.emit("connected", "a");
   } else if (players["b"] == null) {
-    players["b"] = socket;
+    players.b = socket;
     console.log("b connected");
     socket.emit("connected", "b");
     socket.emit("opponentConnected"); // Tell b that a is already connected

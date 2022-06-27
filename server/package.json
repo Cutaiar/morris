@@ -4,11 +4,15 @@
   "version": "0.1.0",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "build": "rimraf build && tsc",
+    "prestart": "npm run build",
+    "start": "concurrently \"tsc --watch\" \"nodemon -q build/server.js\""
   },
   "author": "cutaiar",
   "devDependencies": {
-    "nodemon": "^2.0.18"
+    "@types/node": "^18.0.0",
+    "nodemon": "^2.0.18",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "socket.io": "^4.5.1"

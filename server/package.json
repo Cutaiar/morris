@@ -6,7 +6,9 @@
   "scripts": {
     "build": "rimraf build && tsc",
     "prestart": "npm run build",
-    "start": "concurrently \"tsc --watch\" \"nodemon -q build/server.js\""
+    "start": "node build/server.js",
+    "preserve": "npm run build",
+    "serve": "concurrently \"tsc --watch\" \"nodemon -q build/server.js\""
   },
   "author": "cutaiar",
   "devDependencies": {

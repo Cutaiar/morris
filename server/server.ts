@@ -90,6 +90,6 @@ io.on("connection", function (socket: Socket) {
   });
 });
 
-const port = 1337;
+const port = process.env.PORT || 1337;
 httpServer.listen(port);
 console.log("Listening on port " + port + "...");

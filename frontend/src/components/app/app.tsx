@@ -6,7 +6,7 @@ import { palette } from "../../theme";
 
 // Components
 import GithubCorner from "react-github-corner";
-import { Game } from "../../components";
+import { Game } from "..";
 
 // Hooks
 import { defaultPrefs, PrefsProvider } from "../../hooks";

@@ -1,5 +1,6 @@
 {
   "name": "morris",
+  "private": true,
   "version": "0.1.0",
   "repository": {
     "type": "git",
@@ -8,15 +9,10 @@
   "homepage": "https://github.com/Cutaiar/morris#readme",
   "scripts": {
     "frontend": "cd frontend && npm start",
-    "server": "cd server && nodemon server.js",
+    "server": "cd server && npm start",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run frontend\""
   },
   "devDependencies": {
-    "concurrently": "^7.2.2",
-    "nodemon": "^2.0.16"
-  },
-  "dependencies": {
-    "express": "^4.18.1",
-    "socket.io": "^4.5.1"
+    "concurrently": "^7.2.2"
   }
 }

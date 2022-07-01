@@ -63,7 +63,7 @@ export const EditableName = (props: EditableNameProps) => {
         }}
       />
       {/* TODO: disabled={nameState.length === 0}, once these are action buttons */}
-      <FiCheck color={palette.primary} onClick={handleSubmit} />
+      <FiCheck color={palette.neutral} onClick={handleSubmit} />
       <FiX
         color={palette.neutral}
         onClick={() => {

@@ -145,6 +145,7 @@ export const Game = () => {
             remove={gameState.turn.type === "remove"}
             turn={gameState.turn.player}
             name={name}
+            onNameChange={(newName) => setPref("name", newName)}
             remainingMen={player ? gameState.remainingMen[player] : 0}
           />
 

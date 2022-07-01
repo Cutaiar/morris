@@ -3,6 +3,7 @@ import React from "react";
 import { Player } from "../../hooks/useGameState";
 import { palette } from "../../theme";
 import { RemainingMen } from "../RemainingMen/RemainingMen";
+import { EditableName } from "./editableName";
 
 export interface PlayerCardProps {
   /** Which player is this. undefined if not determined yet */
@@ -15,14 +16,16 @@ export interface PlayerCardProps {
   name: string;
   /** How many remaining men for this player?*/
   remainingMen: number;
+  /** Cb for when the player uses the card to change their name */
+  onNameChange?: (newName: string) => void;
 }
 
 export const PlayerCard = (props: PlayerCardProps) => {
-  const { player, remove, turn, name, remainingMen } = props;
+  const { player, remove, turn, name, remainingMen, onNameChange } = props;
 
   const myTurn = player === turn;
   const isRemove = remove && myTurn;
-  const labelColor = myTurn ? palette.neutralLight : palette.neutral;
+  const nameColor = myTurn ? palette.neutralLight : palette.neutral;
 
   return (
     <>
@@ -35,7 +38,11 @@ export const PlayerCard = (props: PlayerCardProps) => {
           gap: 10,
         }}
       >
-        <label style={{ color: labelColor, fontSize: "larger" }}>{name}</label>
+        <EditableName
+          name={name}
+          onNameChange={onNameChange}
+          color={nameColor}
+        />
         {/* TODO: State for player loading */}
         <div
           style={{

@@ -9,7 +9,7 @@
   "homepage": "https://github.com/Cutaiar/morris#readme",
   "scripts": {
     "frontend": "cd frontend && npm start",
-    "server": "cd server && npm serve",
+    "server": "cd server && npm run serve",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run frontend\""
   },
   "devDependencies": {

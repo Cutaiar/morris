@@ -300,7 +300,6 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
   const pointFill = (occupancy?: Occupancy) => {
-    if (disabled) return palette.neutralDark;
     if (hovered) return "white";
     if (!occupancy) return palette.neutral;
     return occupancy === "a" ? palette.primary : palette.secondary;
@@ -322,6 +321,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         {...rest}
         stroke={pointStroke}
         fill={pointFill(point.occupancy)}
+        cursor={disabled ? "not-allowed" : "pointer"}
         onMouseOver={() => {
           if (disabled) return;
           // TODO: Should be informed by what kind of hover (empty valid, empty invalid, opponent, self, phase)
@@ -343,38 +343,42 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           sound && playClick({ playbackRate: 1.5 });
         }}
       >
-        <animate
-          attributeName="r"
-          from={r}
-          to={br}
-          dur={"50ms"}
-          begin="mouseenter"
-          fill="freeze"
-        />
-        <animate
-          attributeName="r"
-          from={br}
-          to={r}
-          dur={"50ms"}
-          begin="mouseleave"
-          fill="freeze"
-        />
-        <animate
-          attributeName="r"
-          to={sr}
-          from={br}
-          dur={"50ms"}
-          begin="mousedown"
-          fill="freeze"
-        />
-        <animate
-          attributeName="r"
-          from={sr}
-          to={r}
-          dur={"50ms"}
-          begin="mouseup"
-          fill="freeze"
-        />
+        {!disabled && (
+          <>
+            <animate
+              attributeName="r"
+              from={r}
+              to={br}
+              dur={"50ms"}
+              begin="mouseenter"
+              fill="freeze"
+            />
+            <animate
+              attributeName="r"
+              from={br}
+              to={r}
+              dur={"50ms"}
+              begin="mouseleave"
+              fill="freeze"
+            />
+            <animate
+              attributeName="r"
+              to={sr}
+              from={br}
+              dur={"50ms"}
+              begin="mousedown"
+              fill="freeze"
+            />
+            <animate
+              attributeName="r"
+              from={sr}
+              to={r}
+              dur={"50ms"}
+              begin="mouseup"
+              fill="freeze"
+            />
+          </>
+        )}
       </circle>
       {debug && (
         <text

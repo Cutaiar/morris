@@ -50,7 +50,11 @@ export const PlayerCard = (props: PlayerCardProps) => {
             width: 20,
             height: 20,
             borderRadius: 10,
-            background: player === "a" ? palette.primary : palette.secondary,
+            background: player
+              ? player === "a"
+                ? palette.primary
+                : palette.secondary
+              : palette.neutral,
             border: myTurn ? `1px solid ${palette.neutralLight}` : undefined,
           }}
         />

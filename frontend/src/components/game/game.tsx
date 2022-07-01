@@ -30,15 +30,18 @@ import { palette } from "../../theme";
 // TODO these should import from somewhere else
 import { Player } from "../../hooks/useGameState";
 
+const defaultOpponentName = "Opponent";
+
 export const Game = () => {
   // TODO: Figure out how to switch between online state and non-online state
   const [socketGameState, updateSocketGameState] = useSocketGameState();
   const [localGameState, updateLocalGameState] = useGameState();
 
   // Get multiplayer functionalities
-  const [connect] = useMultiplayer(() => {
+  const [connect] = useMultiplayer((opponentInfo) => {
     console.log("opponent connected");
-    setOpponent(player === "a" ? "b" : "a");
+    setOpponentName(opponentInfo.name ?? "Anonymous Opp.");
+    setOpponent(opponentInfo.player);
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -55,6 +58,9 @@ export const Game = () => {
 
   const [player, setPlayer] = React.useState<Player | undefined>(undefined);
   const [opponent, setOpponent] = React.useState<Player | undefined>(undefined);
+  const [opponentName, setOpponentName] = React.useState<string | undefined>(
+    undefined
+  );
 
   const [prefs, setPref] = usePrefs();
   const mute = prefs.mute;
@@ -78,7 +84,7 @@ export const Game = () => {
       if (!connecting) {
         console.log("connecting");
         setConnecting(true);
-        const player = await connect();
+        const player = await connect(name);
         setPlayer(player);
         setConnecting(false);
         return;
@@ -86,6 +92,7 @@ export const Game = () => {
       return;
     }
     setOpponentType(type);
+    setOpponentName(defaultOpponentName);
     setOpponent("b");
     setPlayer("a");
   };
@@ -103,7 +110,7 @@ export const Game = () => {
               player={opponent}
               remove={gameState.turn.type === "remove"}
               turn={gameState.turn.player}
-              name="Opponent"
+              name={opponentName ?? "..."}
               remainingMen={opponent ? gameState.remainingMen[opponent] : 0}
             />
           )}

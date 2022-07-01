@@ -38,6 +38,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
           gap: 10,
         }}
       >
+        {/* TODO: Disable editing while the game is in play */}
         <EditableName
           name={name}
           onNameChange={onNameChange}
@@ -55,12 +56,14 @@ export const PlayerCard = (props: PlayerCardProps) => {
         />
         {isRemove && <i>{" (to remove)"}</i>}
       </div>
-      <label style={{ fontSize: "medium", color: palette.neutral }}>
-        remaining men:
-      </label>
       {/* TODO: Shimmer */}
       {player && (
-        <RemainingMen remainingMenCount={remainingMen} player={player} />
+        <>
+          <label style={{ fontSize: "medium", color: palette.neutral }}>
+            remaining men:
+          </label>
+          <RemainingMen remainingMenCount={remainingMen} player={player} />
+        </>
       )}
     </>
   );

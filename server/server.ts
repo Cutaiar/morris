@@ -5,9 +5,13 @@ import { Socket } from "socket.io";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+interface Player {
+  socket: Socket;
+  name?: string;
+}
 interface Players {
-  a: Socket | null;
-  b: Socket | null;
+  a: Player | null;
+  b: Player | null;
 }
 
 const httpServer = createServer();
@@ -27,18 +31,21 @@ const players: Players = { a: null, b: null };
  * Emit an opponentConnected event to let the other player know when they have an opponent
  */
 io.on("connection", function (socket: Socket) {
-  // TODO player should tell us who they are
+  const name = socket.handshake.query.name as string | undefined; // TODO is this assertion safe? When could it be string[]?
 
-  if (players.a == null) {
-    players.a = socket;
-    console.log("a connected");
+  if (players.a === null) {
+    players.a = { socket, name };
+    console.log(name + " (a) connected");
     socket.emit("connected", "a");
-  } else if (players["b"] == null) {
-    players.b = socket;
-    console.log("b connected");
+  } else if (players.b === null) {
+    players.b = { socket, name };
+    console.log(name + " (b) connected");
     socket.emit("connected", "b");
-    socket.emit("opponentConnected"); // Tell b that a is already connected
-    players.a.emit("opponentConnected"); // Tell a that b connected
+    socket.emit("opponentConnected", { name: players.a.name, player: "a" }); // Tell b that a is already connected
+    players.a.socket.emit("opponentConnected", {
+      name: players.b.name,
+      player: "b",
+    }); // Tell a that b connected
   } else {
     socket.disconnect();
   }
@@ -47,9 +54,9 @@ io.on("connection", function (socket: Socket) {
    * If the player disconnects
    */
   socket.on("disconnect", function () {
-    if (players["a"] === socket) {
+    if (players.a?.socket === socket) {
       players["a"] = null;
-    } else if (players["b"] === socket) {
+    } else if (players.b?.socket === socket) {
       players["b"] = null;
     }
   });
@@ -68,7 +75,7 @@ io.on("connection", function (socket: Socket) {
     // }
 
     // Ignore clicks before both players are connected
-    if (players["a"] == null || players["b"] == null) {
+    if (players["a"] === null || players["b"] === null) {
       console.log("dispatch before all players are connected");
       return;
     }

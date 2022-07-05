@@ -3,7 +3,7 @@ import { fontSizes, fontWeights, palette } from "../../theme/theme";
 
 const style = {
   root: {
-    width: "100vw",
+    width: "calc(100% - 30px)",
     maxHeight: 200,
     padding: "15px",
     background: palette.neutralDark,

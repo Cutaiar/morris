@@ -1,0 +1,24 @@
+.icon-button-root {
+  border-radius: 10%;
+  background: transparent;
+  min-width: 30px;
+  min-height: 30px;
+  margin: 5px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.15s ease;
+  border-style: none;
+  color: currentColor;
+  font-size: medium;
+}
+
+.icon-button-root:hover {
+  background: rgb(74, 74, 74);
+}
+
+.icon-button-root:active {
+  background: rgb(144, 144, 144);
+  transform: scale(0.9);
+}

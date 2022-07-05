@@ -4,54 +4,34 @@ import React from "react";
 import { palette } from "../../theme";
 import "./editableName.css";
 
-// Hooks
-import { useKeyPressEvent } from "react-use";
-
-// Components
-import { FiCheck, FiX } from "react-icons/fi";
-
 interface EditableNameProps {
   /** The name to render */
-  name: string;
+  name?: string;
   /** CB for when the user submits a name change */
   onNameChange?: (newName: string) => void;
   /** Text color of the name */
   color?: string;
+  /** Is the name being edited? */
+  editing?: boolean;
 }
 
 /**
  * Renders an editable name
  */
 export const EditableName = (props: EditableNameProps) => {
-  const { name, onNameChange } = props;
+  const { name, onNameChange, editing } = props;
 
   const color = props.color ?? palette.neutral;
 
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [nameState, setNameState] = React.useState<string | undefined>(
-    undefined
-  );
+  const size = name?.length || 1;
 
-  // Sync internal state with prop (and reset it when finished or starting editing)
-  React.useEffect(() => setNameState(name), [name, isEditing]);
-
-  // Represents the intention to change the name
-  const handleSubmit = () => {
-    nameState && onNameChange?.(nameState); // Fortunately, "" is falsy so this blocks empty name save too
-    setIsEditing(false);
-  };
-
-  // Submit on enter
-  useKeyPressEvent("Enter", handleSubmit);
-
-  return isEditing ? (
+  return editing ? (
     <>
       <input
         type={"text"}
-        value={nameState}
-        onChange={(e) => setNameState(e.target.value)}
-        autoFocus
-        size={nameState?.length}
+        value={name}
+        onChange={(e) => onNameChange?.(e.target.value)}
+        size={size}
         style={{
           color: color,
           fontSize: "larger",
@@ -63,22 +43,13 @@ export const EditableName = (props: EditableNameProps) => {
         }}
       />
       {/* TODO: disabled={nameState.length === 0}, once these are action buttons */}
-      <FiCheck color={palette.neutral} onClick={handleSubmit} />
-      <FiX
-        color={palette.neutral}
-        onClick={() => {
-          setNameState(undefined);
-          setIsEditing(false);
-        }}
-      />
     </>
   ) : (
     <span
-      onClick={() => {
-        setIsEditing(true);
-      }}
       style={{ color: color, fontSize: "larger" }}
-      className={"name-display-span"}
+      className={`name-display-span${
+        editing ? " name-display-span-editing" : ""
+      }`}
     >
       {name}
     </span>

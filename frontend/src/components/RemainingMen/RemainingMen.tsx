@@ -4,9 +4,12 @@ import { palette } from "../../theme";
 
 export interface RemainingMenProps {
   remainingMenCount: number;
-  player: Player;
+  player?: Player;
 }
 
+/**
+ * Renders a remaining men UI. If player is undefined, disabled/loading state is shown
+ */
 export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
   const { remainingMenCount, player } = props;
 
@@ -17,25 +20,36 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
 
   // This could be implemented with divs and flexbox instead, but i'm on an svg bender rn so...
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-      <rect
-        x1={0}
-        y1={0}
-        width={"100%"}
-        height={"100%"}
-        rx="5"
-        stroke={palette.neutral}
-        fillOpacity={0}
-      />
-      {new Array(remainingMenCount).fill(undefined).map((_, i) => (
-        <circle
-          cx={(i + 1) * (gap + radius)}
-          cy={"50%"}
-          r={radius}
-          fill={player === "a" ? palette.primary : palette.secondary}
-          key={i}
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <label style={{ fontSize: "medium", color: palette.neutral }}>
+        remaining men
+      </label>
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+        <rect
+          x1={0}
+          y1={0}
+          width={"100%"}
+          height={"100%"}
+          rx="5"
+          stroke={palette.neutral}
+          fillOpacity={0}
         />
-      ))}
-    </svg>
+        {new Array(remainingMenCount).fill(undefined).map((_, i) => (
+          <circle
+            cx={(i + 1) * (gap + radius)}
+            cy={"50%"}
+            r={radius}
+            fill={
+              player
+                ? player === "a"
+                  ? palette.primary
+                  : palette.secondary
+                : palette.neutral
+            }
+            key={i}
+          />
+        ))}
+      </svg>
+    </div>
   );
 };

@@ -111,7 +111,9 @@ export const Game = () => {
               remove={gameState.turn.type === "remove"}
               turn={gameState.turn.player}
               name={opponentName ?? "..."}
-              remainingMen={opponent ? gameState.remainingMen[opponent] : 0}
+              remainingMen={
+                opponent ? gameState.remainingMen[opponent] : undefined
+              }
             />
           )}
           {((opponentType === "online" && !opponent) || connecting) && (
@@ -149,70 +151,70 @@ export const Game = () => {
         <div className="Controls">
           <PlayerCard
             player={player}
+            local
             remove={gameState.turn.type === "remove"}
             turn={gameState.turn.player}
             name={name}
             onNameChange={(newName) => setPref("name", newName)}
-            remainingMen={player ? gameState.remainingMen[player] : 0}
-          />
-
-          <span
-            style={{
-              fontSize: "medium",
-              textDecoration: "underline",
-              color: palette.neutral,
-            }}
-            onClick={() => setIsAdvanced((prev) => !prev)}
+            remainingMen={player ? gameState.remainingMen[player] : undefined}
+            toolbarIcons={[
+              {
+                name: "settings",
+                tooltip: "Settings and advanced",
+                onClick: () => setIsAdvanced((prev) => !prev),
+              },
+            ]}
           >
-            Advanced
-          </span>
-          {isAdvanced && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <label
-                style={{ fontSize: "medium" }}
-              >{`phase: ${gameState.phase}`}</label>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <input
-                  id={"opponentControlled"}
-                  type={"checkbox"}
-                  checked={opponentType === "local"}
-                  onChange={(e) =>
-                    setOpponentType(e.target.checked ? "local" : "ai")
-                  }
-                />
+            {isAdvanced && (
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+              >
                 <label
                   style={{ fontSize: "medium" }}
-                  htmlFor="opponentControlled"
-                >
-                  control opponent
-                </label>
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <input
-                  id={"mute"}
-                  type={"checkbox"}
-                  checked={mute}
-                  onChange={(e) => setMute(e.target.checked)}
-                />
-                <label style={{ fontSize: "medium" }} htmlFor="mute">
-                  mute
-                </label>
-                {/* TODO: Disable motion toggle */}
-              </div>
+                >{`phase: ${gameState.phase}`}</label>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    id={"opponentControlled"}
+                    type={"checkbox"}
+                    checked={opponentType === "local"}
+                    onChange={(e) =>
+                      setOpponentType(e.target.checked ? "local" : "ai")
+                    }
+                  />
+                  <label
+                    style={{ fontSize: "medium" }}
+                    htmlFor="opponentControlled"
+                  >
+                    control opponent
+                  </label>
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    id={"mute"}
+                    type={"checkbox"}
+                    checked={mute}
+                    onChange={(e) => setMute(e.target.checked)}
+                  />
+                  <label style={{ fontSize: "medium" }} htmlFor="mute">
+                    mute
+                  </label>
+                  {/* TODO: Disable motion toggle */}
+                </div>
 
-              <Button onClick={() => updateGameState({ type: "reset" })}>
-                Reset
-              </Button>
-              {/* Temporarily adding a slider to control the number of rings */}
-              {/* <Slider
+                <Button onClick={() => updateGameState({ type: "reset" })}>
+                  Reset
+                </Button>
+                {/* Temporarily adding a slider to control the number of rings */}
+                {/* <Slider
               min={minRings}
               max={maxRings}
               value={ringCount}
               onChange={(e) => setRingCount(Number(e.target.value))}
               ringCount={ringCount}
             /> */}
-            </div>
-          )}
+              </div>
+            )}
+          </PlayerCard>
         </div>
 
         {/* Show raw Game State for debug */}

@@ -1,7 +1,10 @@
 import React from "react";
 
-import { palette } from "../../theme";
-import { Button } from "../../components";
+// Theme
+import { palette } from "theme";
+
+// Components
+import { Button } from "components";
 
 export type OpponentType = "ai" | "local" | "online";
 export interface OpponentSelectorProps {

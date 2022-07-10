@@ -1,6 +1,10 @@
-import { Player } from "hooks/useGameState";
 import React from "react";
-import { palette } from "../../theme";
+
+// Types
+import { Player } from "hooks/useGameState";
+
+// Style
+import { palette } from "theme";
 
 interface ChipProps {
   /** The player this chip represents */
@@ -10,6 +14,7 @@ interface ChipProps {
   /** Is the current turn a removal. Should only be true if `isMyTurn` is true too*/
   isRemovalTurn?: boolean;
 }
+
 /**
  * Represents a player
  *

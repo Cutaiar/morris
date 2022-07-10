@@ -5,8 +5,8 @@ import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 
 import { ErrorBoundary } from "react-error-boundary";
-import { App, ErrorFallback } from "./components";
-import { DebugProvider } from "./hooks";
+import { App, ErrorFallback } from "components";
+import { DebugProvider } from "hooks";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

@@ -1,5 +1,5 @@
 import React from "react";
-import { partition } from "../components/utils/utils";
+import { partition } from "utils";
 
 export type Phase = 1 | 2 | 3;
 export type Player = "a" | "b";

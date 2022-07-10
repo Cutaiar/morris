@@ -2,20 +2,20 @@ import React from "react";
 
 // Style
 import "./app.css";
-import { palette } from "../../theme";
+import { palette } from "theme";
 
 // Components
 import GithubCorner from "react-github-corner";
-import { Game } from "..";
+import { Game } from "components";
 
 // Hooks
-import { defaultPrefs, PrefsProvider } from "../../hooks";
+import { defaultPrefs, PrefsProvider } from "hooks";
 
 // Context;
-import { SocketProvider } from "../../context";
+import { SocketProvider } from "context";
 
 // Utils
-import { openInNewTabProps } from "../../util";
+import { openInNewTabProps } from "utils";
 
 export const App: React.FC = () => {
   return (

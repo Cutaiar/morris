@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GameState } from "../../hooks/useGameState";
+import { GameState } from "hooks/useGameState";
 
 export interface DebugGameStateProps {
   gameState: GameState;

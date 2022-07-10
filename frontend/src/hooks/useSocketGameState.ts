@@ -1,5 +1,5 @@
 import React from "react";
-import { useSocket } from "../context";
+import { useSocket } from "context";
 import { Action, GameState, useGameState } from "./useGameState";
 
 /**

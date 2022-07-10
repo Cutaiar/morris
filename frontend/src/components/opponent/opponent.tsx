@@ -1,11 +1,18 @@
 import React from "react";
-import useSound from "use-sound";
-import { Action, GameState, Player } from "../../hooks/useGameState";
-import { useOpponent } from "../../hooks/useOpponent";
-import { palette } from "../../theme";
 
+// Types
+import { Action, GameState, Player } from "hooks/useGameState"; // TODO: imports should come from elsewhere
+
+// Hooks
+import { useOpponent } from "hooks";
+
+// Style
+import { palette } from "theme";
+
+// Sound
 import { HasSound } from "../board/board"; // TODO: import should come from elsewhere
-import opponentSound from "../../sound/octave-tap/tap-wooden.mp3";
+import useSound from "use-sound";
+import opponentSound from "sound/octave-tap/tap-wooden.mp3";
 
 // export type OpponentProps = Parameters<typeof useOpponent>;
 export interface OpponentProps extends HasSound {

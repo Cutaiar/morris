@@ -1,7 +1,10 @@
 import React from "react";
+
+// Icons
 import { IconType } from "react-icons";
 import { FiCheck, FiEdit, FiSettings, FiX } from "react-icons/fi";
 
+// Style
 import "./iconButton.css";
 
 type IconName = "edit" | "settings" | "check" | "x"; // TODO import feather directly to support all icons

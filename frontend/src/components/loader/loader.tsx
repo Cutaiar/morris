@@ -1,13 +1,14 @@
 import React from "react";
 
-import { palette } from "../../theme";
-
+//Style
+import { palette } from "theme";
 import "./loader.css";
 
 export interface LoaderProps
   extends Pick<React.HTMLAttributes<HTMLDivElement>, "style" | "className"> {
   text?: string;
 }
+
 export const Loader = (props: LoaderProps) => {
   const { className, text } = props;
   const style: React.CSSProperties = {

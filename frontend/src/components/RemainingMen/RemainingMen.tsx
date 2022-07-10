@@ -1,6 +1,10 @@
 import * as React from "react";
-import { Player } from "../../hooks/useGameState";
-import { palette } from "../../theme";
+
+// Types
+import { Player } from "hooks/useGameState";
+
+// Style
+import { palette } from "theme";
 
 export interface RemainingMenProps {
   remainingMenCount: number;

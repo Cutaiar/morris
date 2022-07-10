@@ -1,5 +1,7 @@
 import React from "react";
-import { useSocket } from "../../context";
+
+// Contexts
+import { useSocket } from "context";
 
 export const MultiplayerPanel = () => {
   const [socket] = useSocket();

@@ -1,5 +1,7 @@
 import React from "react";
-import { fontSizes, fontWeights, palette } from "../../theme/theme";
+
+// Style
+import { fontSizes, fontWeights, palette } from "theme";
 
 const style = {
   root: {

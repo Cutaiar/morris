@@ -1,1 +1,1 @@
-export { palette } from "./theme";
+export { palette, confetti, fontSizes, fontWeights } from "./theme";

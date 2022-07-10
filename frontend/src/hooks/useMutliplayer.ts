@@ -1,7 +1,5 @@
 import React from "react";
-
-import { useSocket } from "../context";
-
+import { useSocket } from "context";
 import { Player } from "./useGameState";
 
 // TODO should be shared with the server

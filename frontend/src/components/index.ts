@@ -1,7 +1,9 @@
+// Component library
 export { Button } from "./button/button";
 export { Loader } from "./loader/loader";
 export { IconButton } from "./iconButton/iconButton";
 
+// Morris specific components
 export { App } from "./app/app";
 export { Game } from "./game/game";
 export { TopNav } from "./topnav/topnav";
@@ -14,5 +16,6 @@ export { DebugGameState } from "./debug/debugGameState";
 export { ErrorFallback } from "./error/ErrorHandler";
 export { RemainingMen } from "./RemainingMen/RemainingMen";
 
+// Types
 export type { OpponentType } from "./opponentSelector/opponentSelector";
 export type { IconButtonProps } from "./iconButton/iconButton";

@@ -1,9 +1,11 @@
 import React from "react";
 
-import { palette } from "../../theme";
+// Style
+import { palette } from "theme";
 import "./button.css";
 
-import { Loader } from "../../components";
+// Components
+import { Loader } from "components";
 export interface ButtonProps
   extends React.PropsWithChildren<{
     onClick?: () => void;

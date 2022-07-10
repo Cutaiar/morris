@@ -1,19 +1,29 @@
 import React from "react";
 
-import { Player } from "../../hooks/useGameState";
+// Types
+import { Player } from "hooks/useGameState";
+
+// Hooks
 import { useWindowSize } from "react-use";
 
+// Style
 import "./winnerModal.css";
-import { confetti, palette } from "../../theme/theme";
+import { confetti, palette } from "theme";
 
+// Components
 import Confetti from "react-confetti";
-import { Button } from "../../components";
+import { Button } from "components";
 
 export interface WinnerModalProps {
+  /** cb for when the "play again" button is selected */
   onPlayAgain: () => void;
+  /** which player won? */
   winner: Player;
 }
 
+/**
+ * Shown when a player wins the game
+ */
 export const WinnerModal = (props: WinnerModalProps) => {
   const { onPlayAgain, winner } = props;
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 // Style
-import { palette } from "../../theme";
+import { palette } from "theme";
 import "./editableName.css";
 
 interface EditableNameProps {

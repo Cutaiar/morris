@@ -1,4 +1,12 @@
 /**
+ * Destructure into props to make a link safely open in a new tab
+ */
+export const openInNewTabProps = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+};
+
+/**
  * Pick a random property of `obj`
  */
 export function getRandomProperty(obj: {}) {

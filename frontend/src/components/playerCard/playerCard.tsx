@@ -1,7 +1,12 @@
 import React from "react";
 
-import { Player } from "../../hooks/useGameState";
-import { palette } from "../../theme";
+// Types
+import { Player } from "hooks/useGameState";
+
+// Style
+import { palette } from "theme";
+
+// Components
 import { RemainingMen, IconButton, IconButtonProps } from "components";
 import { EditableName } from "./editableName";
 import { Chip } from "./chip";

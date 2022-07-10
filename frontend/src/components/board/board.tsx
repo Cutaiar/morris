@@ -7,13 +7,17 @@ import {
   isValidSelection,
   Action,
 } from "../../hooks/useGameState";
-import { useDebug } from "../../hooks/useDebug";
-import { palette } from "../../theme";
 
+// Style
+import { palette } from "theme";
+
+// Hooks
+import { useDebug } from "hooks";
+
+// Sound
 import { useSound } from "use-sound";
-
-import clickSound from "../../sound/octave-tap/tap-warm.mp3";
-import hoverSound from "../../sound/octave-tap/tap-toothy.mp3";
+import clickSound from "sound/octave-tap/tap-warm.mp3";
+import hoverSound from "sound/octave-tap/tap-toothy.mp3";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {

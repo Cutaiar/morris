@@ -1,4 +1,6 @@
 import React from "react";
+
+// Style
 import "./Slider.css";
 
 export interface SliderProps

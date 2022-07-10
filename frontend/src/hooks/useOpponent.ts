@@ -1,5 +1,5 @@
 import React from "react";
-import { getRandomProperty } from "../components/utils/utils";
+import { getRandomProperty } from "utils";
 import { Action, GameState, isValidAction, Player } from "./useGameState";
 
 type OpponentStatus = "waiting" | "thinking";

@@ -12,7 +12,7 @@ import {
   OpponentSelector,
   OpponentType,
   Loader,
-} from "..";
+} from "components";
 
 // Hooks
 import {
@@ -21,14 +21,14 @@ import {
   usePrefs,
   useSocketGameState,
   useGameState,
-} from "../../hooks";
+} from "hooks";
 import { useMount } from "react-use";
 
 // Style
-import { palette } from "../../theme";
+import { palette } from "theme";
 
-// TODO these should import from somewhere else
-import { Player } from "../../hooks/useGameState";
+// TODO this should import from somewhere else
+import { Player } from "hooks/useGameState";
 
 const defaultOpponentName = "Opponent";
 

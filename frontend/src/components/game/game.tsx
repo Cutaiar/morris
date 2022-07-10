@@ -62,8 +62,10 @@ export const Game = () => {
     undefined
   );
 
-  const [prefs, setPref] = usePrefs();
+  const [prefs, setPref, resetPrefs] = usePrefs();
   const mute = prefs.mute;
+  const motion = prefs.motion;
+  const setMotion = (motion: boolean) => setPref("motion", motion);
   const setMute = (mute: boolean) => setPref("mute", mute);
   const name = prefs.name ?? "Me";
 
@@ -198,12 +200,24 @@ export const Game = () => {
                   <label style={{ fontSize: "medium" }} htmlFor="mute">
                     mute
                   </label>
-                  {/* TODO: Disable motion toggle */}
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <input
+                    id={"motion"}
+                    type={"checkbox"}
+                    checked={motion}
+                    onChange={(e) => setMotion(e.target.checked)}
+                  />
+                  <label style={{ fontSize: "medium" }} htmlFor="motion">
+                    motion
+                  </label>
                 </div>
 
                 <Button onClick={() => updateGameState({ type: "reset" })}>
-                  Reset
+                  Reset Game
                 </Button>
+
+                <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
                 {/* Temporarily adding a slider to control the number of rings */}
                 {/* <Slider
               min={minRings}

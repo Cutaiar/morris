@@ -1,4 +1,5 @@
-import { createStateContext } from "react-use";
+import React from "react";
+import { createStateContext, useLocalStorage } from "react-use";
 
 interface Prefs {
   mute?: boolean;
@@ -6,14 +7,17 @@ interface Prefs {
   name?: string;
 }
 
+/** The default preferences. These are used (and stored) when local storage is empty and for the PrefsProvider `initialValue` */
 export const defaultPrefs = {
   mute: false,
   motion: true,
-  name: "Dillon",
+  name: "Me",
 };
 
+const LOCAL_STORAGE_KEY = "morris-prefs";
+
 // Intentionally not destructured to allow TSDoc on DebugProvider
-const hookAndProvider = createStateContext(defaultPrefs); // TODO get prefs from cache?
+const hookAndProvider = createStateContext<Prefs>(defaultPrefs);
 const usePrefsContext = hookAndProvider[0];
 
 /**
@@ -22,18 +26,32 @@ const usePrefsContext = hookAndProvider[0];
 export const PrefsProvider = hookAndProvider[1];
 
 /**
- * `usePrefs` to get the players preferences. Use like `useState` with an optional third array member
- * which is a function to sync the debug status with url param. (i.e. usedebug.com?debug)
+ * `usePrefs` to get the players preferences. Use like `useState`. Immediately reflected in local storage.
  */
-export const usePrefs = (): [
-  Prefs,
-  (pref: keyof Prefs, value: string | boolean | undefined) => void
-] => {
+export const usePrefs = () => {
   const [prefs, setPrefs] = usePrefsContext();
 
+  // Local storage prefs are the source of truth. They will default to `defaultPrefs` when `usePrefs` is called for the first time
+  const [localStoragePrefs, setLocalStoragePrefs, clearLocalStorage] =
+    useLocalStorage<Prefs>(LOCAL_STORAGE_KEY, defaultPrefs);
+
+  // Sync stateContext `prefs` with `localStoragePrefs`
+  React.useEffect(() => {
+    if (localStoragePrefs) {
+      setPrefs(localStoragePrefs);
+    }
+  }, [localStoragePrefs, setPrefs]);
+
+  /** Set an individual preference value. Will be immediately reflected in local storage */
   const setPref = (pref: keyof Prefs, value: Prefs[typeof pref]) => {
-    setPrefs({ ...prefs, [pref]: value });
+    setLocalStoragePrefs({ ...prefs, [pref]: value });
   };
 
-  return [prefs, setPref];
+  /** Clear local storage and reset to default prefs */
+  const reset = () => {
+    clearLocalStorage();
+    setLocalStoragePrefs(defaultPrefs);
+  };
+
+  return [prefs, setPref, reset] as const;
 };

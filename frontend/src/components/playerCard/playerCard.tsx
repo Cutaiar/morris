@@ -4,6 +4,7 @@ import { Player } from "../../hooks/useGameState";
 import { palette } from "../../theme";
 import { RemainingMen, IconButton, IconButtonProps } from "..";
 import { EditableName } from "./editableName";
+import { Chip } from "./chip";
 
 export type PlayerCardProps = React.PropsWithChildren<{
   /** Which player is this. undefined if not determined yet */
@@ -43,9 +44,9 @@ export const PlayerCard = (props: PlayerCardProps) => {
     local,
   } = props;
 
-  const myTurn = player === turn;
-  const isRemove = remove && myTurn;
-  const nameColor = myTurn ? palette.neutralLight : palette.neutral;
+  const isMyTurn = player === turn;
+  const isRemovalTurn = remove && isMyTurn;
+  const nameColor = isMyTurn ? palette.neutralLight : palette.neutral;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [nameState, setNameState] = React.useState<string | undefined>(
@@ -68,31 +69,19 @@ export const PlayerCard = (props: PlayerCardProps) => {
           gap: 10,
         }}
       >
-        {/* TODO: Disable editing while the game is in play */}
         <EditableName
           name={nameState}
           onNameChange={setNameState}
           color={nameColor}
           editing={isEditing}
         />
-        {/* TODO: State for player loading */}
-        <div
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            background: player
-              ? player === "a"
-                ? palette.primary
-                : palette.secondary
-              : palette.neutral,
-            border: myTurn ? `1px solid ${palette.neutralLight}` : undefined,
-          }}
+        <Chip
+          player={player}
+          isMyTurn={isMyTurn}
+          isRemovalTurn={isRemovalTurn}
         />
-        {isRemove && <i>{" (to remove)"}</i>}
       </div>
       {/* TODO: Shimmer */}
-
       <RemainingMen
         remainingMenCount={remainingMen ?? defaultRemainingMenCount}
         player={player}

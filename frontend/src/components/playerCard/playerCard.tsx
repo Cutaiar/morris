@@ -2,7 +2,7 @@ import React from "react";
 
 import { Player } from "../../hooks/useGameState";
 import { palette } from "../../theme";
-import { RemainingMen, IconButton, IconButtonProps } from "..";
+import { RemainingMen, IconButton, IconButtonProps } from "components";
 import { EditableName } from "./editableName";
 import { Chip } from "./chip";
 

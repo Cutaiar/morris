@@ -26,6 +26,7 @@ import { useMount } from "react-use";
 
 // Style
 import { palette } from "theme";
+import styled from "styled-components";
 
 // TODO this should import from somewhere else
 import { Player } from "hooks/useGameState";
@@ -100,10 +101,10 @@ export const Game = () => {
   };
 
   return (
-    <div className="App">
+    <AppContainer>
       <TopNav />
-      <div className="Page">
-        <div className="Controls">
+      <Page>
+        <Controls>
           {!opponentType && (
             <OpponentSelector onDecision={handleOpponentSelected} />
           )}
@@ -134,7 +135,7 @@ export const Game = () => {
               opponent is local
             </label>
           )}
-        </div>
+        </Controls>
 
         {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
         <Board
@@ -150,7 +151,7 @@ export const Game = () => {
           }
         />
 
-        <div className="Controls">
+        <Controls>
           <PlayerCard
             player={player}
             local
@@ -229,11 +230,11 @@ export const Game = () => {
               </div>
             )}
           </PlayerCard>
-        </div>
+        </Controls>
 
         {/* Show raw Game State for debug */}
         {debug && <DebugGameState gameState={gameState} />}
-      </div>
+      </Page>
       {/* If there is a winner, show the modal, the game is over */}
       {gameState.winner && (
         <WinnerModal
@@ -241,6 +242,45 @@ export const Game = () => {
           winner={gameState.winner}
         />
       )}
-    </div>
+    </AppContainer>
   );
 };
+
+/** Take viewport height and layout full-width rows */
+const AppContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+/** Set the background, layout full height rows*/
+const Page = styled.div`
+  background-color: ${({ theme }) => theme.palette.background};
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: ${({ theme }) => theme.palette.neutralLight};
+  gap: 20px;
+  width: 100%;
+  flex: 1;
+  padding-top: 100px;
+  padding-bottom: 100px;
+`;
+
+/** Hold the playerCard */
+const Controls = styled.div`
+  background-color: ${({ theme }) => theme.palette.neutralDark};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  border-radius: 10px;
+`;

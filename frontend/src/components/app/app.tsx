@@ -1,8 +1,8 @@
 import React from "react";
 
 // Style
-import "./app.css";
-import { palette } from "theme";
+import { defaultTheme, palette } from "theme";
+import { ThemeProvider } from "styled-components";
 
 // Components
 import GithubCorner from "react-github-corner";
@@ -22,15 +22,17 @@ export const App: React.FC = () => {
     // TODO: get initial prefs from the cache and cache any updates
     <PrefsProvider initialValue={defaultPrefs}>
       <SocketProvider>
-        <Game />
-        <GithubCorner
-          href="https://github.com/Cutaiar/morris"
-          bannerColor={palette.neutral}
-          octoColor={palette.background}
-          size={85}
-          direction="right"
-          {...openInNewTabProps}
-        />
+        <ThemeProvider theme={defaultTheme}>
+          <Game />
+          <GithubCorner
+            href="https://github.com/Cutaiar/morris"
+            bannerColor={palette.neutral}
+            octoColor={palette.background}
+            size={85}
+            direction="right"
+            {...openInNewTabProps}
+          />
+        </ThemeProvider>
       </SocketProvider>
     </PrefsProvider>
   );

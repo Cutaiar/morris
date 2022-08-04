@@ -18,6 +18,7 @@ import { useDebug } from "hooks";
 import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
+import { DragTranslate } from "components/Drag/DragTranslate";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
@@ -262,17 +263,19 @@ const Ring = (props: RingProps) => {
         stroke={stroke}
       />
       {points.map((point, i) => (
-        <SVGPoint
-          {...centers[i]}
-          r={pointRadius}
-          point={point[1]}
-          id={point[0]}
-          onClick={() => onClick?.(point[0])}
-          selected={point[0] === selectedPoint}
-          key={point[0]}
-          sound={sound}
-          disabled={disabled}
-        />
+        <DragTranslate>
+          <SVGPoint
+            {...centers[i]}
+            r={pointRadius}
+            point={point[1]}
+            id={point[0]}
+            onClick={() => onClick?.(point[0])}
+            selected={point[0] === selectedPoint}
+            key={point[0]}
+            sound={sound}
+            disabled={disabled}
+          />
+        </DragTranslate>
       ))}
     </g>
   );

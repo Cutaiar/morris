@@ -26,6 +26,7 @@ export interface GameState {
   stateGraph: StateGraph;
   mills: Mill[];
   winner?: Player;
+  nextMoves: PointID[];
 }
 
 export interface BaseAction {

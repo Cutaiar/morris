@@ -64,6 +64,7 @@ export const initialStateSix: GameState = {
   remainingMen: { a: 6, b: 6 },
   mills: initialMills,
   winner: undefined,
+  nextMoves: Object.keys(initialStateGraph), // On turn 0, first player can move anywhere
 };
 
 /**
@@ -379,6 +380,47 @@ export const isValidAction = (action: Action, state: GameState): boolean => {
   }
 };
 
+/** Calculate the next valid moves
+ * Note: Should be called on a state which has already had to/from, mills, and turn updated
+ * // TODO: after phase too?
+ */
+const nextValidMoves = (state: GameState): PointID[] => {
+  // The next valid moves depends on the phase. Phase 1 has no selected piece,
+  // so selection is not needed to calculate it. In phase 2 however, the next valid
+  // moves depends on which piece you have selected. This is not yet implemented, maybe we should build a map of
+  // points occupied by the current player to their valid next locations? This is extra calculation but saves us from
+  // needing information for the board. Alternatively, we can calculate valid moves at the time of selection, but this
+  // requires either removing nextMoves from gameState, making it entirely a display concept, or having gameState be aware
+  // of the players current selection (which seems like it should only be a display concept...)
+
+  // If its a removal, only valid moves are those occupied by opponent
+  if (state.turn.type === "remove")
+    return Object.entries(state.stateGraph)
+      .filter((p) => p[1].occupancy === getOpponent(state.turn.player))
+      .map((p) => p[0]);
+
+  switch (state.phase) {
+    case 1:
+      // In phase 1, we just check all the spots on the board for ones which are a valid place
+      // curry the validator with the current state
+      const cIsValidPlace = (to: PointID) =>
+        isValidPlace({ type: "place", to: to }, state);
+      return Object.keys(state.stateGraph).filter((p) => cIsValidPlace(p));
+    case 2:
+      // In phase 2, only neighbors of the piece the player intends to move matter.
+      // curry the validator with the current state
+      // TODO: Don't know how to do this yet, "a" is not the right "from"
+      const cIsValidMove = (p: PointID) =>
+        isValidMove({ type: "move", from: "a", to: p }, state);
+      return Object.keys(state.stateGraph).filter((p) => cIsValidMove(p));
+    case 3:
+      // Never get here yet
+      return [];
+    default:
+      return [];
+  }
+};
+
 const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
   const currentPlayer = state.turn.player;
 
@@ -413,6 +455,9 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
 
   // Update the turn (which is dependent on the updated mills)
   nextState = { ...nextState, turn: nextTurn(nextState) };
+
+  // Update the next valid moves (dependent on updated mills and turn)
+  nextState = { ...nextState, nextMoves: nextValidMoves(nextState) };
 
   // TODO: Check for win? Can you win in this phase?
   // I don't think so, and at this point, it causes issues to allow a win in phase 1
@@ -458,6 +503,9 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
   // Update the turn (which is dependent on the updated mills)
   nextState = { ...nextState, turn: nextTurn(nextState) };
 
+  // Update the next valid moves (dependent on updated mills and turn)
+  nextState = { ...nextState, nextMoves: nextValidMoves(nextState) };
+
   // Check to see if there is winner
   nextState = { ...nextState, winner: getWinner(nextState) };
 
@@ -495,6 +543,9 @@ const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
 
   // Update the turn (which is dependent on the updated mills? Maybe not for a remove)
   nextState = { ...nextState, turn: nextTurn(nextState) };
+
+  // Update the next valid moves (dependent on updated mills and turn)
+  nextState = { ...nextState, nextMoves: nextValidMoves(nextState) };
 
   // Check to see if there is winner
   nextState = { ...nextState, winner: getWinner(nextState) };

@@ -94,7 +94,14 @@ export const Board: React.FC<BoardProps> = (props) => {
       .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
       .map<[PointID, PointForDisplay]>((p) => [
         p[0],
-        { ...p[1], next: gameState.nextMoves.includes(p[0]) },
+        {
+          ...p[1],
+          next: selectedPoint
+            ? !Array.isArray(gameState.nextMoves) &&
+              gameState.nextMoves[selectedPoint].includes(p[0])
+            : Array.isArray(gameState.nextMoves) &&
+              gameState.nextMoves.includes(p[0]),
+        },
       ]),
   }));
 

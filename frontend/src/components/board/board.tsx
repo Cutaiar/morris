@@ -53,6 +53,11 @@ const validateRingCount = (ringCount: number) => {
   }
 };
 
+/** Represents a point, augmented with a little extra information to make displaying it easier / more efficient */
+interface PointForDisplay extends Point {
+  next?: boolean;
+}
+
 /**
  * Represents the morris board to be played on.
  *
@@ -84,10 +89,20 @@ export const Board: React.FC<BoardProps> = (props) => {
     size: paddedSize * (i + 1) * (1 / ringCount),
 
     // This distributes 8 points from the state graph to each ring, moving from inner to outer
-    points: Object.entries(gameState.stateGraph).slice(
-      i * numberOfPointsInRing,
-      (i + 1) * numberOfPointsInRing
-    ),
+    // Here, we also take some information from the gameState and store it with the point for convenient display
+    points: Object.entries(gameState.stateGraph)
+      .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
+      .map<[PointID, PointForDisplay]>((p) => [
+        p[0],
+        {
+          ...p[1],
+          next: selectedPoint
+            ? !Array.isArray(gameState.nextMoves) &&
+              gameState.nextMoves[selectedPoint].includes(p[0])
+            : Array.isArray(gameState.nextMoves) &&
+              gameState.nextMoves.includes(p[0]),
+        },
+      ]),
   }));
 
   // When any point is clicked, dispatch an action noting so.
@@ -214,7 +229,7 @@ interface RingProps extends HasSound {
   vbsize: number;
   stroke: string;
   pointRadius: number;
-  points: [string, Point][]; // Points in the ring from top-left clockwise as object.entries
+  points: [string, PointForDisplay][]; // Points in the ring from top-left clockwise as object.entries, augmented with display info
   onClick?: (pointID: PointID) => void;
   selectedPoint?: PointID;
   disabled?: boolean;
@@ -282,7 +297,7 @@ interface SVGPointProps extends HasSound {
   cx: number;
   cy: number;
   r: number;
-  point: Point;
+  point: PointForDisplay;
   id: string;
   onClick: () => void;
   selected?: boolean;
@@ -384,6 +399,15 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           </>
         )}
       </circle>
+      {!disabled && point.next && (
+        <circle
+          cx={rest.cx}
+          cy={rest.cy}
+          r={5}
+          fill={"white"}
+          pointerEvents="none"
+        />
+      )}
       {debug && (
         <text
           x={props.cx}

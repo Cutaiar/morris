@@ -399,7 +399,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           </>
         )}
       </circle>
-      {point.next && (
+      {!disabled && point.next && (
         <circle
           cx={rest.cx}
           cy={rest.cy}

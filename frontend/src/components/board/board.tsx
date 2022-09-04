@@ -41,7 +41,7 @@ export interface BoardProps extends HasSound {
 
 const sizeDefault = 400;
 
-export const maxRings = 6;
+export const maxRings = 6; // 6 rings is the maximum that looks OK right now. // TODO -- adapt point size and other things to support large number of rings
 export const minRings = 2; // TODO -- we can support 3 men morris (1 ring) by adding a center point
 
 /** Throws if ringCount is not in the supported range */

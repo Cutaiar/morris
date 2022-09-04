@@ -17,10 +17,25 @@ export interface RemainingMenProps {
 export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
   const { remainingMenCount, player } = props;
 
-  const radius = 10;
-  const gap = 2 * radius;
-  const width = (radius + gap) * 7; // This magic number is the max remaining count + 1
-  const height = radius + gap;
+  const diameter = 20;
+  const gap = diameter / 4; // Gap between points
+
+  const Man = (i: number) => (
+    <div
+      style={{
+        width: diameter,
+        height: diameter,
+        borderRadius: "50%",
+        margin: gap,
+        background: player
+          ? player === "a"
+            ? palette.primary
+            : palette.secondary
+          : palette.neutral,
+      }}
+      key={i}
+    />
+  );
 
   // This could be implemented with divs and flexbox instead, but i'm on an svg bender rn so...
   return (
@@ -28,32 +43,19 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
       <label style={{ fontSize: "medium", color: palette.neutral }}>
         remaining men
       </label>
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        <rect
-          x1={0}
-          y1={0}
-          width={"100%"}
-          height={"100%"}
-          rx="5"
-          stroke={palette.neutral}
-          fillOpacity={0}
-        />
-        {new Array(remainingMenCount).fill(undefined).map((_, i) => (
-          <circle
-            cx={(i + 1) * (gap + radius)}
-            cy={"50%"}
-            r={radius}
-            fill={
-              player
-                ? player === "a"
-                  ? palette.primary
-                  : palette.secondary
-                : palette.neutral
-            }
-            key={i}
-          />
-        ))}
-      </svg>
+      <div
+        style={{
+          display: "flex",
+          flexFlow: "row wrap",
+          justifyContent: "start",
+          borderRadius: 5,
+          border: `1px solid ${palette.neutral}`,
+          padding: gap,
+          width: (diameter + gap * 2) * 6, // 6 points to a row before wrapping
+        }}
+      >
+        {new Array(remainingMenCount).fill(undefined).map((_, i) => Man(i))}
+      </div>
     </div>
   );
 };

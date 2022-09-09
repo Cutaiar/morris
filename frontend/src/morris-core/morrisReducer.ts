@@ -1,5 +1,5 @@
 import { partition } from "utils";
-import { generate } from "./initialState/generate";
+import { initialStateNine } from "./initialState";
 import {
   Action,
   GameState,
@@ -541,7 +541,7 @@ export const reducer = (state: GameState, action: Action): GameState => {
       return nextStateAfterRemove(state, action);
     // We support resetting the game entirely
     case "reset":
-      return generate(2);
+      return initialStateNine;
     // If a different action came in here, bail
     default:
       throw new Error(

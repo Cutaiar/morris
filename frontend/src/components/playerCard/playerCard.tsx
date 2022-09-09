@@ -10,6 +10,7 @@ import { palette } from "theme";
 import { RemainingMen, IconButton, IconButtonProps } from "components";
 import { EditableName } from "./editableName";
 import { Chip } from "./chip";
+import { ToRemove } from "./ToRemove";
 
 export type PlayerCardProps = React.PropsWithChildren<{
   /** Which player is this. undefined if not determined yet */
@@ -80,11 +81,8 @@ export const PlayerCard = (props: PlayerCardProps) => {
           color={nameColor}
           editing={isEditing}
         />
-        <Chip
-          player={player}
-          isMyTurn={isMyTurn}
-          isRemovalTurn={isRemovalTurn}
-        />
+        <Chip player={player} isMyTurn={isMyTurn} />
+        {isRemovalTurn && <ToRemove />}
       </div>
       {/* TODO: Shimmer */}
       <RemainingMen

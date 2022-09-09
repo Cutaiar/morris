@@ -11,8 +11,6 @@ interface ChipProps {
   player?: Player;
   /** Is it `player`'s turn? */
   isMyTurn?: boolean;
-  /** Is the current turn a removal. Should only be true if `isMyTurn` is true too*/
-  isRemovalTurn?: boolean;
 }
 
 /**
@@ -21,7 +19,7 @@ interface ChipProps {
  * TODO: State for player loading
  */
 export const Chip = (props: ChipProps) => {
-  const { player, isMyTurn, isRemovalTurn } = props;
+  const { player, isMyTurn } = props;
 
   return (
     <div
@@ -36,8 +34,6 @@ export const Chip = (props: ChipProps) => {
           : palette.neutral,
         border: isMyTurn ? `1px solid ${palette.neutralLight}` : undefined,
       }}
-    >
-      {isRemovalTurn && <i>{" (to remove)"}</i>}
-    </div>
+    ></div>
   );
 };

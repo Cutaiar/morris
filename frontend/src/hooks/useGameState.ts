@@ -1,6 +1,6 @@
 import React from "react";
 import { reducer } from "morris-core";
-import { generate, initialStateNine } from "morris-core/initialState";
+import { initialStateNine } from "morris-core/initialState";
 
 /**
  * A reducer-like hook which holds the entire state of the game

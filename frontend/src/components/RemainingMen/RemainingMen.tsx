@@ -37,9 +37,8 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
     />
   );
 
-  // This could be implemented with divs and flexbox instead, but i'm on an svg bender rn so...
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: gap }}>
       <label style={{ fontSize: "medium", color: palette.neutral }}>
         remaining men
       </label>
@@ -52,6 +51,7 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
           border: `1px solid ${palette.neutral}`,
           padding: gap,
           width: (diameter + gap * 2) * 6, // 6 points to a row before wrapping
+          minHeight: diameter + gap * 2, // Maintain height after last man is gone
         }}
       >
         {new Array(remainingMenCount).fill(undefined).map((_, i) => Man(i))}

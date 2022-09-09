@@ -13,7 +13,6 @@ const ringManMultiplier = 3;
  * Generate an initial state for a game of morris with any number of rings.
  */
 export const generate = (numberOfRings: number): GameState => {
-  console.log("generate");
   const sg = generateStateGraph(numberOfRings);
   const numberOfMen = numberOfRings * ringManMultiplier;
   return {

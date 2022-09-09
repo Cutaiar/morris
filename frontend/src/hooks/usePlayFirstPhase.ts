@@ -17,7 +17,6 @@ export const usePlayFirstPhase = (
     const interval = setInterval(function () {
       if (Object.values(gameState.remainingMen).some((rm) => rm !== 0)) {
         makeRandomPlace();
-        console.log(gameState.remainingMen);
       } else {
         clearInterval(interval);
       }

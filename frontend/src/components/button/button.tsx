@@ -41,7 +41,14 @@ export const Button = (props: ButtonProps) => {
       }}
       onClick={onClick}
     >
-      <div style={{ display: "flex", gap: 8 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+        }}
+      >
         {props.children}
         {loading && <Loader />}
       </div>

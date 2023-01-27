@@ -46,7 +46,7 @@ export const Game = () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [debug, _, syncDebug] = useDebug();
+  const [debug, setDebug, syncDebug] = useDebug();
   useMount(() => syncDebug());
 
   // If advanced controls are open or not
@@ -175,44 +175,24 @@ export const Game = () => {
                 <label
                   style={{ fontSize: "medium" }}
                 >{`phase: ${gameState.phase}`}</label>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"opponentControlled"}
-                    type={"checkbox"}
-                    checked={opponentType === "local"}
-                    onChange={(e) =>
-                      setOpponentType(e.target.checked ? "local" : "ai")
-                    }
-                  />
-                  <label
-                    style={{ fontSize: "medium" }}
-                    htmlFor="opponentControlled"
-                  >
-                    control opponent
-                  </label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"mute"}
-                    type={"checkbox"}
-                    checked={mute}
-                    onChange={(e) => setMute(e.target.checked)}
-                  />
-                  <label style={{ fontSize: "medium" }} htmlFor="mute">
-                    mute
-                  </label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"motion"}
-                    type={"checkbox"}
-                    checked={motion}
-                    onChange={(e) => setMotion(e.target.checked)}
-                  />
-                  <label style={{ fontSize: "medium" }} htmlFor="motion">
-                    motion
-                  </label>
-                </div>
+
+                <Toggle
+                  checked={opponentType === "local"}
+                  onChange={(c) => setOpponentType(c ? "local" : "ai")}
+                  label={"Control opponent"}
+                />
+                <Toggle
+                  label={"Mute"}
+                  checked={mute ?? false}
+                  onChange={setMute}
+                />
+                <Toggle
+                  label={"Reduce motion"}
+                  checked={motion ?? false}
+                  onChange={setMotion}
+                />
+
+                <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
 
                 <Button onClick={() => updateGameState({ type: "reset" })}>
                   Reset Game
@@ -243,6 +223,29 @@ export const Game = () => {
         />
       )}
     </AppContainer>
+  );
+};
+
+/**
+ * A simple toggle component
+ */
+const Toggle = (props: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+}) => {
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <input
+        id={props.label}
+        type={"checkbox"}
+        checked={props.checked}
+        onChange={(e) => props.onChange(e.target.checked)}
+      />
+      <label style={{ fontSize: "medium" }} htmlFor={props.label}>
+        {props.label}
+      </label>
+    </div>
   );
 };
 

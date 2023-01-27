@@ -15,6 +15,13 @@ export function getRandomProperty(obj: {}) {
 }
 
 /**
+ * Get a random element from an array
+ */
+export const getRandomElement = (arr: any[]) => {
+  return arr[Math.floor(Math.random() * arr.length)];
+};
+
+/**
  * Use like Array.filter, but get a handle on the elements "filtered out"
  */
 export const partition = (

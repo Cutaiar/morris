@@ -30,6 +30,7 @@ import styled from "styled-components";
 
 // TODO this should import from somewhere else
 import { Player } from "hooks/useGameState";
+import { OpponentDifficulty } from "hooks/useOpponent";
 
 const defaultOpponentName = "Opponent";
 
@@ -62,6 +63,9 @@ export const Game = () => {
   const [opponentName, setOpponentName] = React.useState<string | undefined>(
     undefined
   );
+  // Difficulty of the opponent. Player can change this mid game currently
+  const [oppDifficulty, setOppDifficulty] =
+    React.useState<OpponentDifficulty>("easy");
 
   const [prefs, setPref, resetPrefs] = usePrefs();
   const mute = prefs.mute;
@@ -123,12 +127,24 @@ export const Game = () => {
             <Loader text="waiting for opponent..." />
           )}
           {opponent && opponentType === "ai" && (
-            <Opponent
-              state={gameState}
-              player={opponent}
-              updateGameState={updateGameState}
-              sound={!mute}
-            />
+            <>
+              <Opponent
+                state={gameState}
+                player={opponent}
+                updateGameState={updateGameState}
+                sound={!mute}
+                difficulty={oppDifficulty}
+              />
+              <Button
+                onClick={() =>
+                  setOppDifficulty(
+                    oppDifficulty === "medium" ? "easy" : "medium"
+                  )
+                }
+              >
+                {oppDifficulty}
+              </Button>
+            </>
           )}
           {opponentType === "local" && (
             <label style={{ fontSize: "medium", color: palette.neutral }}>

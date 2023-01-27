@@ -17,7 +17,7 @@ import {
 /**
  * Given a player, get the opponent
  */
-const getOpponent = (player: Player): Player => {
+export const getOpponent = (player: Player): Player => {
   return player === "a" ? "b" : "a";
 };
 

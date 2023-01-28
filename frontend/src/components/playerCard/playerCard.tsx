@@ -97,8 +97,8 @@ export const PlayerCard = (props: PlayerCardProps) => {
           width: "100%",
         }}
       >
-        {toolbarIcons?.map((props) => (
-          <IconButton {...props} />
+        {toolbarIcons?.map((props, i) => (
+          <IconButton key={i} {...props} />
         ))}
         {isEditing ? (
           <>

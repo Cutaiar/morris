@@ -65,7 +65,7 @@ export const Game = () => {
   );
   // Difficulty of the opponent. Player can change this mid game currently
   const [oppDifficulty, setOppDifficulty] =
-    React.useState<OpponentDifficulty>("easy");
+    React.useState<OpponentDifficulty>("medium");
 
   const [prefs, setPref, resetPrefs] = usePrefs();
   const mute = prefs.mute;

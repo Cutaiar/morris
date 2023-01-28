@@ -203,7 +203,7 @@ export const Game = () => {
                   onChange={setMute}
                 />
                 <Toggle
-                  label={"Reduce motion"}
+                  label={"Full motion"}
                   checked={motion ?? false}
                   onChange={setMotion}
                 />

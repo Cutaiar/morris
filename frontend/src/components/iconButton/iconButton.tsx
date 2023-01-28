@@ -3,7 +3,7 @@ import React from "react";
 // Icons
 import { IconType } from "react-icons";
 import {
-  FiBox,
+  FiEye,
   FiCheck,
   FiEdit,
   FiSettings,
@@ -15,7 +15,7 @@ import {
 // Style
 import "./iconButton.css";
 
-type IconName = "edit" | "settings" | "check" | "x" | "box" | "users" | "wifi"; // TODO import feather directly to support all icons
+type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
 export interface IconButtonProps {
   name: IconName;
   disabled?: boolean;
@@ -31,7 +31,7 @@ export const IconButton = (props: IconButtonProps) => {
     settings: FiSettings,
     check: FiCheck,
     x: FiX,
-    box: FiBox,
+    eye: FiEye,
     users: FiUsers,
     wifi: FiWifi,
   };

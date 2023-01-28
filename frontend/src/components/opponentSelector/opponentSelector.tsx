@@ -21,7 +21,7 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
       <div style={{ display: "flex", gap: 20 }}>
         <IconButton
           onClick={() => onDecision?.("ai")}
-          name={"box"}
+          name={"eye"}
           text={"AI"}
         />
 

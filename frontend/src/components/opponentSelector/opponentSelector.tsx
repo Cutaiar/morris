@@ -4,7 +4,7 @@ import React from "react";
 import { palette } from "theme";
 
 // Components
-import { Button } from "components";
+import { IconButton } from "components";
 
 export type OpponentType = "ai" | "local" | "online";
 export interface OpponentSelectorProps {
@@ -19,15 +19,22 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
         Choose your opponent
       </h1>
       <div style={{ display: "flex", gap: 20 }}>
-        <Button primary onClick={() => onDecision?.("ai")}>
-          Play AI
-        </Button>
-        <Button primary onClick={() => onDecision?.("local")}>
-          Play local
-        </Button>
-        <Button primary onClick={() => onDecision?.("online")}>
-          Play online
-        </Button>
+        <IconButton
+          onClick={() => onDecision?.("ai")}
+          name={"box"}
+          text={"AI"}
+        />
+
+        <IconButton
+          onClick={() => onDecision?.("local")}
+          name={"users"}
+          text={"Local"}
+        />
+        <IconButton
+          onClick={() => onDecision?.("online")}
+          name={"wifi"}
+          text={"Online"}
+        />
       </div>
     </div>
   );

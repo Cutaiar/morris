@@ -3,7 +3,8 @@ import { io, Socket } from "socket.io-client";
 
 // TODO: switch between dev and prod dynamically
 // const uri = "http://localhost:1337";
-const uri = "https://morris-socket-server.herokuapp.com";
+// const uri = "https://morris-socket-server.herokuapp.com";
+const uri = "https://morris-socket-server.onrender.com";
 
 interface SocketContextValue {
   socket?: Socket;

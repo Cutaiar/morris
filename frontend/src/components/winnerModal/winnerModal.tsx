@@ -19,13 +19,15 @@ export interface WinnerModalProps {
   onPlayAgain: () => void;
   /** which player won? */
   winner: Player;
+  /** Name of the winning player */
+  winnerName: string;
 }
 
 /**
  * Shown when a player wins the game
  */
 export const WinnerModal = (props: WinnerModalProps) => {
-  const { onPlayAgain, winner } = props;
+  const { onPlayAgain, winner, winnerName } = props;
 
   const { width, height } = useWindowSize();
 
@@ -64,7 +66,7 @@ export const WinnerModal = (props: WinnerModalProps) => {
           }}
           className="fade-in"
         >
-          <h1>{`${winner} wins.`}</h1>
+          <h1>{`${winnerName} wins.`}</h1>
           <Button onClick={onPlayAgain}>Play again</Button>
         </div>
       </div>

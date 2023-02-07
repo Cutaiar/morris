@@ -236,6 +236,7 @@ export const Game = () => {
         <WinnerModal
           onPlayAgain={() => updateGameState({ type: "reset" })}
           winner={gameState.winner}
+          winnerName={gameState.winner === "a" ? name : opponentName ?? ""}
         />
       )}
     </AppContainer>

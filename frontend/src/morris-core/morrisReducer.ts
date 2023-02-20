@@ -344,11 +344,15 @@ export const isValidAction = (action: Action, state: GameState): boolean => {
 const nextValidMoves = (
   state: GameState
 ): PointID[] | Record<PointID, PointID[]> => {
-  // If its a removal, only valid moves are those occupied by opponent
-  if (state.turn.type === "remove")
-    return Object.entries(state.stateGraph)
-      .filter((p) => p[1].occupancy === getOpponent(state.turn.player))
+  // If its a removal, we already have a validator
+  if (state.turn.type === "remove") {
+    // curry the validator with the current state
+    const cIsValidRemove = (to: PointID) =>
+      isValidRemove({ type: "remove", to: to }, state);
+    return Object.keys(state.stateGraph)
+      .filter(cIsValidRemove)
       .map((p) => p[0]);
+  }
 
   switch (state.phase) {
     case 1:

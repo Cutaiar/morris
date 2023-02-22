@@ -5,7 +5,6 @@ import { Action, GameState, Player } from "hooks/useGameState"; // TODO: imports
 
 // Hooks
 import { useOpponent } from "hooks";
-import { OpponentDifficulty } from "hooks/useOpponent";
 
 // Style
 import { palette } from "theme";
@@ -15,16 +14,18 @@ import { HasSound } from "../board/board"; // TODO: import should come from else
 import useSound from "use-sound";
 import opponentSound from "sound/octave-tap/tap-wooden.mp3";
 
+import { AIID } from "morris-ai";
+
 // export type OpponentProps = Parameters<typeof useOpponent>;
 export interface OpponentProps extends HasSound {
   state: GameState;
   player: Player;
   updateGameState: React.Dispatch<Action>;
-  difficulty: OpponentDifficulty;
+  ai: AIID;
 }
 
 export const Opponent: React.FC<OpponentProps> = (props) => {
-  const { state, player, updateGameState, sound, difficulty } = props;
+  const { state, player, updateGameState, sound, ai } = props;
 
   const [play] = useSound(opponentSound);
 
@@ -33,7 +34,7 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
     updateGameState(action);
   };
 
-  const { status } = useOpponent(state, player, handleDecision, difficulty);
+  const { status } = useOpponent(state, player, handleDecision, ai);
   return (
     <span style={{ fontSize: "medium" }}>
       {`opponent is `}

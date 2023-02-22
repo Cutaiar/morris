@@ -2,6 +2,7 @@ import React from "react";
 import { getNextMoveMinimax } from "../morris-ai/getNextMoveMinimax";
 import { Action, GameState, Player } from "morris-core";
 import {
+  AIID,
   getNextMoveRandom,
   getNextMoveSmart,
   NextMoveFunction,
@@ -12,8 +13,6 @@ interface UseOpponentReturn {
   status: OpponentStatus;
 }
 
-export type OpponentDifficulty = "easy" | "medium" | "hard";
-
 /**
  * Get an opp. to play with
  */
@@ -21,17 +20,17 @@ export const useOpponent = (
   state: GameState,
   player: Player,
   onDecision: (action: Action) => void,
-  difficulty: OpponentDifficulty
+  ai: AIID
 ): UseOpponentReturn => {
   const opponentThinkingTime = 1000;
   const [status, setStatus] = React.useState<OpponentStatus>("waiting");
 
-  const nextMoveFnByDifficulty: Record<OpponentDifficulty, NextMoveFunction> = {
-    easy: getNextMoveRandom,
-    medium: getNextMoveSmart,
-    hard: getNextMoveMinimax,
+  const nextMoveFnByDifficulty: Record<AIID, NextMoveFunction> = {
+    rand: getNextMoveRandom,
+    smart: getNextMoveSmart,
+    minimax: getNextMoveMinimax,
   };
-  const nextMoveFn = nextMoveFnByDifficulty[difficulty];
+  const nextMoveFn = nextMoveFnByDifficulty[ai];
 
   React.useEffect(() => {
     let timer: NodeJS.Timeout | undefined = undefined;

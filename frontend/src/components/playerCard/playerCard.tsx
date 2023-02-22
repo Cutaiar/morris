@@ -7,10 +7,17 @@ import { Player } from "hooks/useGameState";
 import { palette } from "theme";
 
 // Components
-import { RemainingMen, IconButton, IconButtonProps } from "components";
-import { EditableName } from "./editableName";
-import { Chip } from "./chip";
+import {
+  RemainingMen,
+  IconButton,
+  IconButtonProps,
+  Chip,
+  EditableName,
+} from "components";
 import { ToRemove } from "./ToRemove";
+
+// Hooks
+import { useKey } from "react-use";
 
 export type PlayerCardProps = React.PropsWithChildren<{
   /** Which player is this. undefined if not determined yet */
@@ -64,6 +71,17 @@ export const PlayerCard = (props: PlayerCardProps) => {
     setNameState(name);
   }, [name, isEditing]);
 
+  const onAcceptName = (name?: string) => {
+    name && onNameChange?.(name);
+    setIsEditing(false);
+  };
+
+  useKey("Enter", () => isEditing && onAcceptName(nameState), undefined, [
+    nameState,
+    onNameChange,
+    isEditing,
+  ]);
+
   return (
     <>
       <div
@@ -81,7 +99,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
           color={nameColor}
           editing={isEditing}
         />
-        <Chip player={player} isMyTurn={isMyTurn} />
+        <Chip color={getChipColor(player)} emphasis={isMyTurn} />
         {isRemovalTurn && <ToRemove />}
       </div>
       {/* TODO: Shimmer */}
@@ -105,8 +123,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
             <IconButton
               name="check"
               onClick={() => {
-                nameState && onNameChange?.(nameState);
-                setIsEditing(false);
+                onAcceptName(nameState);
               }}
               disabled={(nameState?.length ?? 0) === 0}
             />
@@ -134,4 +151,12 @@ export const PlayerCard = (props: PlayerCardProps) => {
       {props.children}
     </>
   );
+};
+
+const getChipColor = (player?: Player) => {
+  return player
+    ? player === "a"
+      ? palette.primary
+      : palette.secondary
+    : palette.neutral;
 };

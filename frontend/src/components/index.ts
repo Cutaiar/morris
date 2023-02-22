@@ -2,6 +2,7 @@
 export { Button } from "./button/button";
 export { Loader } from "./loader/loader";
 export { IconButton } from "./iconButton/iconButton";
+export { Toggle } from "./toggle/toggle";
 
 // Morris specific components
 export { App } from "./app/app";
@@ -15,7 +16,12 @@ export { WinnerModal } from "./winnerModal/winnerModal";
 export { DebugGameState } from "./debug/debugGameState";
 export { ErrorFallback } from "./error/ErrorHandler";
 export { RemainingMen } from "./RemainingMen/RemainingMen";
+export { Chip } from "./chip/chip";
+export { EditableName } from "./editableName/editableName";
 
 // Types
-export type { OpponentType } from "./opponentSelector/opponentSelector";
+export type {
+  OpponentType,
+  Decision,
+} from "./opponentSelector/opponentSelector";
 export type { IconButtonProps } from "./iconButton/iconButton";

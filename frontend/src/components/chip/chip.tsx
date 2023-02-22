@@ -1,16 +1,13 @@
 import React from "react";
 
-// Types
-import { Player } from "hooks/useGameState";
-
 // Style
 import { palette } from "theme";
 
 interface ChipProps {
   /** The player this chip represents */
-  player?: Player;
+  color?: string;
   /** Is it `player`'s turn? */
-  isMyTurn?: boolean;
+  emphasis?: boolean;
 }
 
 /**
@@ -19,7 +16,7 @@ interface ChipProps {
  * TODO: State for player loading
  */
 export const Chip = (props: ChipProps) => {
-  const { player, isMyTurn } = props;
+  const { color, emphasis } = props;
 
   return (
     <div
@@ -27,12 +24,8 @@ export const Chip = (props: ChipProps) => {
         width: 20,
         height: 20,
         borderRadius: 10,
-        background: player
-          ? player === "a"
-            ? palette.primary
-            : palette.secondary
-          : palette.neutral,
-        border: isMyTurn ? `1px solid ${palette.neutralLight}` : undefined,
+        background: color,
+        border: emphasis ? `1px solid ${palette.neutralLight}` : undefined,
       }}
     ></div>
   );

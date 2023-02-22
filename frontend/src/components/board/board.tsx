@@ -409,7 +409,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         />
       )}
       {debug && (
-        <text
+        <p
           x={props.cx}
           y={props.cy}
           textAnchor="middle"
@@ -421,7 +421,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           pointerEvents={"none"}
         >
           {props.id}
-        </text>
+        </p>
       )}
     </g>
   );

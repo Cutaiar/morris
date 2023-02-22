@@ -60,7 +60,7 @@ export const IconButton = (props: IconButtonProps) => {
       title={tooltip} // TODO: Don't use title for tooltip, use own component
     >
       <Icon />
-      {text && <text style={{ paddingLeft: 8 }}>{text}</text>}
+      {text && <p style={{ paddingLeft: 8 }}>{text}</p>}
     </button>
   );
 };

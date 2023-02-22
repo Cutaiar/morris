@@ -7,18 +7,3 @@ export const openInNewTabProps = {
   target: "_blank",
   rel: "noopener noreferrer",
 };
-
-/**
- * Pick a random property of `obj`
- */
-export function getRandomProperty(obj: {}) {
-  const keys = Object.keys(obj);
-  return keys[Math.floor(Math.random() * keys.length)];
-}
-
-/**
- * Get a random element from an array
- */
-export const getRandomElement = (arr: any[]) => {
-  return arr[Math.floor(Math.random() * arr.length)];
-};

@@ -1,6 +1,6 @@
 import { GameState, Action, nextValidMoves, reducer } from "morris-core";
 import { countMenOnBoard, partition } from "morris-core/utils";
-import { NextMoveFunction } from "./useOpponent";
+import { NextMoveFunction } from "./types";
 
 /** A "next move function" which uses an alphabeta pruned minimax tree along with
  * a tuned heuristic evaluation function to produce the optimal move for a given `state` of the game.

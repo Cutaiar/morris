@@ -1,3 +1,5 @@
+// File contains utils used in the frontend morris web app
+
 /**
  * Destructure into props to make a link safely open in a new tab
  */
@@ -19,21 +21,4 @@ export function getRandomProperty(obj: {}) {
  */
 export const getRandomElement = (arr: any[]) => {
   return arr[Math.floor(Math.random() * arr.length)];
-};
-
-/**
- * Use like Array.filter, but get a handle on the elements "filtered out"
- */
-export const partition = (
-  array: any[],
-  predicate: (e: any) => boolean
-): [any, any] => {
-  return array.reduce(
-    ([pass, fail], elem) => {
-      return predicate(elem)
-        ? [[...pass, elem], fail]
-        : [pass, [...fail, elem]];
-    },
-    [[], []]
-  );
 };

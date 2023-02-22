@@ -1,5 +1,6 @@
 import React from "react";
 import { getRandomElement, getRandomProperty } from "utils";
+import { getNextMoveMinimax } from "./getNextMoveMinimax";
 import {
   Action,
   GameState,
@@ -9,17 +10,20 @@ import {
 } from "./useGameState";
 
 type OpponentStatus = "waiting" | "thinking";
-interface useOpponentReturn {
+interface UseOpponentReturn {
   status: OpponentStatus;
 }
 
-export type OpponentDifficulty = "easy" | "medium";
+export type OpponentDifficulty = "easy" | "medium" | "hard";
+
+/** A function which takes the current game state and returns an action to be executed */
+export type NextMoveFunction = (state: GameState) => Action | undefined;
 
 /**
  * Get the next move an opponent should make given the status to the game.
  * Moves are picked at random
  */
-export const getNextMoveRandom = (state: GameState): Action | undefined => {
+export const getNextMoveRandom: NextMoveFunction = (state: GameState) => {
   // Generate an action at random, but appropriate to what is happening in the game
   let action: Action | undefined = undefined;
   if (state.turn.type === "remove") {
@@ -55,7 +59,7 @@ export const getNextMoveRandom = (state: GameState): Action | undefined => {
  * Get the next move an opponent should make given the status to the game.
  * Employ some basic analysis of the board to make a move towards winning the game.
  */
-const getNextMoveSmart = (state: GameState): Action | undefined => {
+const getNextMoveSmart: NextMoveFunction = (state: GameState) => {
   // Generate an action at random, but appropriate to what is happening in the game
   let action: Action | undefined = undefined;
   if (state.turn.type === "remove") {
@@ -116,13 +120,17 @@ export const useOpponent = (
   state: GameState,
   player: Player,
   onDecision: (action: Action) => void,
-  difficulty?: OpponentDifficulty
-): useOpponentReturn => {
+  difficulty: OpponentDifficulty
+): UseOpponentReturn => {
   const opponentThinkingTime = 1000;
   const [status, setStatus] = React.useState<OpponentStatus>("waiting");
 
-  const nextMoveFn =
-    difficulty === "medium" ? getNextMoveSmart : getNextMoveRandom;
+  const nextMoveFnByDifficulty: Record<OpponentDifficulty, NextMoveFunction> = {
+    easy: getNextMoveRandom,
+    medium: getNextMoveSmart,
+    hard: getNextMoveMinimax,
+  };
+  const nextMoveFn = nextMoveFnByDifficulty[difficulty];
 
   React.useEffect(() => {
     let timer: NodeJS.Timeout | undefined = undefined;

@@ -1,4 +1,4 @@
-import { partition } from "utils";
+import { partition, countMenOnBoard } from "./utils";
 import { initialStateNine } from "./initialState";
 import {
   Action,
@@ -89,15 +89,6 @@ const getWinner = (state: GameState) => {
   }
 
   // Count the number of men still on the board for a given occupancy
-  // TODO: Move this out to utils or something
-  const countMenOnBoard = (state: GameState, occupancy: Occupancy) =>
-    Object.values(state.stateGraph).reduce((accumulator, point) => {
-      if (point.occupancy === occupancy) {
-        return accumulator + 1;
-      }
-
-      return accumulator;
-    }, 0);
 
   // Do we need to generalize for n players?
   const players: Occupancy[] = ["a", "b"];
@@ -341,7 +332,7 @@ export const isValidAction = (action: Action, state: GameState): boolean => {
  * making it entirely a display concept, or having gameState be aware
  * of the players current selection (which seems like it should only be a display concept...)
  */
-const nextValidMoves = (
+export const nextValidMoves = (
   state: GameState
 ): PointID[] | Record<PointID, PointID[]> => {
   // If its a removal, we already have a validator

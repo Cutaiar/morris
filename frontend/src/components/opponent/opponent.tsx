@@ -20,7 +20,7 @@ export interface OpponentProps extends HasSound {
   state: GameState;
   player: Player;
   updateGameState: React.Dispatch<Action>;
-  difficulty?: OpponentDifficulty;
+  difficulty: OpponentDifficulty;
 }
 
 export const Opponent: React.FC<OpponentProps> = (props) => {

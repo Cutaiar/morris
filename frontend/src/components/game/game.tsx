@@ -11,7 +11,9 @@ import {
   Board,
   OpponentSelector,
   OpponentType,
+  Decision,
   Loader,
+  Toggle,
 } from "components";
 
 // Hooks
@@ -28,11 +30,11 @@ import { useMount } from "react-use";
 import { palette } from "theme";
 import styled from "styled-components";
 
-// TODO this should import from somewhere else
-import { Player } from "hooks/useGameState";
+// Core
+import { AIID } from "morris-ai";
+import { Player } from "morris-core";
 
-const defaultOpponentName = "Opponent";
-
+/** The root of morris gameplay. Should be wrapped in required providers and placed in the `App` component. */
 export const Game = () => {
   // TODO: Figure out how to switch between online state and non-online state
   const [socketGameState, updateSocketGameState] = useSocketGameState();
@@ -45,24 +47,26 @@ export const Game = () => {
     setOpponent(opponentInfo.player);
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [debug, _, syncDebug] = useDebug();
+  /** Debug hook */
+  const [debug, setDebug, syncDebug] = useDebug();
   useMount(() => syncDebug());
 
-  // If advanced controls are open or not
+  /**  If advanced controls are open or not */
   const [isAdvanced, setIsAdvanced] = React.useState(false);
 
-  // Whether the opponent is controlled by the keyboard or not
-  const [opponentType, setOpponentType] = React.useState<
-    OpponentType | undefined
-  >(undefined);
+  /** The type of opponent the user is playing against*/
+  const [opponentType, setOpponentType] = React.useState<OpponentType>();
 
-  const [player, setPlayer] = React.useState<Player | undefined>(undefined);
-  const [opponent, setOpponent] = React.useState<Player | undefined>(undefined);
-  const [opponentName, setOpponentName] = React.useState<string | undefined>(
-    undefined
-  );
+  /** The local users player (always "a") */
+  const [player, setPlayer] = React.useState<Player>();
+  /** The opponents player (always "b") */
+  const [opponent, setOpponent] = React.useState<Player>();
+  /** Display name for the opponent */
+  const [opponentName, setOpponentName] = React.useState<string>();
+  /** Which AI is the player playing against */
+  const [oppAI, setOppAI] = React.useState<AIID>();
 
+  /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
   const mute = prefs.mute;
   const motion = prefs.motion;
@@ -81,9 +85,9 @@ export const Game = () => {
     opponentType === "online" ? updateSocketGameState : updateLocalGameState;
 
   const [connecting, setConnecting] = React.useState(false);
-  const handleOpponentSelected = async (type: OpponentType) => {
-    if (type === "online") {
-      setOpponentType(type);
+  const handleOpponentSelected = async (decision: Decision) => {
+    if (decision.type === "online") {
+      setOpponentType(decision.type);
       if (!connecting) {
         console.log("connecting");
         setConnecting(true);
@@ -94,8 +98,20 @@ export const Game = () => {
       }
       return;
     }
-    setOpponentType(type);
-    setOpponentName(defaultOpponentName);
+
+    if (decision.type === "local") {
+      setOpponentType(decision.type);
+      setOpponentName(decision.opponent);
+      setOpponent("b");
+      setPlayer("a");
+      return;
+      // TODO: Playing this local opponent should track the result of their game
+    }
+
+    // Otherwise, opponent is ai.
+    setOpponentType(decision.type);
+    setOpponentName(decision.ai);
+    setOppAI(decision.ai);
     setOpponent("b");
     setPlayer("a");
   };
@@ -104,6 +120,7 @@ export const Game = () => {
     <AppContainer>
       <TopNav />
       <Page>
+        {/* Controls for the opponents side */}
         <Controls>
           {!opponentType && (
             <OpponentSelector onDecision={handleOpponentSelected} />
@@ -122,12 +139,13 @@ export const Game = () => {
           {((opponentType === "online" && !opponent) || connecting) && (
             <Loader text="waiting for opponent..." />
           )}
-          {opponent && opponentType === "ai" && (
+          {opponent && opponentType === "ai" && oppAI && (
             <Opponent
               state={gameState}
               player={opponent}
               updateGameState={updateGameState}
               sound={!mute}
+              ai={oppAI}
             />
           )}
           {opponentType === "local" && (
@@ -151,6 +169,7 @@ export const Game = () => {
           }
         />
 
+        {/* Controls for the player side */}
         <Controls>
           <PlayerCard
             player={player}
@@ -175,44 +194,24 @@ export const Game = () => {
                 <label
                   style={{ fontSize: "medium" }}
                 >{`phase: ${gameState.phase}`}</label>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"opponentControlled"}
-                    type={"checkbox"}
-                    checked={opponentType === "local"}
-                    onChange={(e) =>
-                      setOpponentType(e.target.checked ? "local" : "ai")
-                    }
-                  />
-                  <label
-                    style={{ fontSize: "medium" }}
-                    htmlFor="opponentControlled"
-                  >
-                    control opponent
-                  </label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"mute"}
-                    type={"checkbox"}
-                    checked={mute}
-                    onChange={(e) => setMute(e.target.checked)}
-                  />
-                  <label style={{ fontSize: "medium" }} htmlFor="mute">
-                    mute
-                  </label>
-                </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <input
-                    id={"motion"}
-                    type={"checkbox"}
-                    checked={motion}
-                    onChange={(e) => setMotion(e.target.checked)}
-                  />
-                  <label style={{ fontSize: "medium" }} htmlFor="motion">
-                    motion
-                  </label>
-                </div>
+
+                <Toggle
+                  checked={opponentType === "local"}
+                  onChange={(c) => setOpponentType(c ? "local" : "ai")}
+                  label={"Control opponent"}
+                />
+                <Toggle
+                  label={"Mute"}
+                  checked={mute ?? false}
+                  onChange={setMute}
+                />
+                <Toggle
+                  label={"Full motion"}
+                  checked={motion ?? false}
+                  onChange={setMotion}
+                />
+
+                <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
 
                 <Button onClick={() => updateGameState({ type: "reset" })}>
                   Reset Game
@@ -240,6 +239,7 @@ export const Game = () => {
         <WinnerModal
           onPlayAgain={() => updateGameState({ type: "reset" })}
           winner={gameState.winner}
+          winnerName={gameState.winner === "a" ? name : opponentName ?? ""}
         />
       )}
     </AppContainer>

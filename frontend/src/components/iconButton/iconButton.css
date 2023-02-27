@@ -1,5 +1,5 @@
 .icon-button-root {
-  border-radius: 10%;
+  border-radius: 4px;
   background: transparent;
   min-width: 30px;
   min-height: 30px;
@@ -12,6 +12,7 @@
   border-style: none;
   color: currentColor;
   font-size: medium;
+  box-sizing: border-box;
 }
 
 .icon-button-root:hover {

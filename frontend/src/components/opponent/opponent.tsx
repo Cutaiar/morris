@@ -14,15 +14,18 @@ import { HasSound } from "../board/board"; // TODO: import should come from else
 import useSound from "use-sound";
 import opponentSound from "sound/octave-tap/tap-wooden.mp3";
 
+import { AIID } from "morris-ai";
+
 // export type OpponentProps = Parameters<typeof useOpponent>;
 export interface OpponentProps extends HasSound {
   state: GameState;
   player: Player;
   updateGameState: React.Dispatch<Action>;
+  ai: AIID;
 }
 
 export const Opponent: React.FC<OpponentProps> = (props) => {
-  const { state, player, updateGameState, sound } = props;
+  const { state, player, updateGameState, sound, ai } = props;
 
   const [play] = useSound(opponentSound);
 
@@ -31,7 +34,7 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
     updateGameState(action);
   };
 
-  const { status } = useOpponent(state, player, handleDecision);
+  const { status } = useOpponent(state, player, handleDecision, ai);
   return (
     <span style={{ fontSize: "medium" }}>
       {`opponent is `}

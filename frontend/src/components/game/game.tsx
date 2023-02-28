@@ -23,6 +23,7 @@ import {
   usePrefs,
   useSocketGameState,
   useGameState,
+  useBuildSkipPhaseOneFunc,
 } from "hooks";
 import { useMount } from "react-use";
 
@@ -115,6 +116,8 @@ export const Game = () => {
     setOpponent("b");
     setPlayer("a");
   };
+
+  const skipPhaseOne = useBuildSkipPhaseOneFunc(updateGameState);
 
   return (
     <AppContainer>
@@ -218,6 +221,11 @@ export const Game = () => {
                 </Button>
 
                 <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
+
+                <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
+                  Skip phase 1
+                </Button>
+
                 {/* Temporarily adding a slider to control the number of rings */}
                 {/* <Slider
               min={minRings}

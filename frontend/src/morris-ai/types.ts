@@ -1,7 +1,7 @@
 import { Action, GameState } from "morris-core";
 
 /** A function which takes the current game state and returns an action to be executed */
-export type NextMoveFunction = (state: GameState) => Action | undefined;
+export type NextMoveFunction = (state: GameState) => Action;
 
 /** We currently have 3 types of AI */
 export type AIID = "rand" | "smart" | "minimax";

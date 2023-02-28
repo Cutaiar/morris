@@ -14,14 +14,37 @@ export const getNextMoveMinimax: NextMoveFunction = (state: GameState) => {
 };
 
 /** Call minimax from here. Has the correct starting parameters and a built in depth limit. */
-const minimaxRoot = (state: GameState) =>
-  minimax(state, 6, true, -Infinity, Infinity);
+const minimaxRoot = (state: GameState): MinimaxReturn => {
+  const mm = minimax(state, 6, true, -Infinity, Infinity);
 
-/** The minimax function will return an evaluation of each move as well as the move itself. */
+  // If this is not a minimax return, move is undefined (see type guard), and an issue has occurred
+  if (!isMinimaxReturn(mm)) {
+    throw new Error("Minimax was unable to produce a valid move");
+  }
+
+  return mm;
+};
+
+/** The minimaxRoot function will return an evaluation of the best move as well as the move itself. */
 type MinimaxReturn = {
+  evaluation: number;
+  move: Action;
+};
+
+/**
+ * The minimax function will return an evaluation of each move as well as the move itself.
+ * We need this type because at the leaf nodes of minimax recursion, we don't know the move to associate with the evaluation, nor is it necessary. */
+type MinimaxRecursionReturn = {
   evaluation: number;
   move?: Action;
 };
+
+/** Type guard to distinguish recursion return vs root return */
+function isMinimaxReturn(
+  r: MinimaxReturn | MinimaxRecursionReturn
+): r is MinimaxReturn {
+  return (r as MinimaxReturn).move !== undefined;
+}
 
 /**
  * Classic minimax implemented for morris.
@@ -40,7 +63,7 @@ const minimax = (
   maximizingPlayer: boolean,
   alpha: number,
   beta: number
-): MinimaxReturn => {
+): MinimaxRecursionReturn => {
   // Leaf node, return the evaluation
   if (depth === 0 || state.winner) {
     return { evaluation: evaluation(state) };

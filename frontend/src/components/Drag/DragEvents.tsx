@@ -26,28 +26,43 @@ export const DragEvents = (props: DragEventsProps) => {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const handlePointerDown = (e: any) => {
-    setIsDragging(true);
-    console.log("drag");
-    onPointerDown?.(e);
-  };
+  const handlePointerDown = React.useCallback(
+    (e: any) => {
+      setIsDragging(true);
+      console.log("pointer down");
+      onPointerDown?.(e);
+    },
+    [onPointerDown]
+  );
 
   const handlePointerUp = React.useCallback(
     (e: any) => {
       setIsDragging(false);
-      console.log("drop");
-
+      console.log("pointer up");
       onPointerUp?.(e);
     },
     [onPointerUp]
   );
 
-  const handlePointerMove = (e: any) => {
-    if (isDragging) {
-      onDragMove(e);
-    }
-    onPointerMove?.(e);
-  };
+  const handlePointerMove = React.useCallback(
+    (e: any) => {
+      if (isDragging) {
+        onDragMove(e);
+      }
+      onPointerMove?.(e);
+    },
+    [isDragging, onDragMove, onPointerMove]
+  );
+
+  // Pointer move must be on the window to prevent dropping from mouse trailing
+  //https://stackoverflow.com/questions/5758090/dragging-a-div-in-jquery-fine-when-mouse-is-slow-but-fails-on-fast-mouse-move
+  useEffect(() => {
+    window.addEventListener("pointermove", handlePointerMove);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, [handlePointerMove]);
 
   useEffect(() => {
     window.addEventListener("pointerup", handlePointerUp);
@@ -58,12 +73,7 @@ export const DragEvents = (props: DragEventsProps) => {
   }, [handlePointerUp]);
 
   return (
-    <g
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      style={style}
-      className={className}
-    >
+    <g onPointerDown={handlePointerDown} style={style} className={className}>
       {children}
     </g>
   );

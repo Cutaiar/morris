@@ -2,8 +2,9 @@ import React from "react";
 import { getNextMoveRandom } from "morris-ai";
 import { Action, GameState, reducer } from "morris-core";
 
-// TODO: does not work, get called infinitely since game state seems not to update
-/** Function returned by this hook will play quickly through phase 1 of the game when called. CALL ONCE. */
+/** Function returned by this hook will play quickly through phase 1 of the game when called. CALL ONCE.
+ * ⚠️: TODO -- does not work, get called infinitely since game state seems not to update
+ */
 export const usePlayFirstPhase = (
   gameState: GameState,
   updateGameState: React.Dispatch<Action>
@@ -37,13 +38,13 @@ export const useBuildSkipPhaseOneFunc = (
   updateGameState: React.Dispatch<Action>
 ) => {
   const func = () => {
-    updateGameState({ type: "reset", state: targetGamestate });
+    updateGameState({ type: "reset", state: targetGameState });
   };
   return func;
 };
 
-/** This is the gamestate we will be resetting to. This is a game just after phase 1 was finished, copied using the the debug output of the app. */
-const targetGamestate: GameState = {
+/** This is the gameState we will be resetting to. This is a game just after phase 1 was finished, copied using the the debug output of the app. */
+const targetGameState: GameState = {
   phase: 2,
   turn: {
     count: 19,

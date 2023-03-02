@@ -18,7 +18,6 @@ import { useDebug } from "hooks";
 import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
-import { DragTranslate } from "components/Drag/DragTranslate";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
@@ -278,26 +277,17 @@ const Ring = (props: RingProps) => {
         stroke={stroke}
       />
       {points.map((point, i) => (
-        // TODO: Rather than just allow points to be moved, we need to make this more sophisticated.
-        // 1. Moving a point should not move the underlying gray point of the board. We need to make a distinction between the two.
-        // 2. We should not allow dragging, or should allow but provide a gentle hint that there is no dragging in phase 1. Maybe a very small falloff with a tooltip after x number of consecutive tries.
-        // 3. Viable placements should expand/lerp/cue when a drag begins and when dropped on, the man should snap to the spot, updating the game state.
-        // 4. When dropping anywhere else, man should lerp back to original location
-        // 5. points should not disappear when leaving the small area that is the board.
-        // 6. Sounds should be incorporated into this.
-        <DragTranslate>
-          <SVGPoint
-            {...centers[i]}
-            r={pointRadius}
-            point={point[1]}
-            id={point[0]}
-            onClick={() => onClick?.(point[0])}
-            selected={point[0] === selectedPoint}
-            key={point[0]}
-            sound={sound}
-            disabled={disabled}
-          />
-        </DragTranslate>
+        <SVGPoint
+          {...centers[i]}
+          r={pointRadius}
+          point={point[1]}
+          id={point[0]}
+          onClick={() => onClick?.(point[0])}
+          selected={point[0] === selectedPoint}
+          key={point[0]}
+          sound={sound}
+          disabled={disabled}
+        />
       ))}
     </g>
   );
@@ -429,39 +419,39 @@ interface HoverClickAnimationsProps {
 const HoverClickAnimations = (props: HoverClickAnimationsProps) => {
   const { r, br, sr } = props;
   return (
-          <>
-            <animate
-              attributeName="r"
-              from={r}
-              to={br}
-              dur={"50ms"}
-              begin="mouseenter"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              from={br}
-              to={r}
-              dur={"50ms"}
-              begin="mouseleave"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              to={sr}
-              from={br}
-              dur={"50ms"}
-              begin="mousedown"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              from={sr}
-              to={r}
-              dur={"50ms"}
-              begin="mouseup"
-              fill="freeze"
-            />
-          </>
+    <>
+      <animate
+        attributeName="r"
+        from={r}
+        to={br}
+        dur={"50ms"}
+        begin="mouseenter"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        from={br}
+        to={r}
+        dur={"50ms"}
+        begin="mouseleave"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        to={sr}
+        from={br}
+        dur={"50ms"}
+        begin="mousedown"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        from={sr}
+        to={r}
+        dur={"50ms"}
+        begin="mouseup"
+        fill="freeze"
+      />
+    </>
   );
 };

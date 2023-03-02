@@ -19,6 +19,9 @@ import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
 
+// Should be imported from components probs
+import { DragTranslate } from "components/Drag/DragTranslate";
+
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
   /** Whether or not to play sound fx */
@@ -98,7 +101,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           ...p[1],
           next: selectedPoint
             ? !Array.isArray(gameState.nextMoves) &&
-              gameState.nextMoves[selectedPoint].includes(p[0])
+              gameState.nextMoves[selectedPoint]?.includes(p[0])
             : Array.isArray(gameState.nextMoves) &&
               gameState.nextMoves.includes(p[0]),
         },
@@ -170,6 +173,8 @@ export const Board: React.FC<BoardProps> = (props) => {
           selectedPoint={selectedPoint}
           sound={sound}
           disabled={disabled}
+          allowDrag={gameState.phase !== 1}
+          setSelectedPoint={setSelectedPoint}
         />
       ))}
     </svg>
@@ -233,6 +238,8 @@ interface RingProps extends HasSound {
   onClick?: (pointID: PointID) => void;
   selectedPoint?: PointID;
   disabled?: boolean;
+  allowDrag?: boolean;
+  setSelectedPoint?: (p: PointID) => void;
 }
 
 /**
@@ -249,6 +256,7 @@ const Ring = (props: RingProps) => {
     points,
     selectedPoint,
     disabled,
+    allowDrag,
   } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
@@ -277,17 +285,33 @@ const Ring = (props: RingProps) => {
         stroke={stroke}
       />
       {points.map((point, i) => (
-        <SVGPoint
-          {...centers[i]}
-          r={pointRadius}
-          point={point[1]}
-          id={point[0]}
-          onClick={() => onClick?.(point[0])}
-          selected={point[0] === selectedPoint}
-          key={point[0]}
-          sound={sound}
-          disabled={disabled}
-        />
+        // TODO: Rather than just allow points to be moved, we need to make this more sophisticated.
+        // 1. Moving a point should not move the underlying gray point of the board. We need to make a distinction between the two.
+        // 2. We should not allow dragging, or should allow but provide a gentle hint that there is no dragging in phase 1. Maybe a very small falloff with a tooltip after x number of consecutive tries.
+        // 3. Viable placements should expand/lerp/cue when a drag begins and when dropped on, the man should snap to the spot, updating the game state.
+        // 4. When dropping anywhere else, man should lerp back to original location
+        // 5. points should not disappear when leaving the small area that is the board.
+        // 6. Sounds should be incorporated into this.
+        <DragTranslate
+          disabled={disabled || !allowDrag}
+          maxDistance={pointRadius * 3}
+          onDrag={() => {
+            // TODO: if isValidSelection(...)
+            props.setSelectedPoint?.(point[0]);
+          }}
+        >
+          <SVGPoint
+            {...centers[i]}
+            r={pointRadius}
+            point={point[1]}
+            id={point[0]}
+            onClick={() => onClick?.(point[0])}
+            selected={point[0] === selectedPoint}
+            key={point[0]}
+            sound={sound}
+            disabled={disabled}
+          />
+        </DragTranslate>
       ))}
     </g>
   );

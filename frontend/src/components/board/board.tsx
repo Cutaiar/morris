@@ -334,6 +334,13 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const br = 1.2 * r;
   const sr = 0.8 * r;
 
+  // This allows us to trigger the animation when we want
+  const isNext = !disabled && point.next;
+  const isNextAnimationRef = React.useRef<any>();
+  React.useEffect(() => {
+    if (isNext) isNextAnimationRef.current.beginElement();
+  }, [isNext]);
+
   return (
     <g>
       <circle
@@ -362,51 +369,27 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           sound && playClick({ playbackRate: 1.5 });
         }}
       >
-        {!disabled && (
-          <>
-            <animate
-              attributeName="r"
-              from={r}
-              to={br}
-              dur={"50ms"}
-              begin="mouseenter"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              from={br}
-              to={r}
-              dur={"50ms"}
-              begin="mouseleave"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              to={sr}
-              from={br}
-              dur={"50ms"}
-              begin="mousedown"
-              fill="freeze"
-            />
-            <animate
-              attributeName="r"
-              from={sr}
-              to={r}
-              dur={"50ms"}
-              begin="mouseup"
-              fill="freeze"
-            />
-          </>
-        )}
+        {!disabled && HoverClickAnimations({ r, br, sr })}
       </circle>
       {!disabled && point.next && (
         <circle
           cx={rest.cx}
           cy={rest.cy}
           r={5}
-          fill={"white"}
+          fill={"transparent"}
+          stroke="white"
           pointerEvents="none"
-        />
+        >
+          <animate
+            ref={isNextAnimationRef}
+            attributeName="r"
+            from={r}
+            to={br}
+            begin="indefinite"
+            dur={"100ms"}
+            fill="freeze"
+          />
+        </circle>
       )}
       {debug && (
         <text
@@ -424,5 +407,51 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
         </text>
       )}
     </g>
+  );
+};
+
+interface HoverClickAnimationsProps {
+  r: number;
+  br: number;
+  sr: number;
+}
+
+const HoverClickAnimations = (props: HoverClickAnimationsProps) => {
+  const { r, br, sr } = props;
+  return (
+    <>
+      <animate
+        attributeName="r"
+        from={r}
+        to={br}
+        dur={"50ms"}
+        begin="mouseenter"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        from={br}
+        to={r}
+        dur={"50ms"}
+        begin="mouseleave"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        to={sr}
+        from={br}
+        dur={"50ms"}
+        begin="mousedown"
+        fill="freeze"
+      />
+      <animate
+        attributeName="r"
+        from={sr}
+        to={r}
+        dur={"50ms"}
+        begin="mouseup"
+        fill="freeze"
+      />
+    </>
   );
 };

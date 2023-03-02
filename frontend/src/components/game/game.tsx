@@ -23,6 +23,7 @@ import {
   usePrefs,
   useSocketGameState,
   useGameState,
+  useBuildSkipPhaseOneFunc,
 } from "hooks";
 import { useMount } from "react-use";
 
@@ -54,17 +55,16 @@ export const Game = () => {
   /**  If advanced controls are open or not */
   const [isAdvanced, setIsAdvanced] = React.useState(false);
 
-  /** The type of opponent the user is playing against*/
-  const [opponentType, setOpponentType] = React.useState<OpponentType>();
-
   /** The local users player (always "a") */
   const [player, setPlayer] = React.useState<Player>();
   /** The opponents player (always "b") */
   const [opponent, setOpponent] = React.useState<Player>();
-  /** Display name for the opponent */
-  const [opponentName, setOpponentName] = React.useState<string>();
+  /** The type of opponent the user is playing against*/
+  const [opponentType, setOpponentType] = React.useState<OpponentType>();
   /** Which AI is the player playing against */
   const [oppAI, setOppAI] = React.useState<AIID>();
+  /** Display name for the opponent */
+  const [opponentName, setOpponentName] = React.useState<string>();
 
   /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
@@ -115,6 +115,8 @@ export const Game = () => {
     setOpponent("b");
     setPlayer("a");
   };
+
+  const skipPhaseOne = useBuildSkipPhaseOneFunc(updateGameState);
 
   return (
     <AppContainer>
@@ -218,6 +220,11 @@ export const Game = () => {
                 </Button>
 
                 <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
+
+                <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
+                  Skip phase 1
+                </Button>
+
                 {/* Temporarily adding a slider to control the number of rings */}
                 {/* <Slider
               min={minRings}

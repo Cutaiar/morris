@@ -536,7 +536,7 @@ export const reducer = (state: GameState, action: Action): GameState => {
       return nextStateAfterRemove(state, action);
     // We support resetting the game entirely
     case "reset":
-      return initialStateNine;
+      return action.state ?? initialStateNine;
     // If a different action came in here, bail
     default:
       throw new Error(

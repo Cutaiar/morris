@@ -19,12 +19,13 @@ export const countMenOnBoard = (state: GameState, occupancy: Occupancy) =>
  * Use like Array.filter, but get a handle on the elements "filtered out"
  * TODO: Use generics
  */
-export const partition = (
-  array: any[],
-  predicate: (e: any) => boolean
-): [any, any] => {
+export const partition = <T extends any>(
+  array: T[],
+  predicate: (e: T) => boolean
+): [T[], T[]] => {
   return array.reduce(
-    ([pass, fail], elem) => {
+    (acc: [T[], T[]], elem) => {
+      const [pass, fail] = acc;
       return predicate(elem)
         ? [[...pass, elem], fail]
         : [pass, [...fail, elem]];
@@ -36,14 +37,22 @@ export const partition = (
 /**
  * Pick a random property of `obj`
  */
-export function getRandomProperty(obj: {}) {
+export function getRandomProperty<T>(obj: Record<string, T>): string {
   const keys = Object.keys(obj);
   return keys[Math.floor(Math.random() * keys.length)];
 }
 
 /**
+ * Pick a random value of `obj`
+ */
+export function getRandomValue<T>(obj: Record<string, T>): T {
+  const values = Object.values(obj);
+  return values[Math.floor(Math.random() * values.length)];
+}
+
+/**
  * Get a random element from an array
  */
-export const getRandomElement = (arr: any[]) => {
+export const getRandomElement = <T>(arr: T[]): T => {
   return arr[Math.floor(Math.random() * arr.length)];
 };

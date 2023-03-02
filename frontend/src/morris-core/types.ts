@@ -49,8 +49,10 @@ export interface RemoveAction extends BaseAction {
   to: PointID;
 }
 
+/** Reset the game to the initial state. If `state` is given, reset to that state instead. */
 export interface ResetAction extends BaseAction {
   type: "reset";
+  state?: GameState;
 }
 
 export type ActionType = "place" | "move" | "remove" | "reset";

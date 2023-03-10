@@ -33,7 +33,7 @@ export const useOpponent = (
   const nextMoveFn = nextMoveFnByDifficulty[ai];
 
   React.useEffect(() => {
-    let timer: NodeJS.Timeout | undefined = undefined;
+    let timer: number | undefined = undefined;
     // If it is our turn
     if (state.turn.player === player) {
       // Declare that we are thinking, and after some time, dispatch an appropriate action

@@ -1,6 +1,6 @@
 // Generate initial states
 
-import { GameState, Mill, PointID, StateGraph } from "morris-core/types";
+import { GameState, Mill, PointID, StateGraph } from "../types";
 
 const numberOfPointsInRing = 8;
 

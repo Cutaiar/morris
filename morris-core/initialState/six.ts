@@ -1,4 +1,4 @@
-import { GameState, Mill, StateGraph } from "morris-core/types";
+import { GameState, Mill, StateGraph } from "../types";
 
 // This state graph represents the adjacency for 6 man morris (2 rings)
 // Initial state graph just defines adjacency. occupancy is omitted as there are no pieces to start

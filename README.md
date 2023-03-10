@@ -13,9 +13,11 @@ The experience is live [here](https://morris-cutaiar.netlify.app/).
 
 ## Development
 
-Currently, the app is split into two packages:
+The monorepo hosts a number of packages:
 
-- `morris-frontend`
-- `morris-socket-server`
+- `morris-ai` - Decision making
+- `morris-core` - Core game implementation
+- `morris-server` - multiplayer node server
+- `morris-ui` - react frontend
 
-Each have their own development process, but both can be run `concurrently` using `npm start` from the root here.
+`core` and `ai` are imported without transpiling and used by `ui` and `server` which each have their own development process. Both can be run `concurrently` using `pnpm dev` from the root here.

@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "morris-ai",
+  "main": "index.ts",
+  "dependencies": {
+    "morris-core": "workspace:*"
+  }
+}

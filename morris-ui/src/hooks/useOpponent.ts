@@ -1,5 +1,5 @@
 import React from "react";
-import { getNextMoveMinimax } from "../morris-ai/getNextMoveMinimax";
+import { getNextMoveMinimax } from "morris-ai";
 import { Action, GameState, Player } from "morris-core";
 import {
   AIID,

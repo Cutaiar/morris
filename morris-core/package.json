@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "morris-core",
+  "main": "index.ts"
+}

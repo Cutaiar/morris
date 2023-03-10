@@ -1,13 +1,13 @@
 {
-  "name": "morris-socket-server",
+  "name": "morris-server",
   "private": true,
   "version": "0.1.0",
   "main": "server.js",
   "scripts": {
     "build": "rimraf build && tsc",
-    "prestart": "npm run build",
+    "prestart": "pnpm build",
     "start": "node build/server.js",
-    "preserve": "npm run build",
+    "preserve": "pnpm build",
     "serve": "concurrently \"tsc --watch\" \"nodemon -q build/server.js\""
   },
   "author": "cutaiar",
@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "socket.io": "^4.5.1",
-    "typescript": "^4.6.4",
     "rimraf": "^3.0.2"
   }
 }

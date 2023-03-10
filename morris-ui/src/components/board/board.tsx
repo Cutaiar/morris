@@ -6,7 +6,7 @@ import {
   PointID,
   isValidSelection,
   Action,
-} from "../../hooks/useGameState";
+} from "morris-core";
 
 // Style
 import { palette } from "theme";

@@ -1,5 +1,7 @@
-import { reducer, Action } from "morris-core/";
+import { reducer } from "./morrisReducer";
 import { initialStateSix } from "./initialState";
+
+import type { Action } from "./types";
 
 // For now just use initial state 6 until we determine if we want to pass in game size
 var state = initialStateSix;

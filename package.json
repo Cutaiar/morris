@@ -1,5 +1,6 @@
 {
   "name": "morris",
+  "description": "Monorepo for all packages contributing to the morris experience",
   "private": true,
   "version": "0.1.0",
   "repository": {
@@ -8,9 +9,12 @@
   },
   "homepage": "https://github.com/Cutaiar/morris#readme",
   "scripts": {
-    "frontend": "cd frontend && npm start",
-    "server": "cd server && npm run serve",
-    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run frontend\""
+    "ui": "pnpm --filter morris-ui start",
+    "server": "pnpm --filter morris-server server",
+    "dev": "concurrently --kill-others-on-fail \"pnpm server\" \"pnpm ui\""
+  },
+  "dependencies": {
+    "typescript": "^4.6.4"
   },
   "devDependencies": {
     "concurrently": "^7.2.2"

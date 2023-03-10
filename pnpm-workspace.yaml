@@ -1,0 +1,10 @@
+# pnpm-workspace.yaml
+packages:
+  # morris frontend application
+  - "morris-ui"
+  # Decision making agents
+  - "morris-ai"
+  # Core game rules
+  - "morris-core"
+  # Server supporting multiplayer / api
+  - "morris-server"

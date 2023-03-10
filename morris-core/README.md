@@ -4,7 +4,7 @@
 
 `morris-core` currently only supports 6 man morris, but is written with expansion in mind. At least 9 and 12 man morris will be supported. Hopefully larger games, recursive, and 3 dimensional games will be supported too.
 
-`// TODO: Turn into package`
+Its TS source is imported directly without transpiling.
 
 ## Usage with React
 

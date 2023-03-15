@@ -17,6 +17,9 @@ importers:
     dependencies:
       morris-core: link:../morris-core
 
+  morris-chatgpt:
+    specifiers: {}
+
   morris-core:
     specifiers: {}
 
@@ -45,6 +48,7 @@ importers:
       '@types/styled-components': ^5.1.25
       '@vitejs/plugin-react': ^3.1.0
       morris-ai: workspace:*
+      morris-chatgpt: workspace:*
       morris-core: workspace:*
       react: ^18.1.0
       react-confetti: ^6.1.0
@@ -70,6 +74,7 @@ importers:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       morris-ai: link:../morris-ai
+      morris-chatgpt: link:../morris-chatgpt
       morris-core: link:../morris-core
       react: 18.2.0
       react-confetti: 6.1.0_react@18.2.0

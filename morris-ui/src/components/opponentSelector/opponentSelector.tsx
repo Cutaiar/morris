@@ -4,7 +4,7 @@ import React from "react";
 import { fontSizes, palette } from "theme";
 
 // Components
-import { Button, Chip, EditableName, IconButton } from "components";
+import { Button, Chip, EditableName, IconButton, Loader } from "components";
 import { FiPlus } from "react-icons/fi";
 
 import { AIID } from "morris-ai";
@@ -15,6 +15,8 @@ import "./custom-tabs-style.css";
 import { useKey } from "react-use";
 
 export type OpponentType = "ai" | "local" | "online";
+
+import { promptForMorris } from "morris-chatgpt";
 
 // Type system for decisions
 type BaseDecision = {
@@ -93,18 +95,35 @@ interface MakesDecision {
 }
 
 const AIPanel: React.FC<MakesDecision> = (props) => {
+  // ChatGPT test code
+  const [message, setMessage] = React.useState<string>();
+  React.useEffect(() => {
+    async function fetchMessage() {
+      try {
+        const result = await promptForMorris();
+        setMessage(result);
+      } catch (e: any) {
+        setMessage(`Issue: ${e.message}`);
+      }
+    }
+    fetchMessage();
+  }, []);
+
   // TODO: These AI opponents should probably be stored somewhere else
   return (
-    <OpponentList
-      opponents={[
-        { id: "rand", name: "Random", color: palette.secondary },
-        { id: "smart", name: "Smart", color: palette.secondary },
-        { id: "minimax", name: "Minimax", color: palette.secondary },
-      ]}
-      onSelectOpponent={(id) =>
-        props.onDecision({ type: "ai", ai: id as AIID })
-      }
-    />
+    <>
+      <OpponentList
+        opponents={[
+          { id: "rand", name: "Random", color: palette.secondary },
+          { id: "smart", name: "Smart", color: palette.secondary },
+          { id: "minimax", name: "Minimax", color: palette.secondary },
+        ]}
+        onSelectOpponent={(id) =>
+          props.onDecision({ type: "ai", ai: id as AIID })
+        }
+      />
+      <div>{message ?? <Loader text="Thinking..." />}</div>
+    </>
   );
 };
 

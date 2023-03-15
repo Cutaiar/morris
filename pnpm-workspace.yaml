@@ -8,3 +8,5 @@ packages:
   - "morris-core"
   # Server supporting multiplayer / api
   - "morris-server"
+  # Play morris against chatgpt
+  - "morris-chatgpt"

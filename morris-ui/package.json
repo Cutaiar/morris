@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.0.3",
     "morris-ai": "workspace:*",
     "morris-core": "workspace:*",
+    "morris-chatgpt": "workspace:*",
     "react": "^18.1.0",
     "react-confetti": "^6.1.0",
     "react-dom": "^18.1.0",

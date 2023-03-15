@@ -1,0 +1,6 @@
+{
+  "name": "morris-chatgpt",
+  "version": "1.0.0",
+  "description": "play morris against chatgpt",
+  "main": "index.ts"
+}

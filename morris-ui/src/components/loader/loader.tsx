@@ -12,7 +12,6 @@ export interface LoaderProps
 export const Loader = (props: LoaderProps) => {
   const { className, text } = props;
   const style: React.CSSProperties = {
-    width: 20,
     height: 20,
     display: "flex",
     alignItems: "center",

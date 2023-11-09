@@ -8,18 +8,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background 0.15s ease;
   border-style: none;
   color: currentColor;
   font-size: medium;
   box-sizing: border-box;
+  transition: transform 0.2s ease;
+  transition: box-shadow 0.2s ease;
+  border: 1px solid #161616;
 }
 
 .icon-button-root:hover {
-  background: rgb(74, 74, 74);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-elevation-medium);
 }
 
 .icon-button-root:active {
-  background: rgb(144, 144, 144);
   transform: scale(0.9);
+  box-shadow: none;
 }

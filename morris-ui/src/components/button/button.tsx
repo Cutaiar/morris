@@ -18,13 +18,23 @@ export const Button = (props: ButtonProps) => {
   const { onClick, disabled, primary, loading } = props;
 
   // TODO: Better support for disabled
-  const bgColor = disabled
-    ? "grey"
-    : primary
+  const bgColor = primary
     ? palette.primary
-    : palette.neutralLight;
+    : palette.surface;
 
   const textColor = primary ? palette.neutralLight : palette.neutralDark;
+
+  const disabledStyle: React.CSSProperties = {
+    borderColor: palette.neutralLighter,
+    color: palette.neutralLighter,
+    transform: "none",
+    boxShadow: "none",
+    cursor: "not-allowed"
+  };
+
+  const extraStyle = {
+    ...(disabled ? disabledStyle : {}),
+  };
 
   return (
     <button
@@ -36,8 +46,11 @@ export const Button = (props: ButtonProps) => {
         backgroundColor: bgColor,
         color: textColor,
         borderRadius: 5,
-        borderStyle: "none",
+        borderStyle: "solid",
         padding: 8,
+        borderWidth: 1,
+        borderColor: textColor,
+        ...extraStyle
       }}
       onClick={onClick}
     >

@@ -14,6 +14,7 @@ import {
 
 // Style
 import "./iconButton.css";
+import { palette } from "theme";
 
 type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
 export interface IconButtonProps {
@@ -36,8 +37,11 @@ export const IconButton = (props: IconButtonProps) => {
     wifi: FiWifi,
   };
   const disabledStyle: React.CSSProperties = {
-    background: "rgb(74, 74, 74)",
-    color: "gray",
+    borderColor: palette.neutralLighter,
+    color: palette.neutralLighter,
+    transform: "none",
+    boxShadow: "none",
+    cursor: "not-allowed"
   };
 
   const withTextStyle: React.CSSProperties = {

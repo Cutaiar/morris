@@ -319,12 +319,9 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
   const pointFill = (occupancy?: Occupancy) => {
-    if (hovered) return "white";
-    if (!occupancy) return palette.neutral;
+    if (!occupancy) return palette.surface;
     return occupancy === "a" ? palette.primary : palette.secondary;
   };
-
-  const pointStroke = selected ? "white" : undefined;
 
   const [playHover] = useSound(hoverSound);
   const [playClick] = useSound(clickSound);
@@ -345,7 +342,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
     <g>
       <circle
         {...rest}
-        stroke={pointStroke}
+        stroke={palette.neutral}
+        strokeWidth={selected ? 3 : 1}
         fill={pointFill(point.occupancy)}
         cursor={disabled ? "not-allowed" : "pointer"}
         onMouseOver={() => {
@@ -377,7 +375,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           cy={rest.cy}
           r={5}
           fill={"transparent"}
-          stroke="white"
+          stroke={palette.neutral}
           pointerEvents="none"
         >
           <animate

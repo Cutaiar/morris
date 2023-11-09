@@ -280,7 +280,7 @@ const Page = styled.div`
 
 /** Hold the playerCard */
 const Controls = styled.div`
-  background-color: ${({ theme }) => theme.palette.neutralDark};
+  background-color: ${({ theme }) => theme.palette.surface};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -290,4 +290,8 @@ const Controls = styled.div`
   width: fit-content;
   padding: 20px;
   border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.palette.neutral};
+  box-shadow: var(--shadow-elevation-medium);
 `;

@@ -3,9 +3,11 @@
  */
 export const defaultTheme = {
   palette: {
-    background: "#212121",
-    neutral: "grey",
-    neutralLight: "lightgray",
+    background: "#f4f4f1",
+    surface: "#f7f7f6",
+    neutral: "#161616",
+    neutralLight: "#434343",
+    neutralLighter: "#707070",
     neutralDark: "#121212",
     primary: "#D2042D",
     secondary: "#1E90FF",

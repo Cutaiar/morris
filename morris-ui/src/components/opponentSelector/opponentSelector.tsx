@@ -165,7 +165,7 @@ const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
       onClick={props.onClick}
       style={{
         borderRadius: 5,
-        border: "1px solid white",
+        border: `1px solid ${palette.neutral}`,
         listStyleType: "none",
         marginTop: 10,
         boxSizing: "border-box",
@@ -173,6 +173,7 @@ const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        color: palette.neutral
       }}
     >
       <p style={{ margin: 0 }}>{props.name}</p>
@@ -267,7 +268,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
       onClick={() => setAdding(true)}
       style={{
         borderRadius: 5,
-        border: "1px solid white",
+        border: `1px solid ${palette.neutral}`,
         listStyleType: "none",
         marginTop: 10,
         boxSizing: "border-box",
@@ -275,6 +276,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        color: palette.neutral
       }}
     >
       <p style={{ margin: 0 }}>Add a player</p>

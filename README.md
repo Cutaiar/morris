@@ -13,6 +13,8 @@ The experience is live [here](https://morris-cutaiar.netlify.app/).
 
 ## Development
 
+From a fresh clone, make sure you have `pnpm` and run `pnpm i`, then `pnpm dev`.
+
 The monorepo hosts a number of packages:
 
 - `morris-ai` - Decision making

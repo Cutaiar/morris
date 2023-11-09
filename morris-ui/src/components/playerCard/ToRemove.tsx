@@ -8,12 +8,14 @@ export const ToRemove = () => {
   return (
     <div
       style={{
-        background: "rgb(74, 74, 74)",
+        background: palette.surface,
         borderRadius: 5,
         padding: 5,
         boxSizing: "border-box",
         fontSize: "small",
-        color: palette.neutralLight,
+        color: palette.neutral,
+        borderColor: palette.neutral,
+        borderStyle: "solid"
       }}
     >
       {"to remove"}

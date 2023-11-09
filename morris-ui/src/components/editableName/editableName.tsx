@@ -39,7 +39,7 @@ export const EditableName = (props: EditableNameProps) => {
           borderStyle: "solid",
           borderWidth: "1px",
           borderRadius: "4px",
-          background: palette.neutralDark,
+          background: palette.surface,
         }}
       />
       {/* TODO: disabled={nameState.length === 0}, once these are action buttons */}

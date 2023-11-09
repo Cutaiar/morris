@@ -19,7 +19,7 @@
 }
 
 .react-tabs__tab--selected {
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid #161616; /* palette.neutral */
 }
 
 .react-tabs__tab--disabled {

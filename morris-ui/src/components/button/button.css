@@ -1,8 +1,10 @@
 .button-component {
-  transition: transform 0.1s ease;
+  transition: transform 0.2s ease;
+  transition: box-shadow 0.1s ease;
   cursor: pointer;
 }
 
 .button-component:hover {
   transform: scale(1.05);
+  box-shadow: var(--shadow-elevation-medium);
 }

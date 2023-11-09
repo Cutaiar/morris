@@ -9,7 +9,9 @@ The goal here is to create n-men morris just for fun using typescript and react.
 - extend into unprecedented n's
 - extend into 3 dimensions
 
-The experience is live [here](https://morris-cutaiar.netlify.app/).
+The experience is live [here](https://morris-cutaiar.netlify.app/). And it looks like this:
+
+![Morris Demo](./morris-demo-11-8-23.png)
 
 ## Development
 

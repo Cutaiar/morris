@@ -3,14 +3,14 @@ import { createStateContext, useLocalStorage } from "react-use";
 
 interface Prefs {
   mute?: boolean;
-  motion?: boolean;
+  reduceMotion?: boolean;
   name?: string;
 }
 
 /** The default preferences. These are used (and stored) when local storage is empty and for the PrefsProvider `initialValue` */
 export const defaultPrefs = {
   mute: false,
-  motion: true,
+  reduceMotion: false,
   name: "Me",
 };
 

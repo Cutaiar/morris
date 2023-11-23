@@ -69,8 +69,8 @@ export const Game = () => {
   /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
   const mute = prefs.mute;
-  const motion = prefs.motion;
-  const setMotion = (motion: boolean) => setPref("motion", motion);
+  const reduceMotion = prefs.reduceMotion;
+  const setReduceMotion = (motion: boolean) => setPref("reduceMotion", motion);
   const setMute = (mute: boolean) => setPref("mute", mute);
   const name = prefs.name ?? "Me";
 
@@ -208,9 +208,9 @@ export const Game = () => {
                   onChange={setMute}
                 />
                 <Toggle
-                  label={"Full motion"}
-                  checked={motion ?? false}
-                  onChange={setMotion}
+                  label={"Reduce motion"}
+                  checked={reduceMotion ?? false}
+                  onChange={setReduceMotion}
                 />
 
                 <Toggle label={"Debug"} checked={debug} onChange={setDebug} />

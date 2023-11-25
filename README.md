@@ -3,7 +3,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1c2d36df-6241-4a45-a3cb-ea10ec3b210a/deploy-status)](https://app.netlify.com/sites/morris-cutaiar/deploys)
 [![Render Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Frender-deploy-status.onrender.com%2Fsrv-cfgrc0pgp3jqehoco6dg&query=%24.status&style=flat-square&logo=Render&label=Render)](https://dashboard.render.com/web/srv-cfgrc0pgp3jqehoco6dg)
 
-The goal here is to create n-men morris just for fun using typescript and react. Some goals:
+This is a monorepo containing packages related to the morris projects. The goal here is to create n-men morris just for fun using typescript and react. Some goals:
 
 - have multiplayer
 - have a bot play perfectly against you

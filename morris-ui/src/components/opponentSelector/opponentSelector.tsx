@@ -54,22 +54,24 @@ export interface OpponentSelectorProps {
 
 export const OpponentSelector = (props: OpponentSelectorProps) => {
   const { onDecision } = props;
+
+  const buttonStyle: React.CSSProperties = {marginBottom: 4}
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       <h1 style={{ fontSize: "large", color: palette.neutral, margin: 0 }}>
         Choose an opponent
       </h1>
-      <div style={{ display: "flex", gap: 20 }}>
         <Tabs>
-          <TabList>
+          <TabList style={{ display: "flex", gap: 8 }}>
             <Tab>
-              <IconButton name={"eye"} text={"AI"} />
+              <IconButton style={buttonStyle} name={"eye"} text={"AI"} />
             </Tab>
             <Tab>
-              <IconButton name={"users"} text={"Local"} />
+              <IconButton style={buttonStyle} name={"users"} text={"Local"} />
             </Tab>
             <Tab>
-              <IconButton name={"wifi"} text={"Online"} />
+              <IconButton style={buttonStyle} name={"wifi"} text={"Online"} />
             </Tab>
           </TabList>
 
@@ -83,7 +85,6 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
             <OnlinePanel onDecision={onDecision} />
           </TabPanel>
         </Tabs>
-      </div>
     </div>
   );
 };
@@ -162,22 +163,12 @@ interface OpponentListItemProps {
 const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
   return (
     <li
-      onClick={props.onClick}
       style={{
-        borderRadius: 5,
-        border: `1px solid ${palette.neutral}`,
         listStyleType: "none",
-        marginTop: 10,
-        boxSizing: "border-box",
-        padding: 5,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        color: palette.neutral
+        marginTop: 8,
       }}
     >
-      <p style={{ margin: 0 }}>{props.name}</p>
-      <Chip color={props.color} />
+      <IconButton onClick={props.onClick}style={{width: "100%"}} text={props.name} End={() => <Chip color={props.color} />}/> 
     </li>
   );
 };
@@ -238,6 +229,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         justifyContent: "end",
         alignItems: "center",
         width: "100%",
+        gap: 8
       }}
     >
       <EditableName
@@ -245,6 +237,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         onNameChange={setNameState}
         color={palette.neutralLight}
         editing={true}
+        fill
       />
       <>
         <IconButton
@@ -267,20 +260,11 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
     <li
       onClick={() => setAdding(true)}
       style={{
-        borderRadius: 5,
-        border: `1px solid ${palette.neutral}`,
         listStyleType: "none",
-        marginTop: 10,
-        boxSizing: "border-box",
-        padding: 5,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        color: palette.neutral
+        marginTop: 8,
       }}
     >
-      <p style={{ margin: 0 }}>Add a player</p>
-      <FiPlus />
+      <IconButton style={{width: "100%"}}  text="Add a player" End={() => <FiPlus />}/>
     </li>
   );
 };

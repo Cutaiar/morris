@@ -18,15 +18,17 @@ import { palette } from "theme";
 
 type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
 export interface IconButtonProps {
-  name: IconName;
+  name?: IconName;
   disabled?: boolean;
   onClick?: () => void;
   tooltip?: string;
   text?: string;
+  style?: React.CSSProperties;
+  End?: () => JSX.Element;
 }
 
 export const IconButton = (props: IconButtonProps) => {
-  const { name, disabled, onClick, tooltip, text } = props;
+  const { name, disabled, onClick, tooltip, text, style, End } = props;
   const icons: Record<IconName, IconType> = {
     edit: FiEdit,
     settings: FiSettings,
@@ -50,11 +52,12 @@ export const IconButton = (props: IconButtonProps) => {
   };
 
   const extraStyle = {
+    ...style,
     ...(disabled ? disabledStyle : {}),
     ...(text ? withTextStyle : {}),
   };
 
-  const Icon = icons[name];
+  const Icon = name ? icons[name] : () => null;
   return (
     <button
       className="icon-button-root"
@@ -63,8 +66,13 @@ export const IconButton = (props: IconButtonProps) => {
       onClick={onClick}
       title={tooltip} // TODO: Don't use title for tooltip, use own component
     >
-      <Icon />
-      {text && <p style={{ paddingLeft: 8, margin: 0 }}>{text}</p>}
+    <div style={{width: "100%", display:"flex", alignItems: "center", justifyContent: "space-between"}}>
+      <div style={{width: "100%", display:"flex", alignItems: "center", justifyContent: props.text ? "start" : "center"}}>
+        <Icon />
+        {text && <p style={{ paddingLeft: name ? 8 : 0, margin: 0 }}>{text}</p>}
+      </div>
+      {End?.()}
+    </div>
     </button>
   );
 };

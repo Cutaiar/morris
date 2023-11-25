@@ -13,13 +13,15 @@ interface EditableNameProps {
   color?: string;
   /** Is the name being edited? */
   editing?: boolean;
+  /** Should the field fill its container? */
+  fill?: boolean
 }
 
 /**
  * Renders an editable name
  */
 export const EditableName = (props: EditableNameProps) => {
-  const { name, onNameChange, editing } = props;
+  const { name, onNameChange, editing, fill } = props;
 
   const color = props.color ?? palette.neutral;
 
@@ -40,6 +42,7 @@ export const EditableName = (props: EditableNameProps) => {
           borderWidth: "1px",
           borderRadius: "4px",
           background: palette.surface,
+          width: fill ? "100%" : undefined
         }}
       />
       {/* TODO: disabled={nameState.length === 0}, once these are action buttons */}

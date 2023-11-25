@@ -21,8 +21,8 @@ export const Chip = (props: ChipProps) => {
   return (
     <div
       style={{
-        width: 20,
-        height: 20,
+        minWidth: 20,
+        minHeight: 20,
         borderRadius: "50%",
         background: color,
         border: emphasis ? `1px solid ${palette.neutral}` : undefined,

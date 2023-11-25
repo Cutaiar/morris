@@ -113,6 +113,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
           justifyContent: "end",
           alignItems: "center",
           width: "100%",
+          gap: 8,
         }}
       >
         {toolbarIcons?.map((props, i) => (

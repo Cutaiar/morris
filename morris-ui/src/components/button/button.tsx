@@ -45,7 +45,7 @@ export const Button = (props: ButtonProps) => {
         minHeight: 30,
         backgroundColor: bgColor,
         color: textColor,
-        borderRadius: 5,
+        borderRadius: 4,
         borderStyle: "solid",
         padding: 8,
         borderWidth: 1,

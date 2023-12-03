@@ -54,3 +54,15 @@ export const confetti = {
     "#d2e9ff",
   ],
 };
+
+export const injectStyleVars = () => {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync('');
+  document.adoptedStyleSheets = [sheet];
+
+  let index = sheet.cssRules.length;
+
+  const declarations =  Object.entries(defaultTheme.palette).map(e => `    --morris-palette-${e[0]}: ${e[1]};`).join("\n");
+  const rule = `:root {\n${declarations}\n}`
+  sheet.insertRule(rule, index);
+}

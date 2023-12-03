@@ -7,6 +7,9 @@ import "./index.css";
 import { ErrorBoundary } from "react-error-boundary";
 import { App, ErrorFallback } from "components";
 import { DebugProvider } from "hooks";
+import { injectStyleVars } from "theme";
+
+injectStyleVars();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

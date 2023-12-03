@@ -18,6 +18,7 @@ import { useDebug } from "hooks";
 import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
+import { useMeasure } from "react-use";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
@@ -65,11 +66,11 @@ interface PointForDisplay extends Point {
  */
 export const Board: React.FC<BoardProps> = (props) => {
   // Provide sensible defaults if props aren't provided
-  const size = props.size ?? sizeDefault;
   const sound = props.sound ?? false;
   const { onPlay, gameState, disabled } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
+  const [ref, { width }] = useMeasure<SVGSVGElement>();
 
   // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
@@ -80,12 +81,11 @@ export const Board: React.FC<BoardProps> = (props) => {
   validateRingCount(ringCount);
 
   // We use this in the ring size calculation to pad the outer ring from the edge of the svg
-  const paddedSize = size * 0.9;
-
-  const pointRadius = size * 0.035;
+  const paddedSize = width * 0.9;
+  const pointRadius = width * 0.035;
 
   // Build ring sizes based on ringCount
-  const rings = new Array(ringCount).fill(undefined).map((_, i) => ({
+  const rings = !width ? [] : new Array(ringCount).fill(undefined).map((_, i) => ({
     size: paddedSize * (i + 1) * (1 / ringCount),
 
     // This distributes 8 points from the state graph to each ring, moving from inner to outer
@@ -139,7 +139,7 @@ export const Board: React.FC<BoardProps> = (props) => {
 
   // Render these three rings and the two sets of connections between them
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+    <svg ref={ref} viewBox={`0 0 ${width} ${width}`}>
       {rings.map((ring, i) => {
         const nextRing = rings[i + 1];
         // Short circuit if there is no outer ring to draw a connection to.
@@ -150,7 +150,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           <Connections
             innerSize={ring.size}
             outerSize={nextRing.size}
-            vbsize={size}
+            vbsize={width}
             stroke={palette.neutral}
             key={i}
           />
@@ -161,7 +161,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       {rings.reverse().map((ring) => (
         <Ring
           size={ring.size}
-          vbsize={size}
+          vbsize={width}
           stroke={palette.neutral}
           pointRadius={pointRadius}
           onClick={onClick}

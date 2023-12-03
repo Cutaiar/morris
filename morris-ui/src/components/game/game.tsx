@@ -158,18 +158,20 @@ export const Game = () => {
         </Controls>
 
         {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
-        <Board
-          gameState={gameState}
-          onPlay={(play) => {
-            updateGameState(play);
-          }}
-          sound={!mute}
-          disabled={
-            // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
-            (opponentType !== "local" && player !== gameState.turn.player) ||
-            !opponent
-          }
-        />
+        <BoardContainer>
+          <Board
+            gameState={gameState}
+            onPlay={(play) => {
+              updateGameState(play);
+            }}
+            sound={!mute}
+            disabled={
+              // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
+              (opponentType !== "local" && player !== gameState.turn.player) ||
+              !opponent
+            }
+          />
+        </BoardContainer>
 
         {/* Controls for the player side */}
         <Controls>
@@ -253,6 +255,11 @@ export const Game = () => {
   );
 };
 
+const BoardContainer = styled.div`
+  max-width: 400px;
+  padding-inline: 20px;
+  width: 300px;
+`
 /** Take viewport height and layout full-width rows */
 const AppContainer = styled.div`
   display: flex;
@@ -276,6 +283,10 @@ const Page = styled.div`
   flex: 1;
   padding-top: 100px;
   padding-bottom: 100px;
+
+  @media (max-width: 460px) {
+    flex-direction: column;
+  }
 `;
 
 /** Hold the playerCard */

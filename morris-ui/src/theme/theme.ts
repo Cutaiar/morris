@@ -55,14 +55,15 @@ export const confetti = {
   ],
 };
 
+/**
+ * Add CSS vars for the global styles so that components using css file styles can access them
+ */
 export const injectStyleVars = () => {
   const sheet = new CSSStyleSheet();
   sheet.replaceSync('');
   document.adoptedStyleSheets = [sheet];
 
-  let index = sheet.cssRules.length;
-
   const declarations =  Object.entries(defaultTheme.palette).map(e => `    --morris-palette-${e[0]}: ${e[1]};`).join("\n");
   const rule = `:root {\n${declarations}\n}`
-  sheet.insertRule(rule, index);
+  sheet.insertRule(rule, sheet.cssRules.length);
 }

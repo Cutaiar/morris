@@ -50,7 +50,7 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
           borderRadius: 5,
           border: `1px solid ${palette.neutral}`,
           padding: gap,
-          width: (diameter + gap * 2) * 6, // 6 points to a row before wrapping
+          width: ((diameter + gap * 2) * 6) + gap * 3, // 6 points to a row before wrapping plus magic extra. TODO: Use css to do this wrapping
           minHeight: diameter + gap * 2, // Maintain height after last man is gone
         }}
       >

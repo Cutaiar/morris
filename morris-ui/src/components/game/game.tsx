@@ -121,7 +121,7 @@ export const Game = () => {
   return (
     <AppContainer>
       <TopNav />
-      <Page>
+      <Main>
         {/* Controls for the opponents side */}
         <Controls>
           {!opponentType && (
@@ -242,7 +242,7 @@ export const Game = () => {
 
         {/* Show raw Game State for debug */}
         {debug && <DebugGameState gameState={gameState} />}
-      </Page>
+      </Main>
       {/* If there is a winner, show the modal, the game is over */}
       {gameState.winner && (
         <WinnerModal
@@ -257,8 +257,7 @@ export const Game = () => {
 
 const BoardContainer = styled.div`
   max-width: 400px;
-  padding-inline: 20px;
-  width: 300px;
+  width: 100%;
 `
 /** Take viewport height and layout full-width rows */
 const AppContainer = styled.div`
@@ -270,7 +269,7 @@ const AppContainer = styled.div`
 `;
 
 /** Set the background, layout full height rows*/
-const Page = styled.div`
+const Main = styled.div`
   background-color: ${({ theme }) => theme.palette.background};
   display: flex;
   flex-direction: row;
@@ -278,14 +277,15 @@ const Page = styled.div`
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: ${({ theme }) => theme.palette.neutralLight};
-  gap: 20px;
+  gap: 24px;
   width: 100%;
   flex: 1;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding: 24px;
 
-  @media (max-width: 460px) {
+  /* Goto col layout at 800px screen width */
+  @media (max-width: 800px) {
     flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -296,11 +296,11 @@ const Controls = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 20px;
+  gap: 24px;
   height: fit-content;
   width: fit-content;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 24px;
+  border-radius: 8px;
   border-style: solid;
   border-width: 1px;
   border-color: ${({ theme }) => theme.palette.neutral};

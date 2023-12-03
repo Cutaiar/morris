@@ -5,7 +5,7 @@ import { fontSizes, fontWeights, palette } from "theme";
 
 const style: Record<string, React.CSSProperties> = {
   root: {
-    width: "calc(100% - 50px)",
+    width: "100%",
     height: "10vh",
     padding: "25px",
     background: palette.background,

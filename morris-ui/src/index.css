@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* TODO: This should be compartmentalized */
 /* Generated from https://www.joshwcomeau.com/shadow-palette/ */
 :root {

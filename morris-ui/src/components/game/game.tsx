@@ -122,123 +122,125 @@ export const Game = () => {
     <AppContainer>
       <TopNav />
       <Main>
-        {/* Controls for the opponents side */}
-        <Controls>
-          {!opponentType && (
-            <OpponentSelector onDecision={handleOpponentSelected} />
-          )}
-          {opponentType && (
-            <PlayerCard
-              player={opponent}
-              remove={gameState.turn.type === "remove"}
-              turn={gameState.turn.player}
-              name={opponentName ?? "..."}
-              remainingMen={
-                opponent ? gameState.remainingMen[opponent] : undefined
+        <GameContainer>
+          {/* Controls for the opponents side */}
+          <Controls>
+            {!opponentType && (
+              <OpponentSelector onDecision={handleOpponentSelected} />
+            )}
+            {opponentType && (
+              <PlayerCard
+                player={opponent}
+                remove={gameState.turn.type === "remove"}
+                turn={gameState.turn.player}
+                name={opponentName ?? "..."}
+                remainingMen={
+                  opponent ? gameState.remainingMen[opponent] : undefined
+                }
+              />
+            )}
+            {((opponentType === "online" && !opponent) || connecting) && (
+              <Loader text="waiting for opponent..." />
+            )}
+            {opponent && opponentType === "ai" && oppAI && (
+              <Opponent
+                state={gameState}
+                player={opponent}
+                updateGameState={updateGameState}
+                sound={!mute}
+                ai={oppAI}
+              />
+            )}
+            {opponentType === "local" && (
+              <label style={{ fontSize: "medium", color: palette.neutral }}>
+                opponent is local
+              </label>
+            )}
+          </Controls>
+
+          {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
+          <BoardContainer>
+            <Board
+              gameState={gameState}
+              onPlay={(play) => {
+                updateGameState(play);
+              }}
+              sound={!mute}
+              disabled={
+                // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
+                (opponentType !== "local" && player !== gameState.turn.player) ||
+                !opponent
               }
             />
-          )}
-          {((opponentType === "online" && !opponent) || connecting) && (
-            <Loader text="waiting for opponent..." />
-          )}
-          {opponent && opponentType === "ai" && oppAI && (
-            <Opponent
-              state={gameState}
-              player={opponent}
-              updateGameState={updateGameState}
-              sound={!mute}
-              ai={oppAI}
-            />
-          )}
-          {opponentType === "local" && (
-            <label style={{ fontSize: "medium", color: palette.neutral }}>
-              opponent is local
-            </label>
-          )}
-        </Controls>
+          </BoardContainer>
 
-        {/* We need to use the adjacency in gameState to assign ids to the elements drawn by this component */}
-        <BoardContainer>
-          <Board
-            gameState={gameState}
-            onPlay={(play) => {
-              updateGameState(play);
-            }}
-            sound={!mute}
-            disabled={
-              // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
-              (opponentType !== "local" && player !== gameState.turn.player) ||
-              !opponent
-            }
-          />
-        </BoardContainer>
+          {/* Controls for the player side */}
+          <Controls>
+            <PlayerCard
+              player={player}
+              local
+              remove={gameState.turn.type === "remove"}
+              turn={gameState.turn.player}
+              name={name}
+              onNameChange={(newName) => setPref("name", newName)}
+              remainingMen={player ? gameState.remainingMen[player] : undefined}
+              toolbarIcons={[
+                {
+                  name: "settings",
+                  tooltip: "Settings and advanced",
+                  onClick: () => setIsAdvanced((prev) => !prev),
+                },
+              ]}
+            >
+              {isAdvanced && (
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                >
+                  <label
+                    style={{ fontSize: "medium" }}
+                  >{`phase: ${gameState.phase}`}</label>
 
-        {/* Controls for the player side */}
-        <Controls>
-          <PlayerCard
-            player={player}
-            local
-            remove={gameState.turn.type === "remove"}
-            turn={gameState.turn.player}
-            name={name}
-            onNameChange={(newName) => setPref("name", newName)}
-            remainingMen={player ? gameState.remainingMen[player] : undefined}
-            toolbarIcons={[
-              {
-                name: "settings",
-                tooltip: "Settings and advanced",
-                onClick: () => setIsAdvanced((prev) => !prev),
-              },
-            ]}
-          >
-            {isAdvanced && (
-              <div
-                style={{ display: "flex", flexDirection: "column", gap: 10 }}
-              >
-                <label
-                  style={{ fontSize: "medium" }}
-                >{`phase: ${gameState.phase}`}</label>
+                  <Toggle
+                    checked={opponentType === "local"}
+                    onChange={(c) => setOpponentType(c ? "local" : "ai")}
+                    label={"Control opponent"}
+                  />
+                  <Toggle
+                    label={"Mute"}
+                    checked={mute ?? false}
+                    onChange={setMute}
+                  />
+                  <Toggle
+                    label={"Reduce motion"}
+                    checked={reduceMotion ?? false}
+                    onChange={setReduceMotion}
+                  />
 
-                <Toggle
-                  checked={opponentType === "local"}
-                  onChange={(c) => setOpponentType(c ? "local" : "ai")}
-                  label={"Control opponent"}
-                />
-                <Toggle
-                  label={"Mute"}
-                  checked={mute ?? false}
-                  onChange={setMute}
-                />
-                <Toggle
-                  label={"Reduce motion"}
-                  checked={reduceMotion ?? false}
-                  onChange={setReduceMotion}
-                />
+                  <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
 
-                <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
+                  <Button onClick={() => updateGameState({ type: "reset" })}>
+                    Reset Game
+                  </Button>
 
-                <Button onClick={() => updateGameState({ type: "reset" })}>
-                  Reset Game
-                </Button>
+                  <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
 
-                <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
+                  <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
+                    Skip phase 1
+                  </Button>
 
-                <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
-                  Skip phase 1
-                </Button>
-
-                {/* Temporarily adding a slider to control the number of rings */}
-                {/* <Slider
-              min={minRings}
-              max={maxRings}
-              value={ringCount}
-              onChange={(e) => setRingCount(Number(e.target.value))}
-              ringCount={ringCount}
-            /> */}
-              </div>
-            )}
-          </PlayerCard>
-        </Controls>
+                  {/* Temporarily adding a slider to control the number of rings */}
+                  {/* <Slider
+                min={minRings}
+                max={maxRings}
+                value={ringCount}
+                onChange={(e) => setRingCount(Number(e.target.value))}
+                ringCount={ringCount}
+              /> */}
+                </div>
+              )}
+            </PlayerCard>
+          </Controls>
+        </GameContainer>
 
         {/* Show raw Game State for debug */}
         {debug && <DebugGameState gameState={gameState} />}
@@ -268,14 +270,28 @@ const AppContainer = styled.div`
   min-height: 100vh;
 `;
 
+const GameContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  gap: 24px;
+
+  /* Goto col layout at 800px screen width */
+  /* TODO: kinda hacky to have this media query in both divs. */
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`
 /** Set the background, layout full height rows*/
 const Main = styled.div`
   background-color: ${({ theme }) => theme.palette.background};
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: ${({ theme }) => theme.palette.neutralLight};
   gap: 24px;
   width: 100%;

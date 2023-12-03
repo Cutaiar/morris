@@ -6,7 +6,7 @@
 	height: 16px;
 	cursor: pointer;
 	position: relative;
-    margin-right: 8px;
+	margin-right: 8px;
 }
 
 .toggler-wrapper input[type="checkbox"] {
@@ -14,14 +14,14 @@
 }
 
 .toggler-wrapper input[type="checkbox"]:checked+.toggler-slider {
-	background-color: #161616; /* palette.neutral */
+	background-color: var(--morris-palette-neutral);
 }
 
 .toggler-wrapper .toggler-slider {
-	background-color: #f7f7f6; /* palette.surface */
-    border-width: 1px;
-    border-color: #161616; /* palette.neutral */
-    border-style: solid;
+	background-color: var(--morris-palette-surface);
+	border-width: 1px;
+	border-color: var(--morris-palette-neutral);
+	border-style: solid;
 	position: absolute;
 	border-radius: 100px;
 	top: 0;
@@ -40,8 +40,7 @@
 
 .toggler-wrapper.style-1 input[type="checkbox"]:checked+.toggler-slider .toggler-knob {
 	left: calc(100% - 10px - 3px);
-    background-color: #f7f7f6; /* palette.surface */
-
+	background-color: var(--morris-palette-surface);
 }
 
 .toggler-wrapper.style-1 .toggler-knob {
@@ -50,5 +49,5 @@
 	border-radius: 50%;
 	left: 3px;
 	top: 3px;
-	background-color: #161616; /* palette.neutral */
+	background-color: var(--morris-palette-neutral);
 }

@@ -1,5 +1,5 @@
 .MPPanel {
-  background-color: #121212; /* palette.neutralDarker */
+  background-color: var(--morris-palette-neutralDarker);
   display: flex;
   flex-direction: column;
   align-items: flex-start;

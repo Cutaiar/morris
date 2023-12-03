@@ -1,7 +1,7 @@
 .slider {
   -webkit-appearance: none;
   height: 1px;
-  background: grey; /* palette.neutral */
+  background: var(--morris-palette-neutral);
   outline: none;
   -webkit-transition: 0.2s;
   transition: opacity 0.2s;
@@ -13,7 +13,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #d2042d; /*palette.primary */
+  background: var(--morris-palette-primary);
   cursor: pointer;
 
   -webkit-transition: 0.2s;
@@ -24,7 +24,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #d2042d; /*palette.primary */
+  background: var(--morris-palette-primary);
   cursor: pointer;
 }
 

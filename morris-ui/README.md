@@ -20,3 +20,9 @@ _It was then switched to Vite._
 `build` - builds the project, and outputs to the folder ./dist
 
 `serve` - start a local web server that serves the built solution from ./dist for previewing
+
+# Core UI
+
+Some components in this app are specifically for use in this morris experience. Others are generic, making up a core ui.
+
+They are currently not in a package of their own, but are a subset of morris-ui.

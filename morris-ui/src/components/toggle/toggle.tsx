@@ -1,5 +1,6 @@
 import React from "react"
 import "./toggle.css"
+import { fontSizes } from "theme";
 
 /**
  * A simple toggle component
@@ -21,7 +22,7 @@ export const Toggle = (props: {
           <div className="toggler-knob"></div>
         </div>
       </label>
-      <label style={{ fontSize: "medium" }} htmlFor={props.label}>
+      <label style={{ fontSize: fontSizes.medium }} htmlFor={props.label}>
         {props.label}
       </label>
     </div>

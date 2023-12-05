@@ -1,6 +1,7 @@
 import React from "react";
 
 import { GameState } from "hooks/useGameState";
+import { fontSizes } from "theme";
 
 export interface DebugGameStateProps {
   gameState: GameState;
@@ -20,7 +21,7 @@ export const DebugGameState = (props: DebugGameStateProps) => {
       <label>Game State</label>
       <p
         style={{
-          fontSize: "small",
+          fontSize: fontSizes.small,
           whiteSpace: "pre-wrap",
         }}
       >

@@ -1,6 +1,7 @@
 import { FallbackProps } from "react-error-boundary";
 
 import { Button } from "components";
+import { fontSizes } from "theme";
 
 export const ErrorFallback = (props: FallbackProps) => {
   const { error, resetErrorBoundary } = props;
@@ -15,6 +16,7 @@ export const ErrorFallback = (props: FallbackProps) => {
         width: "100vw",
         height: "100vh",
         backgroundColor: "pink",
+        fontSize: fontSizes.medium
       }}
     >
       <b>An error occurred:</b>

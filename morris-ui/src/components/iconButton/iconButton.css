@@ -9,7 +9,8 @@
   align-items: center;
   border-style: none;
   color: currentColor;
-  font-size: medium;
+  font-size: var(--morris-font-size-medium);
+  font-family: inherit;
   box-sizing: border-box;
   transition: transform 0.2s ease;
   transition: box-shadow 0.2s ease;

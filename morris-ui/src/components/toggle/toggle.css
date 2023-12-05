@@ -1,54 +1,53 @@
-/*cCheckbox styles inspired by https://codepen.io/alvarotrigo/pen/wvyvjva*/
+/* Checkbox styles inspired by https://codepen.io/alvarotrigo/pen/wvyvjva */
 
 .toggler-wrapper {
-	display: block;
-	width: 32px;
-	height: 16px;
-	cursor: pointer;
-	position: relative;
+    display: block;
+    width: 32px;
+    height: 16px;
+    cursor: pointer;
+    position: relative;
     margin-right: 8px;
 }
 
 .toggler-wrapper input[type="checkbox"] {
-	display: none;
+    display: none;
 }
 
 .toggler-wrapper input[type="checkbox"]:checked+.toggler-slider {
-	background-color: #161616; /* palette.neutral */
+    background-color: var(--morris-palette-neutral);
 }
 
 .toggler-wrapper .toggler-slider {
-	background-color: #f7f7f6; /* palette.surface */
+    background-color: var(--morris-palette-surface);
     border-width: 1px;
-    border-color: #161616; /* palette.neutral */
+    border-color: var(--morris-palette-neutral);
     border-style: solid;
-	position: absolute;
-	border-radius: 100px;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	-webkit-transition: all 300ms ease;
-	transition: all 300ms ease;
+    position: absolute;
+    border-radius: 100px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-transition: all 300ms ease;
+    transition: all 300ms ease;
 }
 
 .toggler-wrapper .toggler-knob {
-	position: absolute;
-	-webkit-transition: all 300ms ease;
-	transition: all 300ms ease;
+    position: absolute;
+    -webkit-transition: all 300ms ease;
+    transition: all 300ms ease;
 }
 
 .toggler-wrapper.style-1 input[type="checkbox"]:checked+.toggler-slider .toggler-knob {
-	left: calc(100% - 10px - 3px);
-    background-color: #f7f7f6; /* palette.surface */
-
+    left: calc(100% - 10px - 2px);
+    background-color: var(--morris-palette-surface);
 }
 
 .toggler-wrapper.style-1 .toggler-knob {
-	width: calc(16px - 6px);
-	height: calc(16px - 6px);
-	border-radius: 50%;
-	left: 3px;
-	top: 3px;
-	background-color: #161616; /* palette.neutral */
+    width: calc(16px - 6px);
+    height: calc(16px - 6px);
+    border-radius: 50%;
+    left: 2px;
+    top: 2px;
+    background-color: var(--morris-palette-neutral);
 }

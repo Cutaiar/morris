@@ -1,7 +1,7 @@
 import React from "react";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 import "./editableName.css";
 
 interface EditableNameProps {
@@ -15,13 +15,15 @@ interface EditableNameProps {
   editing?: boolean;
   /** Should the field fill its container? */
   fill?: boolean
+  /** Additional style */
+  style?: React.CSSProperties;
 }
 
 /**
  * Renders an editable name
  */
 export const EditableName = (props: EditableNameProps) => {
-  const { name, onNameChange, editing, fill } = props;
+  const { name, onNameChange, editing, fill, style } = props;
 
   const color = props.color ?? palette.neutral;
 
@@ -36,20 +38,21 @@ export const EditableName = (props: EditableNameProps) => {
         size={size}
         style={{
           color: color,
-          fontSize: "larger",
+          fontSize: fontSizes.large,
           borderColor: palette.neutral,
           borderStyle: "solid",
           borderWidth: "1px",
           borderRadius: "4px",
           background: palette.surface,
-          width: fill ? "100%" : undefined
+          width: fill ? "100%" : undefined,
+          ...style
         }}
       />
       {/* TODO: disabled={nameState.length === 0}, once these are action buttons */}
     </>
   ) : (
     <span
-      style={{ color: color, fontSize: "larger" }}
+      style={{ color: color, fontSize: fontSizes.large }}
       className={`name-display-span${
         editing ? " name-display-span-editing" : ""
       }`}

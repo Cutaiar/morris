@@ -1,7 +1,7 @@
 import React from "react";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 import "./button.css";
 
 // Components
@@ -22,7 +22,7 @@ export const Button = (props: ButtonProps) => {
     ? palette.primary
     : palette.surface;
 
-  const textColor = primary ? palette.neutralLight : palette.neutralDark;
+  const textColor = primary ? palette.surface : palette.neutralDark;
 
   const disabledStyle: React.CSSProperties = {
     borderColor: palette.neutralLighter,
@@ -50,6 +50,8 @@ export const Button = (props: ButtonProps) => {
         padding: 8,
         borderWidth: 1,
         borderColor: textColor,
+        fontSize: fontSizes.medium,
+        fontFamily: "inherit",
         ...extraStyle
       }}
       onClick={onClick}

@@ -28,7 +28,7 @@ import {
 import { useMount } from "react-use";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 import styled from "styled-components";
 
 // Core
@@ -152,7 +152,7 @@ export const Game = () => {
               />
             )}
             {opponentType === "local" && (
-              <label style={{ fontSize: "medium", color: palette.neutral }}>
+              <label style={{ fontSize: fontSizes.medium, color: palette.neutral }}>
                 opponent is local
               </label>
             )}
@@ -197,7 +197,7 @@ export const Game = () => {
                   style={{ display: "flex", flexDirection: "column", gap: 10 }}
                 >
                   <label
-                    style={{ fontSize: "medium" }}
+                    style={{ fontSize: fontSizes.medium }}
                   >{`phase: ${gameState.phase}`}</label>
 
                   <Toggle

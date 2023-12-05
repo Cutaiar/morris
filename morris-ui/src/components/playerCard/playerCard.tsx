@@ -4,7 +4,7 @@ import React from "react";
 import { Player } from "hooks/useGameState";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 
 // Components
 import {
@@ -89,7 +89,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: "medium",
+          fontSize: fontSizes.medium,
           gap: 10,
         }}
       >

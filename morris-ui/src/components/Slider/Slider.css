@@ -32,5 +32,5 @@
   display: flex;
   align-items: center;
   text-align: center;
-  font-size: medium;
+  font-size: var(--morris-font-size-medium);
 }

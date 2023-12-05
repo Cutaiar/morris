@@ -1,7 +1,7 @@
 import React from "react";
 
 //Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 import "./loader.css";
 
 export interface LoaderProps
@@ -22,7 +22,7 @@ export const Loader = (props: LoaderProps) => {
     <div style={style} className={className}>
       <div className="loading" />
       {text && (
-        <span style={{ color: palette.neutral, fontSize: "medium" }}>
+        <span style={{ color: palette.neutral, fontSize: fontSizes.medium }}>
           {text}
         </span>
       )}

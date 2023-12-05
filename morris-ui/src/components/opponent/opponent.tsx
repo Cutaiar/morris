@@ -7,7 +7,7 @@ import { Action, GameState, Player } from "hooks/useGameState"; // TODO: imports
 import { useOpponent } from "hooks";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 
 // Sound
 import { HasSound } from "../board/board"; // TODO: import should come from elsewhere
@@ -36,7 +36,7 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
 
   const { status } = useOpponent(state, player, handleDecision, ai);
   return (
-    <span style={{ fontSize: "medium" }}>
+    <span style={{ fontSize: fontSizes.medium }}>
       {`opponent is `}
       <i style={{ color: palette.secondary }}>{status}</i>
     </span>

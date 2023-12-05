@@ -59,7 +59,7 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <h1 style={{ fontSize: "large", color: palette.neutral, margin: 0 }}>
+      <h1 style={{ fontSize: fontSizes.large, color: palette.neutral, margin: 0 }}>
         Choose an opponent
       </h1>
         <Tabs>
@@ -237,6 +237,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         onNameChange={setNameState}
         color={palette.neutralLight}
         editing={true}
+        style={{fontSize: fontSizes.medium}}
         fill
       />
       <>

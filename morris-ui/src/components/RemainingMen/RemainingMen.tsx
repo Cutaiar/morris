@@ -4,7 +4,7 @@ import * as React from "react";
 import { Player } from "hooks/useGameState";
 
 // Style
-import { palette } from "theme";
+import { fontSizes, palette } from "theme";
 
 export interface RemainingMenProps {
   remainingMenCount: number;
@@ -39,7 +39,7 @@ export const RemainingMen: React.FC<RemainingMenProps> = (props) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: gap }}>
-      <label style={{ fontSize: "medium", color: palette.neutral }}>
+      <label style={{ fontSize: fontSizes.medium, color: palette.neutral }}>
         remaining men
       </label>
       <div

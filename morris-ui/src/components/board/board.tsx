@@ -27,8 +27,6 @@ export interface HasSound {
 }
 
 export interface BoardProps extends HasSound {
-  /** pixel size of the board */
-  size?: number;
 
   /** The current state of the game including adjacency, occupancy, turn, and more */
   gameState: GameState;
@@ -39,8 +37,6 @@ export interface BoardProps extends HasSound {
   /** The player controlling the game, maybe this should be combined with gameState */
   disabled?: boolean;
 }
-
-const sizeDefault = 400;
 
 export const maxRings = 6; // 6 rings is the maximum that looks OK right now. // TODO -- adapt point size and other things to support large number of rings
 export const minRings = 2; // TODO -- we can support 3 men morris (1 ring) by adding a center point

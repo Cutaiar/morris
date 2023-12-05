@@ -13,11 +13,12 @@ export const defaultTheme = {
     secondary: "#1E90FF",
   },
   fontSizes: {
-    tiny: "10px",
-    small: "12px",
-    medium: "14px",
-    large: "18px",
-    hero: "48px",
+    tiny: "0.5rem", // 8px
+    small: "0.75rem", // 12px
+    medium: "1rem", // 16px
+    large: "1.25rem", // 20px
+    xlarge: "2rem", // 32px
+    hero: "3rem", // 48 px
   },
   fontWeights: {
     thin: 200,
@@ -62,8 +63,10 @@ export const injectStyleVars = () => {
   const sheet = new CSSStyleSheet();
   sheet.replaceSync('');
   document.adoptedStyleSheets = [sheet];
+  const buildDeclarations = (obj: Record<string, string>, prefix: string) => Object.entries(obj).map(e => `    ${prefix}${e[0]}: ${e[1]};`).join("\n");
 
-  const declarations =  Object.entries(defaultTheme.palette).map(e => `    --morris-palette-${e[0]}: ${e[1]};`).join("\n");
-  const rule = `:root {\n${declarations}\n}`
+  const paletteDeclarations = buildDeclarations(defaultTheme.palette, "--morris-palette-")
+  const fontSizeDeclarations = buildDeclarations(defaultTheme.fontSizes, "--morris-font-size-")
+  const rule = `:root {\n${paletteDeclarations}${fontSizeDeclarations}\n}`
   sheet.insertRule(rule, sheet.cssRules.length);
 }

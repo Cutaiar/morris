@@ -229,15 +229,15 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         justifyContent: "end",
         alignItems: "center",
         width: "100%",
-        gap: 8
+        gap: 8,
+        color: palette.neutralLight,
+        fontSize: fontSizes.medium
       }}
     >
       <EditableName
         name={nameState}
         onNameChange={setNameState}
-        color={palette.neutralLight}
         editing={true}
-        style={{fontSize: fontSizes.medium}}
         fill
       />
       <>

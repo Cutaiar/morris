@@ -89,14 +89,14 @@ export const PlayerCard = (props: PlayerCardProps) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          fontSize: fontSizes.medium,
+          fontSize: fontSizes.large,
           gap: 10,
+          color: nameColor
         }}
       >
         <EditableName
           name={nameState}
           onNameChange={setNameState}
-          color={nameColor}
           editing={isEditing}
         />
         <Chip color={getChipColor(player)} emphasis={isMyTurn} />

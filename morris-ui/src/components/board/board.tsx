@@ -13,12 +13,12 @@ import { palette } from "theme";
 
 // Hooks
 import { useDebug } from "hooks";
+import { useMeasure } from "react-use";
 
 // Sound
 import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
-import { useMeasure } from "react-use";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {

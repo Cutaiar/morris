@@ -10,7 +10,7 @@ export const DebugGameState = (props: DebugGameStateProps) => {
   const { gameState } = props;
   return (
     <Root>
-      <label>Game State</label>
+      <Label>Game State</Label>
       <GameStateObject>
         {JSON.stringify(gameState, null, 2)}
       </GameStateObject>
@@ -25,10 +25,17 @@ const GameStateObject = styled.code`
   white-space: pre-wrap;
 `;
 
+const Label = styled.label`
+  display: block;
+  text-align: center;
+  font-weight: ${({theme}) => theme.fontWeights.bold};
+`;
+
 const Root = styled.div`
   height: 80vh;
   overflow: auto;
   position: absolute;
   top: 100px;
-  left: 20px;
+  left: 0px;
+  padding: 8px;
 `;

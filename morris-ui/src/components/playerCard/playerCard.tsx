@@ -17,6 +17,8 @@ import { ToRemove } from "./ToRemove";
 // Hooks
 import { useKey } from "react-use";
 
+import { getChipColor } from "utils";
+
 export type PlayerCardProps = React.PropsWithChildren<{
   /** Which player is this. undefined if not determined yet */
   player?: Player;
@@ -134,14 +136,6 @@ export const PlayerCard = (props: PlayerCardProps) => {
       {props.children}
     </>
   );
-};
-
-const getChipColor = (theme: DefaultTheme, player?: Player, ) => {
-  return player
-    ? player === "a"
-      ? theme.palette.primary
-      : theme.palette.secondary
-    : theme.palette.neutral;
 };
 
 const Toolbar = styled.div`

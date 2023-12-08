@@ -1,13 +1,11 @@
 import React from "react";
+import styled from "styled-components";
 
 // Types
 import { Action, GameState, Player } from "hooks/useGameState"; // TODO: imports should come from elsewhere
 
 // Hooks
 import { useOpponent } from "hooks";
-
-// Style
-import { fontSizes, palette } from "theme";
 
 // Sound
 import { HasSound } from "../board/board"; // TODO: import should come from elsewhere
@@ -35,10 +33,19 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
   };
 
   const { status } = useOpponent(state, player, handleDecision, ai);
+
   return (
-    <span style={{ fontSize: fontSizes.medium }}>
+    <Root>
       {`opponent is `}
-      <i style={{ color: palette.secondary }}>{status}</i>
-    </span>
+      <Status>{status}</Status>
+    </Root>
   );
 };
+
+const Root = styled.span`
+  font-size: ${({theme}) => theme.fontSizes.medium};
+`;
+
+const Status = styled.i`
+  color: ${({theme}) => theme.palette.secondary};
+`;

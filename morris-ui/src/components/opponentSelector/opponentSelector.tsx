@@ -1,8 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-
-// Theme
-import { palette } from "theme";
+import styled, { useTheme } from "styled-components";
 
 // Components
 import { Button, Chip, EditableName, IconButton } from "components";
@@ -108,12 +105,16 @@ interface MakesDecision {
 
 const AIPanel: React.FC<MakesDecision> = (props) => {
   // TODO: These AI opponents should probably be stored somewhere else
+
+  const theme = useTheme();
+  const color = theme.palette.secondary;
+
   return (
     <OpponentList
       opponents={[
-        { id: "rand", name: "Random", color: palette.secondary },
-        { id: "smart", name: "Smart", color: palette.secondary },
-        { id: "minimax", name: "Minimax", color: palette.secondary },
+        { id: "rand", name: "Random", color },
+        { id: "smart", name: "Smart", color },
+        { id: "minimax", name: "Minimax", color},
       ]}
       onSelectOpponent={(id) =>
         props.onDecision({ type: "ai", ai: id as AIID })
@@ -124,8 +125,10 @@ const AIPanel: React.FC<MakesDecision> = (props) => {
 
 const LocalPanel: React.FC<MakesDecision> = (props) => {
   // TODO: These should be in local storage, but we probably need a new context and system for this
+  const theme = useTheme();
+
   const fakeOpponents = [
-    { name: "Opponent", id: "opponent", color: palette.secondary },
+    { name: "Opponent", id: "opponent", color: theme.palette.secondary },
   ];
   const [opponents, setOpponents] =
     React.useState<OpponentListItemProps[]>(fakeOpponents);
@@ -237,12 +240,14 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
   const [adding, setAdding] = React.useState(false);
   const [nameState, setNameState] = React.useState("");
 
+  const theme = useTheme();
+
   const onAcceptName = (name?: string) => {
     name &&
       props.onAdd({
         id: name,
         name,
-        color: palette.secondary,
+        color: theme.palette.secondary,
       });
     setAdding(false);
     setNameState("");

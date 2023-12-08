@@ -30,9 +30,6 @@ export const defaultTheme = {
   },
 } as const;
 
-// For back compat rn...
-export const palette = defaultTheme.palette;
-
 export const GlobalStyle = createGlobalStyle`
   /* Generated from https://www.joshwcomeau.com/shadow-palette/ */
   :root {
@@ -79,7 +76,7 @@ export const GlobalStyle = createGlobalStyle`
 // TODO, make this a build function inside a new component
 export const confetti = {
   primary: [
-    palette.primary,
+    defaultTheme.palette.primary,
     "#bd0429",
     "#a80324",
     "#93031f",
@@ -89,7 +86,7 @@ export const confetti = {
     "e98296",
   ],
   secondary: [
-    palette.secondary,
+    defaultTheme.palette.secondary,
     "#1b82e6",
     "#1873cc",
     "#1565b3",

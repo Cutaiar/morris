@@ -1,5 +1,4 @@
 export {
-  palette,
   confetti,
   defaultTheme,
   injectStyleVars,

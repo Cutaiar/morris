@@ -1,5 +1,5 @@
 /* Copied from "react-tabs/style/react-tabs.css" and customized */
-
+/* TODO: How to make this play nice with SC? */
 .react-tabs {
   -webkit-tap-highlight-color: transparent;
 }
@@ -7,6 +7,8 @@
 .react-tabs__tab-list {
   padding: 0;
   margin: 0;
+  display: flex;
+  gap: 8px;
 }
 
 .react-tabs__tab {
@@ -16,6 +18,7 @@
   position: relative;
   list-style: none;
   cursor: pointer;
+  padding-bottom: 4px;
 }
 
 .react-tabs__tab--selected {

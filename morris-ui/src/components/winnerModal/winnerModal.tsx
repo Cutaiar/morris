@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes, useTheme } from "styled-components";
 
 // Types
 import { Player } from "hooks/useGameState";
@@ -10,8 +10,6 @@ import { useWindowSize } from "react-use";
 // Components
 import Confetti from "react-confetti";
 import { Button } from "components";
-
-import { confetti} from "theme";
 
 export interface WinnerModalProps {
   /** cb for when the "play again" button is selected */
@@ -29,6 +27,8 @@ export const WinnerModal = (props: WinnerModalProps) => {
   const { onPlayAgain, winner, winnerName } = props;
 
   const { width, height } = useWindowSize();
+
+  const confetti = useConfetti();
 
   return (
     <Root>
@@ -87,3 +87,27 @@ const Surface = styled.div<Pick<WinnerModalProps, "winner">>`
   border-radius: 10px;
   background-color: ${({winner, theme}) => winner === "a" ? theme.palette.primary : theme.palette.secondary};
 `;
+
+// TODO: Generate confetti palette based on theme colors
+const useConfetti = () => {
+  const theme = useTheme();
+  
+  return {primary: [
+    theme.palette.primary,
+    "#bd0429",
+    "#a80324",
+    "#93031f",
+    "#7e021b",
+    "#690217",
+    "#d71d42",
+  ],
+  secondary: [
+    theme.palette.secondary,
+    "#1b82e6",
+    "#1873cc",
+    "#1565b3",
+    "#125699",
+    "#8fc8ff",
+    "#d2e9ff",
+  ]}
+};

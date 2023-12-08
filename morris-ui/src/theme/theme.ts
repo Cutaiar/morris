@@ -73,29 +73,6 @@ export const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// TODO, make this a build function inside a new component
-export const confetti = {
-  primary: [
-    defaultTheme.palette.primary,
-    "#bd0429",
-    "#a80324",
-    "#93031f",
-    "#7e021b",
-    "#690217",
-    "#d71d42",
-    "e98296",
-  ],
-  secondary: [
-    defaultTheme.palette.secondary,
-    "#1b82e6",
-    "#1873cc",
-    "#1565b3",
-    "#125699",
-    "#8fc8ff",
-    "#d2e9ff",
-  ],
-};
-
 /**
  * Add CSS vars for the global styles so that components using css file styles can access them
  */

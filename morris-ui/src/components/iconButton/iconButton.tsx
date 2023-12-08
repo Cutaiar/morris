@@ -51,7 +51,7 @@ export const IconButton = (props: IconButtonProps) => {
     <Outer>
       <Inner hasText={!!text}>
         <Icon />
-        {text && <ButtonText>{text}</ButtonText>}
+        {text && <ButtonText hasIcon={!!name}>{text}</ButtonText>}
       </Inner>
       {End?.()}
     </Outer>

@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 // Components
 import {
@@ -26,10 +27,6 @@ import {
   useBuildSkipPhaseOneFunc,
 } from "hooks";
 import { useMount } from "react-use";
-
-// Style
-import { fontSizes, palette } from "theme";
-import styled from "styled-components";
 
 // Core
 import { AIID } from "morris-ai";
@@ -152,9 +149,9 @@ export const Game = () => {
               />
             )}
             {opponentType === "local" && (
-              <label style={{ fontSize: fontSizes.medium, color: palette.neutral }}>
+              <OpponentLabel>
                 opponent is local
-              </label>
+              </OpponentLabel>
             )}
           </Controls>
 
@@ -193,12 +190,8 @@ export const Game = () => {
               ]}
             >
               {isAdvanced && (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
-                >
-                  <label
-                    style={{ fontSize: fontSizes.medium }}
-                  >{`phase: ${gameState.phase}`}</label>
+                <AdvancedMenu>
+                  <code>{`phase: ${gameState.phase}`}</code>
 
                   <Toggle
                     checked={opponentType === "local"}
@@ -226,17 +219,8 @@ export const Game = () => {
 
                   <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
                     Skip phase 1
-                  </Button>
-
-                  {/* Temporarily adding a slider to control the number of rings */}
-                  {/* <Slider
-                min={minRings}
-                max={maxRings}
-                value={ringCount}
-                onChange={(e) => setRingCount(Number(e.target.value))}
-                ringCount={ringCount}
-              /> */}
-                </div>
+                  </Button> 
+                </AdvancedMenu>
               )}
             </PlayerCard>
           </Controls>
@@ -256,6 +240,17 @@ export const Game = () => {
     </AppContainer>
   );
 };
+
+const OpponentLabel = styled.label`
+  font-size: ${({theme}) => theme.fontSizes.medium};
+  color: ${({theme}) => theme.palette.neutral} ;
+`;
+
+const AdvancedMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
 
 const BoardContainer = styled.div`
   max-width: 400px;

@@ -23,3 +23,13 @@ export const Slider: React.FC<SliderProps> = (props) => {
     </div>
   );
 };
+
+/* Usage:
+<Slider
+  min={minRings}
+  max={maxRings}
+  value={ringCount}
+  onChange={(e) => setRingCount(Number(e.target.value))}
+  ringCount={ringCount}
+/>
+*/

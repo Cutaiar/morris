@@ -32,8 +32,6 @@ export const defaultTheme = {
 
 // For back compat rn...
 export const palette = defaultTheme.palette;
-export const fontSizes = defaultTheme.fontSizes;
-export const fontWeights = defaultTheme.fontWeights;
 
 export const GlobalStyle = createGlobalStyle`
   /* Generated from https://www.joshwcomeau.com/shadow-palette/ */

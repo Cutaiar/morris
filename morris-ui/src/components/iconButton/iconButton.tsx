@@ -46,7 +46,7 @@ export const IconButton = (props: IconButtonProps) => {
       onClick={onClick}
       title={tooltip} // TODO: Don't use title for tooltip, use own component
       hasText={!!text}
-      fill={fill}
+      $fill={fill}
     >
     <Outer>
       <Inner hasText={!!text}>
@@ -78,10 +78,10 @@ const Outer = styled.div`
   justify-content: space-between;
 `;
 
-const Root = styled.button<Pick<IconButtonProps, "fill"> & {hasText?: boolean}>`
+const Root = styled.button<{$fill?: boolean, hasText?: boolean}>`
   border-radius: 4px;
   background: transparent;
-  min-width: ${({fill}) => fill ? `100%` : `30px`};
+  min-width: ${({$fill}) => $fill ? `100%` : `30px`};
   min-height: 30px;
   padding: 0px;
   padding-inline: ${p => p.hasText && `8px`}; /* conditional style if the icon button has text */

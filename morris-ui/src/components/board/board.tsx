@@ -1,4 +1,6 @@
 import React from "react";
+import { DefaultTheme, useTheme } from "styled-components";
+
 import {
   GameState,
   Occupancy,
@@ -7,9 +9,6 @@ import {
   isValidSelection,
   Action,
 } from "morris-core";
-
-// Style
-import { palette } from "theme";
 
 // Hooks
 import { useDebug } from "hooks";
@@ -67,6 +66,7 @@ export const Board: React.FC<BoardProps> = (props) => {
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
   const [ref, { width }] = useMeasure<SVGSVGElement>();
+  const theme = useTheme();
 
   // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
@@ -147,8 +147,9 @@ export const Board: React.FC<BoardProps> = (props) => {
             innerSize={ring.size}
             outerSize={nextRing.size}
             vbsize={width}
-            stroke={palette.neutral}
+            stroke={theme.palette.neutral}
             key={i}
+            theme={theme}
           />
         );
       })}
@@ -158,7 +159,7 @@ export const Board: React.FC<BoardProps> = (props) => {
         <Ring
           size={ring.size}
           vbsize={width}
-          stroke={palette.neutral}
+          stroke={theme.palette.neutral}
           pointRadius={pointRadius}
           onClick={onClick}
           key={ring.size}
@@ -166,13 +167,17 @@ export const Board: React.FC<BoardProps> = (props) => {
           selectedPoint={selectedPoint}
           sound={sound}
           disabled={disabled}
+          theme={theme}
         />
       ))}
     </svg>
   );
 };
 
-type ConnectionsProps = {
+interface UsesTheme {
+  theme: DefaultTheme;
+}
+interface ConnectionsProps extends UsesTheme {
   outerSize: number;
   innerSize: number;
   vbsize: number;
@@ -220,7 +225,7 @@ const Connections = (props: ConnectionsProps) => {
   );
 };
 
-interface RingProps extends HasSound {
+interface RingProps extends HasSound, UsesTheme {
   size: number;
   vbsize: number;
   stroke: string;
@@ -245,6 +250,7 @@ const Ring = (props: RingProps) => {
     points,
     selectedPoint,
     disabled,
+    theme,
   } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
@@ -283,13 +289,14 @@ const Ring = (props: RingProps) => {
           key={point[0]}
           sound={sound}
           disabled={disabled}
+          theme={theme}
         />
       ))}
     </g>
   );
 };
 
-interface SVGPointProps extends HasSound {
+interface SVGPointProps extends HasSound, UsesTheme {
   cx: number;
   cy: number;
   r: number;
@@ -308,6 +315,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
     onClick,
     sound: propsSound,
     disabled,
+    theme,
     ...rest
   } = props;
   const sound = propsSound ?? false;
@@ -315,8 +323,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
   const pointFill = (occupancy?: Occupancy) => {
-    if (!occupancy) return palette.surface;
-    return occupancy === "a" ? palette.primary : palette.secondary;
+    if (!occupancy) return theme.palette.surface;
+    return occupancy === "a" ? theme.palette.primary : theme.palette.secondary;
   };
 
   const [playHover] = useSound(hoverSound);
@@ -338,7 +346,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
     <g>
       <circle
         {...rest}
-        stroke={palette.neutral}
+        stroke={theme.palette.neutral}
         strokeWidth={selected ? 3 : 1}
         fill={pointFill(point.occupancy)}
         cursor={disabled ? "not-allowed" : "pointer"}
@@ -371,7 +379,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           cy={rest.cy}
           r={5}
           fill={"transparent"}
-          stroke={palette.neutral}
+          stroke={theme.palette.neutral}
           pointerEvents="none"
         >
           <animate
@@ -390,8 +398,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           x={props.cx}
           y={props.cy}
           textAnchor="middle"
-          stroke={palette.neutralDark}
-          fill={palette.neutralDark}
+          stroke={theme.palette.neutralDark}
+          fill={theme.palette.neutralDark}
           alignmentBaseline="middle"
           fontSize={props.r}
           cursor={"default"}

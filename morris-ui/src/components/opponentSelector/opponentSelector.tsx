@@ -65,13 +65,13 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
         <Tabs>
           <TabList style={{ display: "flex", gap: 8 }}>
             <Tab>
-              <IconButton style={buttonStyle} name={"eye"} text={"AI"} />
+              <IconButton name={"eye"} text={"AI"} />
             </Tab>
             <Tab>
-              <IconButton style={buttonStyle} name={"users"} text={"Local"} />
+              <IconButton name={"users"} text={"Local"} />
             </Tab>
             <Tab>
-              <IconButton style={buttonStyle} name={"wifi"} text={"Online"} />
+              <IconButton name={"wifi"} text={"Online"} />
             </Tab>
           </TabList>
 
@@ -168,7 +168,7 @@ const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
         marginTop: 8,
       }}
     >
-      <IconButton onClick={props.onClick}style={{width: "100%"}} text={props.name} End={() => <Chip color={props.color} />}/> 
+      <IconButton onClick={props.onClick} fill text={props.name} End={() => <Chip color={props.color} />}/> 
     </li>
   );
 };
@@ -265,7 +265,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
         marginTop: 8,
       }}
     >
-      <IconButton style={{width: "100%"}}  text="Add a player" End={() => <FiPlus />}/>
+      <IconButton fill text="Add a player" End={() => <FiPlus />}/>
     </li>
   );
 };

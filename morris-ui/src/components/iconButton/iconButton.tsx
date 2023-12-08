@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 // Icons
 import { IconType } from "react-icons";
@@ -12,23 +13,21 @@ import {
   FiX,
 } from "react-icons/fi";
 
-// Style
-import "./iconButton.css";
-import { palette } from "theme";
 
 type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
+
 export interface IconButtonProps {
   name?: IconName;
   disabled?: boolean;
   onClick?: () => void;
   tooltip?: string;
   text?: string;
-  style?: React.CSSProperties;
+  fill?: boolean;
   End?: () => JSX.Element;
 }
 
 export const IconButton = (props: IconButtonProps) => {
-  const { name, disabled, onClick, tooltip, text, style, End } = props;
+  const { name, disabled, onClick, tooltip, text, fill, End } = props;
   const icons: Record<IconName, IconType> = {
     edit: FiEdit,
     settings: FiSettings,
@@ -38,41 +37,81 @@ export const IconButton = (props: IconButtonProps) => {
     users: FiUsers,
     wifi: FiWifi,
   };
-  const disabledStyle: React.CSSProperties = {
-    borderColor: palette.neutralLighter,
-    color: palette.neutralLighter,
-    transform: "none",
-    boxShadow: "none",
-    cursor: "not-allowed"
-  };
-
-  const withTextStyle: React.CSSProperties = {
-    paddingLeft: 8,
-    paddingRight: 8,
-  };
-
-  const extraStyle = {
-    ...style,
-    ...(disabled ? disabledStyle : {}),
-    ...(text ? withTextStyle : {}),
-  };
 
   const Icon = name ? icons[name] : () => null;
+
   return (
-    <button
-      className="icon-button-root"
-      style={extraStyle}
+    <Root
       disabled={disabled}
       onClick={onClick}
       title={tooltip} // TODO: Don't use title for tooltip, use own component
+      hasText={!!text}
+      fill={fill}
     >
-    <div style={{width: "100%", display:"flex", alignItems: "center", justifyContent: "space-between"}}>
-      <div style={{width: "100%", display:"flex", alignItems: "center", justifyContent: props.text ? "start" : "center"}}>
+    <Outer>
+      <Inner hasText={!!text}>
         <Icon />
-        {text && <p style={{ paddingLeft: name ? 8 : 0, margin: 0 }}>{text}</p>}
-      </div>
+        {text && <ButtonText>{text}</ButtonText>}
+      </Inner>
       {End?.()}
-    </div>
-    </button>
+    </Outer>
+    </Root>
   );
 };
+
+const ButtonText = styled.span<{hasIcon?: boolean}>`
+  padding-left: ${({hasIcon}) => hasIcon && `8px`};
+  margin: 0;
+`;
+
+const Inner = styled.div<{hasText?: boolean}>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: ${({hasText}) => hasText ? "start" : "center"};
+`;
+
+const Outer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const Root = styled.button<Pick<IconButtonProps, "fill"> & {hasText?: boolean}>`
+  border-radius: 4px;
+  background: transparent;
+  min-width: ${({fill}) => fill ? `100%` : `30px`};
+  min-height: 30px;
+  padding: 0px;
+  padding-inline: ${p => p.hasText && `8px`}; /* conditional style if the icon button has text */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-style: none;
+  color: currentColor;
+  font-size: var(--morris-font-size-medium);
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+  transition: box-shadow 0.2s ease;
+  border: 1px solid #161616;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-elevation-medium);
+  }
+
+  &:active {
+    transform: scale(0.9);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    border-color: ${({theme}) => theme.palette.neutralLighter};
+    color: ${({theme}) => theme.palette.neutralLighter};
+    transform: none;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+`;

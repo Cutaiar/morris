@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 // Theme
-import { fontSizes, palette } from "theme";
+import { palette } from "theme";
 
 // Components
 import { Button, Chip, EditableName, IconButton } from "components";

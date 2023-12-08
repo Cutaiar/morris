@@ -1,7 +1,7 @@
 import React from "react";
 
 // Style
-import { defaultTheme, palette } from "theme";
+import { defaultTheme, palette, GlobalStyle } from "theme";
 import { ThemeProvider } from "styled-components";
 
 // Components
@@ -32,6 +32,7 @@ export const App: React.FC = () => {
             direction="right"
             {...openInNewTabProps}
           />
+          <GlobalStyle/>
         </ThemeProvider>
       </SocketProvider>
     </PrefsProvider>

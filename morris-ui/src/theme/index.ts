@@ -4,5 +4,6 @@ export {
   fontSizes,
   fontWeights,
   defaultTheme,
-  injectStyleVars
+  injectStyleVars,
+  GlobalStyle
 } from "./theme";

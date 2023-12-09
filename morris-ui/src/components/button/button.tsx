@@ -16,11 +16,7 @@ export const Button = (props: ButtonProps) => {
   const { onClick, disabled, primary, loading, children } = props;
 
   return (
-    <Root
-      disabled={disabled}
-      onClick={onClick}
-      primary={primary}
-    >
+    <Root disabled={disabled} onClick={onClick} primary={primary}>
       <Content>
         {children}
         {loading && <Loader />}
@@ -29,12 +25,11 @@ export const Button = (props: ButtonProps) => {
   );
 };
 
-
 const Content = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8;
 `;
 
 const Root = styled.button<{ primary?: boolean }>`
@@ -62,8 +57,8 @@ const Root = styled.button<{ primary?: boolean }>`
   }
 
   &:disabled {
-    border-color: ${({theme}) => theme.palette.neutralLighter};
-    color: ${({theme}) => theme.palette.neutralLighter};
+    border-color: ${({ theme }) => theme.palette.neutralLighter};
+    color: ${({ theme }) => theme.palette.neutralLighter};
     transform: none;
     box-shadow: none;
     cursor: not-allowed;

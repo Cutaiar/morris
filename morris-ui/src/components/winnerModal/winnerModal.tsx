@@ -51,7 +51,7 @@ const Root = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: hsl(0deg 0% 10% / .3);
+  background: hsl(0deg 0% 10% / 0.3);
   z-index: 100000;
   display: flex;
   align-items: center;
@@ -68,7 +68,7 @@ const fadeInOpacity = keyframes`
 `;
 
 const Title = styled.h1`
-  font-size: ${({theme}) => theme.fontSizes.xlarge};
+  font-size: ${({ theme }) => theme.fontSizes.xlarge};
 `;
 
 const Surface = styled.div<Pick<WinnerModalProps, "winner">>`
@@ -85,29 +85,32 @@ const Surface = styled.div<Pick<WinnerModalProps, "winner">>`
   width: 800px;
   height: 200px;
   border-radius: 10px;
-  background-color: ${({winner, theme}) => winner === "a" ? theme.palette.primary : theme.palette.secondary};
+  background-color: ${({ winner, theme }) =>
+    winner === "a" ? theme.palette.primary : theme.palette.secondary};
 `;
 
 // TODO: Generate confetti palette based on theme colors
 const useConfetti = () => {
   const theme = useTheme();
-  
-  return {primary: [
-    theme.palette.primary,
-    "#bd0429",
-    "#a80324",
-    "#93031f",
-    "#7e021b",
-    "#690217",
-    "#d71d42",
-  ],
-  secondary: [
-    theme.palette.secondary,
-    "#1b82e6",
-    "#1873cc",
-    "#1565b3",
-    "#125699",
-    "#8fc8ff",
-    "#d2e9ff",
-  ]}
+
+  return {
+    primary: [
+      theme.palette.primary,
+      "#bd0429",
+      "#a80324",
+      "#93031f",
+      "#7e021b",
+      "#690217",
+      "#d71d42"
+    ],
+    secondary: [
+      theme.palette.secondary,
+      "#1b82e6",
+      "#1873cc",
+      "#1565b3",
+      "#125699",
+      "#8fc8ff",
+      "#d2e9ff"
+    ]
+  };
 };

@@ -17,7 +17,7 @@ export const ErrorFallback = (props: FallbackProps) => {
   );
 };
 
-const Root = styled.div.attrs({role: "alert"})`
+const Root = styled.div.attrs({ role: "alert" })`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,5 +25,5 @@ const Root = styled.div.attrs({role: "alert"})`
   width: 100vw;
   height: 100vh;
   background-color: pink;
-  font-size: ${({theme}) => theme.fontSizes.medium};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
 `;

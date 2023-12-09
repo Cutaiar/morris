@@ -14,7 +14,7 @@ export interface SliderProps
 export const Slider: React.FC<SliderProps> = (props) => {
   const { ringCount, ...rest } = props;
   const strings = {
-    ringsPlural: "rings",
+    ringsPlural: "rings"
   };
   return (
     <div className="sliderContainer">

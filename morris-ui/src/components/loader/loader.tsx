@@ -11,20 +11,16 @@ export const Loader = (props: LoaderProps) => {
   return (
     <Root>
       <Spinner />
-      {text && (
-        <Text>
-          {text}
-        </Text>
-      )}
+      {text && <Text>{text}</Text>}
     </Root>
   );
 };
 
 const Root = styled.div`
-    height: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const spin = keyframes`
@@ -48,6 +44,6 @@ const Spinner = styled.div`
 `;
 
 const Text = styled.span`
-  color: ${({theme}) => theme.palette.neutral};
-  font-size: ${({theme}) => theme.fontSizes.medium};
+  color: ${({ theme }) => theme.palette.neutral};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
 `;

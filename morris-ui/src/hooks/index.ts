@@ -6,5 +6,5 @@ export { usePrefs, PrefsProvider, defaultPrefs } from "./usePrefs";
 export { useMultiplayer } from "./useMutliplayer";
 export {
   usePlayFirstPhase,
-  useBuildSkipPhaseOneFunc,
+  useBuildSkipPhaseOneFunc
 } from "./usePlayFirstPhase";

@@ -11,7 +11,7 @@ interface Prefs {
 export const defaultPrefs = {
   mute: false,
   reduceMotion: false,
-  name: "Me",
+  name: "Me"
 };
 
 const LOCAL_STORAGE_KEY = "morris-prefs";

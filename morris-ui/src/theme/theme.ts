@@ -12,7 +12,7 @@ export const defaultTheme = {
     neutralLighter: "#707070",
     neutralDark: "#121212",
     primary: "#D2042D",
-    secondary: "#1E90FF",
+    secondary: "#1E90FF"
   },
   fontSizes: {
     tiny: "0.5rem", // 8px
@@ -20,14 +20,14 @@ export const defaultTheme = {
     medium: "1rem", // 16px
     large: "1.25rem", // 20px
     xlarge: "2rem", // 32px
-    hero: "3rem", // 48 px
+    hero: "3rem" // 48 px
   },
   fontWeights: {
     thin: 200,
     regular: 400,
     semibold: 600,
-    bold: 800,
-  },
+    bold: 800
+  }
 } as const;
 
 export const GlobalStyle = createGlobalStyle`
@@ -78,12 +78,21 @@ export const GlobalStyle = createGlobalStyle`
  */
 export const injectStyleVars = () => {
   const sheet = new CSSStyleSheet();
-  sheet.replaceSync('');
+  sheet.replaceSync("");
   document.adoptedStyleSheets = [sheet];
-  const buildDeclarations = (obj: Record<string, string>, prefix: string) => Object.entries(obj).map(e => `    ${prefix}${e[0]}: ${e[1]};`).join("\n");
+  const buildDeclarations = (obj: Record<string, string>, prefix: string) =>
+    Object.entries(obj)
+      .map((e) => `    ${prefix}${e[0]}: ${e[1]};`)
+      .join("\n");
 
-  const paletteDeclarations = buildDeclarations(defaultTheme.palette, "--morris-palette-")
-  const fontSizeDeclarations = buildDeclarations(defaultTheme.fontSizes, "--morris-font-size-")
-  const rule = `:root {\n${paletteDeclarations}${fontSizeDeclarations}\n}`
+  const paletteDeclarations = buildDeclarations(
+    defaultTheme.palette,
+    "--morris-palette-"
+  );
+  const fontSizeDeclarations = buildDeclarations(
+    defaultTheme.fontSizes,
+    "--morris-font-size-"
+  );
+  const rule = `:root {\n${paletteDeclarations}${fontSizeDeclarations}\n}`;
   sheet.insertRule(rule, sheet.cssRules.length);
-}
+};

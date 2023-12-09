@@ -22,7 +22,7 @@ export const generate = (numberOfRings: number): GameState => {
     remainingMen: { a: numberOfMen, b: numberOfMen },
     mills: generateMills(sg),
     winner: undefined,
-    nextMoves: Object.keys(sg),
+    nextMoves: Object.keys(sg)
   };
 };
 
@@ -58,7 +58,7 @@ const generateIds = (numberOfRings: number) => {
     "w",
     "x",
     "y",
-    "z",
+    "z"
   ];
   const wrap = alphabet.length;
   let ids = [];

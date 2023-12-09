@@ -30,7 +30,7 @@ export const App: React.FC = () => {
             direction="right"
             {...openInNewTabProps}
           />
-          <GlobalStyle/>
+          <GlobalStyle />
         </ThemeProvider>
       </SocketProvider>
     </PrefsProvider>
@@ -40,9 +40,11 @@ export const App: React.FC = () => {
 // TODO: is this the easiest way to theme the component without moving it in the three?
 const ThemedGithubCorner = (props: GithubCornerProps) => {
   const theme = useTheme();
-  return <GithubCorner 
-            bannerColor={theme.palette.neutral}
-            octoColor={theme.palette.background}
-            {...props}
-          />
-}
+  return (
+    <GithubCorner
+      bannerColor={theme.palette.neutral}
+      octoColor={theme.palette.background}
+      {...props}
+    />
+  );
+};

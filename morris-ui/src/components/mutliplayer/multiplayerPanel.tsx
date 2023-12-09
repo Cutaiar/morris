@@ -58,7 +58,7 @@ const randomRoomId = () =>
   Math.random().toString(36).substring(2, 4);
 
 const Root = styled.div`
-  background-color: ${({theme}) => theme.palette.neutralDark};
+  background-color: ${({ theme }) => theme.palette.neutralDark};
   display: flex;
   flex-direction: column;
   align-items: flex-start;

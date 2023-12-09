@@ -10,9 +10,8 @@ import {
   FiSettings,
   FiUsers,
   FiWifi,
-  FiX,
+  FiX
 } from "react-icons/fi";
-
 
 type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
 
@@ -35,7 +34,7 @@ export const IconButton = (props: IconButtonProps) => {
     x: FiX,
     eye: FiEye,
     users: FiUsers,
-    wifi: FiWifi,
+    wifi: FiWifi
   };
 
   const Icon = name ? icons[name] : () => null;
@@ -48,27 +47,27 @@ export const IconButton = (props: IconButtonProps) => {
       hasText={!!text}
       $fill={fill}
     >
-    <Outer>
-      <Inner hasText={!!text}>
-        <Icon />
-        {text && <ButtonText hasIcon={!!name}>{text}</ButtonText>}
-      </Inner>
-      {End?.()}
-    </Outer>
+      <Outer>
+        <Inner hasText={!!text}>
+          <Icon />
+          {text && <ButtonText hasIcon={!!name}>{text}</ButtonText>}
+        </Inner>
+        {End?.()}
+      </Outer>
     </Root>
   );
 };
 
-const ButtonText = styled.span<{hasIcon?: boolean}>`
-  padding-left: ${({hasIcon}) => hasIcon && `8px`};
+const ButtonText = styled.span<{ hasIcon?: boolean }>`
+  padding-left: ${({ hasIcon }) => hasIcon && `8px`};
   margin: 0;
 `;
 
-const Inner = styled.div<{hasText?: boolean}>`
+const Inner = styled.div<{ hasText?: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: ${({hasText}) => hasText ? "start" : "center"};
+  justify-content: ${({ hasText }) => (hasText ? "start" : "center")};
 `;
 
 const Outer = styled.div`
@@ -78,13 +77,14 @@ const Outer = styled.div`
   justify-content: space-between;
 `;
 
-const Root = styled.button<{$fill?: boolean, hasText?: boolean}>`
+const Root = styled.button<{ $fill?: boolean; hasText?: boolean }>`
   border-radius: 4px;
   background: transparent;
-  min-width: ${({$fill}) => $fill ? `100%` : `30px`};
+  min-width: ${({ $fill }) => ($fill ? `100%` : `30px`)};
   min-height: 30px;
   padding: 0px;
-  padding-inline: ${p => p.hasText && `8px`}; /* conditional style if the icon button has text */
+  padding-inline: ${(p) =>
+    p.hasText && `8px`}; /* conditional style if the icon button has text */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,8 +108,8 @@ const Root = styled.button<{$fill?: boolean, hasText?: boolean}>`
   }
 
   &:disabled {
-    border-color: ${({theme}) => theme.palette.neutralLighter};
-    color: ${({theme}) => theme.palette.neutralLighter};
+    border-color: ${({ theme }) => theme.palette.neutralLighter};
+    color: ${({ theme }) => theme.palette.neutralLighter};
     transform: none;
     box-shadow: none;
     cursor: not-allowed;

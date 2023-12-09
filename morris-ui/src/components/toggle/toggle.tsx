@@ -1,9 +1,9 @@
-import React from "react"
+import React from "react";
 import styled from "styled-components";
 
 /**
  * A simple toggle component
- * 
+ *
  * Checkbox styles inspired by https://codepen.io/alvarotrigo/pen/wvyvjva
  */
 export const Toggle = (props: {
@@ -18,14 +18,13 @@ export const Toggle = (props: {
           id={props.label}
           type={"checkbox"}
           checked={props.checked}
-          onChange={(e) => props.onChange(e.target.checked)} />
+          onChange={(e) => props.onChange(e.target.checked)}
+        />
         <Slider>
-          <Knob/>
+          <Knob />
         </Slider>
       </ToggleLabel>
-      <TextLabel htmlFor={props.label}>
-        {props.label}
-      </TextLabel>
+      <TextLabel htmlFor={props.label}>{props.label}</TextLabel>
     </Root>
   );
 };
@@ -64,7 +63,7 @@ const Knob = styled.div`
 `;
 
 const TextLabel = styled.label`
-  font-size: ${p => p.theme.fontSizes.medium};
+  font-size: ${(p) => p.theme.fontSizes.medium};
 `;
 
 const ToggleLabel = styled.label`
@@ -79,7 +78,7 @@ const ToggleLabel = styled.label`
     display: none;
   }
 
-  & input[type="checkbox"]:checked+${Slider} {
+  & input[type="checkbox"]:checked + ${Slider} {
     background-color: var(--morris-palette-neutral);
 
     & ${Knob} {

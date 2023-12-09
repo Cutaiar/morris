@@ -15,7 +15,7 @@ export type {
   RemoveAction,
   StateGraph,
   Turn,
-  Point,
+  Point
 } from "./types";
 
 export { useGameStateOutsideReact } from "./useGameStateOutsideReact";

@@ -9,6 +9,14 @@ export default defineConfig({
     react({
       babel: {
         plugins: [
-          ['babel-plugin-styled-components', { ssr: false, pure: true, displayName: true, fileName: true }]
-    ]}}), viteTsconfigPaths(), svgrPlugin()],
+          [
+            "babel-plugin-styled-components",
+            { ssr: false, pure: true, displayName: true, fileName: true }
+          ]
+        ]
+      }
+    }),
+    viteTsconfigPaths(),
+    svgrPlugin()
+  ]
 });

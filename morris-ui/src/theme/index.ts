@@ -1,5 +1,1 @@
-export {
-  defaultTheme,
-  injectStyleVars,
-  GlobalStyle
-} from "./theme";
+export { defaultTheme, injectStyleVars, GlobalStyle } from "./theme";

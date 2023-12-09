@@ -8,10 +8,10 @@ import { DefaultTheme } from "styled-components";
  */
 export const openInNewTabProps = {
   target: "_blank",
-  rel: "noopener noreferrer",
+  rel: "noopener noreferrer"
 };
 
-export const getChipColor = (theme: DefaultTheme, player?: Player, ) => {
+export const getChipColor = (theme: DefaultTheme, player?: Player) => {
   return player
     ? player === "a"
       ? theme.palette.primary

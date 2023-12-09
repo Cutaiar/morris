@@ -14,15 +14,14 @@ interface ChipProps {
  * TODO: State for player loading
  */
 export const Chip = (props: ChipProps) => {
-  return (
-    <Root {...props}/>
-  );
+  return <Root {...props} />;
 };
 
 const Root = styled.div<ChipProps>`
   min-width: 20px;
   min-height: 20px;
   border-radius: 50%;
-  background: ${({color}) => color};
-  border: ${({emphasis, theme}) => emphasis && `1px solid ${theme.palette.neutral}`},
+  background: ${({ color }) => color};
+  border: ${({ emphasis, theme }) =>
+    emphasis && `1px solid ${theme.palette.neutral}`};
 `;

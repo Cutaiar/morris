@@ -14,7 +14,7 @@ import {
   OpponentType,
   Decision,
   Loader,
-  Toggle,
+  Toggle
 } from "components";
 
 // Hooks
@@ -24,7 +24,7 @@ import {
   usePrefs,
   useSocketGameState,
   useGameState,
-  useBuildSkipPhaseOneFunc,
+  useBuildSkipPhaseOneFunc
 } from "hooks";
 import { useMount } from "react-use";
 
@@ -149,9 +149,7 @@ export const Game = () => {
               />
             )}
             {opponentType === "local" && (
-              <OpponentLabel>
-                opponent is local
-              </OpponentLabel>
+              <OpponentLabel>opponent is local</OpponentLabel>
             )}
           </Controls>
 
@@ -165,7 +163,8 @@ export const Game = () => {
               sound={!mute}
               disabled={
                 // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
-                (opponentType !== "local" && player !== gameState.turn.player) ||
+                (opponentType !== "local" &&
+                  player !== gameState.turn.player) ||
                 !opponent
               }
             />
@@ -185,8 +184,8 @@ export const Game = () => {
                 {
                   name: "settings",
                   tooltip: "Settings and advanced",
-                  onClick: () => setIsAdvanced((prev) => !prev),
-                },
+                  onClick: () => setIsAdvanced((prev) => !prev)
+                }
               ]}
             >
               {isAdvanced && (
@@ -219,7 +218,7 @@ export const Game = () => {
 
                   <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
                     Skip phase 1
-                  </Button> 
+                  </Button>
                 </AdvancedMenu>
               )}
             </PlayerCard>
@@ -242,8 +241,8 @@ export const Game = () => {
 };
 
 const OpponentLabel = styled.label`
-  font-size: ${({theme}) => theme.fontSizes.medium};
-  color: ${({theme}) => theme.palette.neutral} ;
+  font-size: ${({ theme }) => theme.fontSizes.medium};
+  color: ${({ theme }) => theme.palette.neutral};
 `;
 
 const AdvancedMenu = styled.div`
@@ -255,7 +254,8 @@ const AdvancedMenu = styled.div`
 const BoardContainer = styled.div`
   max-width: 400px;
   width: 100%;
-`
+`;
+
 /** Take viewport height and layout full-width rows */
 const AppContainer = styled.div`
   display: flex;
@@ -279,7 +279,8 @@ const GameContainer = styled.div`
     flex-direction: column;
     align-items: center;
   }
-`
+`;
+
 /** Set the background, layout full height rows*/
 const Main = styled.div`
   background-color: ${({ theme }) => theme.palette.background};

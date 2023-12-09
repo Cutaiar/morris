@@ -57,44 +57,40 @@ const OpponentSelectorRoot = styled.div`
 `;
 
 const OpponentSelectorTitle = styled.h1`
-  color: ${({theme}) => theme.palette.neutral};
-  font-size: ${({theme}) => theme.fontSizes.large};
+  color: ${({ theme }) => theme.palette.neutral};
+  font-size: ${({ theme }) => theme.fontSizes.large};
   margin: 0;
 `;
 
 export const OpponentSelector = (props: OpponentSelectorProps) => {
   const { onDecision } = props;
 
-  const buttonStyle: React.CSSProperties = {marginBottom: 4}
-
   return (
     <OpponentSelectorRoot>
-      <OpponentSelectorTitle>
-        Choose an opponent
-      </OpponentSelectorTitle>
-        <Tabs>
-          <TabList>
-            <Tab>
-              <IconButton name={"eye"} text={"AI"} />
-            </Tab>
-            <Tab>
-              <IconButton name={"users"} text={"Local"} />
-            </Tab>
-            <Tab>
-              <IconButton name={"wifi"} text={"Online"} />
-            </Tab>
-          </TabList>
+      <OpponentSelectorTitle>Choose an opponent</OpponentSelectorTitle>
+      <Tabs>
+        <TabList>
+          <Tab>
+            <IconButton name={"eye"} text={"AI"} />
+          </Tab>
+          <Tab>
+            <IconButton name={"users"} text={"Local"} />
+          </Tab>
+          <Tab>
+            <IconButton name={"wifi"} text={"Online"} />
+          </Tab>
+        </TabList>
 
-          <TabPanel>
-            <AIPanel onDecision={onDecision} />
-          </TabPanel>
-          <TabPanel>
-            <LocalPanel onDecision={onDecision} />
-          </TabPanel>
-          <TabPanel>
-            <OnlinePanel onDecision={onDecision} />
-          </TabPanel>
-        </Tabs>
+        <TabPanel>
+          <AIPanel onDecision={onDecision} />
+        </TabPanel>
+        <TabPanel>
+          <LocalPanel onDecision={onDecision} />
+        </TabPanel>
+        <TabPanel>
+          <OnlinePanel onDecision={onDecision} />
+        </TabPanel>
+      </Tabs>
     </OpponentSelectorRoot>
   );
 };
@@ -114,7 +110,7 @@ const AIPanel: React.FC<MakesDecision> = (props) => {
       opponents={[
         { id: "rand", name: "Random", color },
         { id: "smart", name: "Smart", color },
-        { id: "minimax", name: "Minimax", color},
+        { id: "minimax", name: "Minimax", color }
       ]}
       onSelectOpponent={(id) =>
         props.onDecision({ type: "ai", ai: id as AIID })
@@ -128,7 +124,7 @@ const LocalPanel: React.FC<MakesDecision> = (props) => {
   const theme = useTheme();
 
   const fakeOpponents = [
-    { name: "Opponent", id: "opponent", color: theme.palette.secondary },
+    { name: "Opponent", id: "opponent", color: theme.palette.secondary }
   ];
   const [opponents, setOpponents] =
     React.useState<OpponentListItemProps[]>(fakeOpponents);
@@ -184,7 +180,12 @@ const ListItem = styled.li`
 const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
   return (
     <ListItem>
-      <IconButton onClick={props.onClick} fill text={props.name} End={() => <Chip color={props.color} />}/> 
+      <IconButton
+        onClick={props.onClick}
+        fill
+        text={props.name}
+        End={() => <Chip color={props.color} />}
+      />
     </ListItem>
   );
 };
@@ -197,7 +198,7 @@ interface OpponentListProps {
 
 const OpponentListRoot = styled.ol`
   padding: 0;
-  font-size: ${({theme}) => theme.fontSizes.large};
+  font-size: ${({ theme }) => theme.fontSizes.large};
 `;
 
 /**
@@ -229,8 +230,8 @@ const AddExperienceRoot = styled.div`
   align-items: center;
   width: 100%;
   gap: 8px;
-  color: ${({theme}) => theme.palette.neutralLight};
-  font-size: ${({theme}) => theme.fontSizes.medium};
+  color: ${({ theme }) => theme.palette.neutralLight};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
 `;
 
 /**
@@ -247,7 +248,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
       props.onAdd({
         id: name,
         name,
-        color: theme.palette.secondary,
+        color: theme.palette.secondary
       });
     setAdding(false);
     setNameState("");
@@ -255,14 +256,14 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
 
   useKey("Enter", () => adding && onAcceptName(nameState), undefined, [
     nameState,
-    adding,
+    adding
   ]);
 
   return adding ? (
     <AddExperienceRoot>
       <EditableName
         name={nameState}
-        onNameChange={setNameState} 
+        onNameChange={setNameState}
         editing={true}
         fill
       />
@@ -285,7 +286,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
     </AddExperienceRoot>
   ) : (
     <ListItem onClick={() => setAdding(true)}>
-      <IconButton fill text="Add a player" End={() => <FiPlus />}/>
+      <IconButton fill text="Add a player" End={() => <FiPlus />} />
     </ListItem>
   );
 };

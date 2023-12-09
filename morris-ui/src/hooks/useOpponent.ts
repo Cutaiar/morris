@@ -5,7 +5,7 @@ import {
   AIID,
   getNextMoveRandom,
   getNextMoveSmart,
-  NextMoveFunction,
+  NextMoveFunction
 } from "morris-ai";
 
 type OpponentStatus = "waiting" | "thinking";
@@ -28,7 +28,7 @@ export const useOpponent = (
   const nextMoveFnByDifficulty: Record<AIID, NextMoveFunction> = {
     rand: getNextMoveRandom,
     smart: getNextMoveSmart,
-    minimax: getNextMoveMinimax,
+    minimax: getNextMoveMinimax
   };
   const nextMoveFn = nextMoveFnByDifficulty[ai];
 

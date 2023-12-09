@@ -10,7 +10,7 @@ import {
   IconButton,
   IconButtonProps,
   Chip,
-  EditableName,
+  EditableName
 } from "components";
 import { ToRemove } from "./ToRemove";
 
@@ -54,7 +54,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
     remainingMen,
     onNameChange,
     toolbarIcons,
-    local,
+    local
   } = props;
 
   const isMyTurn = player === turn;
@@ -78,7 +78,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
   useKey("Enter", () => isEditing && onAcceptName(nameState), undefined, [
     nameState,
     onNameChange,
-    isEditing,
+    isEditing
   ]);
 
   const theme = useTheme();
@@ -146,11 +146,12 @@ const Toolbar = styled.div`
   gap: 8px;
 `;
 
-const Title = styled.div<{isMyTurn?: boolean}>`
+const Title = styled.div<{ isMyTurn?: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: ${({theme}) => theme.fontSizes.large};
+  font-size: ${({ theme }) => theme.fontSizes.large};
   gap: 10px;
-  color: ${({isMyTurn, theme}) => isMyTurn ? theme.palette.neutralLight : theme.palette.neutral};
+  color: ${({ isMyTurn, theme }) =>
+    isMyTurn ? theme.palette.neutralLight : theme.palette.neutral};
 `;

@@ -22,6 +22,6 @@ export { EditableName } from "./editableName/editableName";
 // Types
 export type {
   OpponentType,
-  Decision,
+  Decision
 } from "./opponentSelector/opponentSelector";
 export type { IconButtonProps } from "./iconButton/iconButton";

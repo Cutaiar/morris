@@ -43,9 +43,9 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
 };
 
 const Root = styled.span`
-  font-size: ${({theme}) => theme.fontSizes.medium};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
 `;
 
 const Status = styled.i`
-  color: ${({theme}) => theme.palette.secondary};
+  color: ${({ theme }) => theme.palette.secondary};
 `;

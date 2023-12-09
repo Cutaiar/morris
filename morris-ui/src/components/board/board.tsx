@@ -7,7 +7,7 @@ import {
   Point,
   PointID,
   isValidSelection,
-  Action,
+  Action
 } from "morris-core";
 
 // Hooks
@@ -26,7 +26,6 @@ export interface HasSound {
 }
 
 export interface BoardProps extends HasSound {
-
   /** The current state of the game including adjacency, occupancy, turn, and more */
   gameState: GameState;
 
@@ -81,25 +80,27 @@ export const Board: React.FC<BoardProps> = (props) => {
   const pointRadius = width * 0.035;
 
   // Build ring sizes based on ringCount
-  const rings = !width ? [] : new Array(ringCount).fill(undefined).map((_, i) => ({
-    size: paddedSize * (i + 1) * (1 / ringCount),
+  const rings = !width
+    ? []
+    : new Array(ringCount).fill(undefined).map((_, i) => ({
+        size: paddedSize * (i + 1) * (1 / ringCount),
 
-    // This distributes 8 points from the state graph to each ring, moving from inner to outer
-    // Here, we also take some information from the gameState and store it with the point for convenient display
-    points: Object.entries(gameState.stateGraph)
-      .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
-      .map<[PointID, PointForDisplay]>((p) => [
-        p[0],
-        {
-          ...p[1],
-          next: selectedPoint
-            ? !Array.isArray(gameState.nextMoves) &&
-              gameState.nextMoves[selectedPoint].includes(p[0])
-            : Array.isArray(gameState.nextMoves) &&
-              gameState.nextMoves.includes(p[0]),
-        },
-      ]),
-  }));
+        // This distributes 8 points from the state graph to each ring, moving from inner to outer
+        // Here, we also take some information from the gameState and store it with the point for convenient display
+        points: Object.entries(gameState.stateGraph)
+          .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
+          .map<[PointID, PointForDisplay]>((p) => [
+            p[0],
+            {
+              ...p[1],
+              next: selectedPoint
+                ? !Array.isArray(gameState.nextMoves) &&
+                  gameState.nextMoves[selectedPoint].includes(p[0])
+                : Array.isArray(gameState.nextMoves) &&
+                  gameState.nextMoves.includes(p[0])
+            }
+          ])
+      }));
 
   // When any point is clicked, dispatch an action noting so.
   // Action depends on the phase of the game and type of turn -- should tis rule be external to board?
@@ -182,7 +183,7 @@ interface ConnectionsProps extends UsesTheme {
   innerSize: number;
   vbsize: number;
   stroke: string;
-};
+}
 
 /**
  * Represents the 4 connecting lines between two rings (innerSize & outerSize)
@@ -250,7 +251,7 @@ const Ring = (props: RingProps) => {
     points,
     selectedPoint,
     disabled,
-    theme,
+    theme
   } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
@@ -264,7 +265,7 @@ const Ring = (props: RingProps) => {
     { cx: size + offset / 2, cy: size + origin },
     { cx: origin + size / 2, cy: size + origin },
     { cx: offset / 2, cy: size + origin },
-    { cx: offset / 2, cy: size / 2 + origin },
+    { cx: offset / 2, cy: size / 2 + origin }
   ];
 
   return (

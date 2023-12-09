@@ -1,4 +1,4 @@
-# morris-frontend
+# morris-ui
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/1c2d36df-6241-4a45-a3cb-ea10ec3b210a/deploy-status)](https://app.netlify.com/sites/morris-cutaiar/deploys)
 

@@ -37,7 +37,7 @@ const Spinner = styled.div`
     width: 15px;
     height: 15px;
     border: 2px solid transparent;
-    border-top-color: var(--morris-palette-neutral);
+    border-top-color: ${({ theme }) => theme.palette.neutral};
     border-radius: 50%;
     animation: ${spin} 1s ease infinite;
   }

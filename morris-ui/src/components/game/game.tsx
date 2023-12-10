@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 // Components
@@ -51,19 +51,19 @@ export const Game = () => {
   useMount(() => syncDebug());
 
   /**  If advanced controls are open or not */
-  const [isAdvanced, setIsAdvanced] = React.useState(false);
+  const [isAdvanced, setIsAdvanced] = useState(false);
 
   /** The local users player (always "a") */
-  const [player, setPlayer] = React.useState<Player>();
+  const [player, setPlayer] = useState<Player>();
   /** The opponents player (always "b") */
-  const [opponent, setOpponent] = React.useState<Player>();
+  const [opponent, setOpponent] = useState<Player>();
   /** The type of opponent the user is playing against*/
-  const [opponentType, setOpponentType] = React.useState<OpponentType>();
+  const [opponentType, setOpponentType] = useState<OpponentType>();
   /** Which AI is the player playing against */
-  const [oppAI, setOppAI] = React.useState<AIID>();
+  const [oppAI, setOppAI] = useState<AIID>();
   /** Display name for the opponent */
-  const [opponentName, setOpponentName] = React.useState<string>();
-  const [opponentSpeed, setOpponentSpeed] = React.useState<number>(1000);
+  const [opponentName, setOpponentName] = useState<string>();
+  const [opponentSpeed, setOpponentSpeed] = useState<number>(1000);
 
   /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
@@ -83,7 +83,7 @@ export const Game = () => {
   const updateGameState =
     opponentType === "online" ? updateSocketGameState : updateLocalGameState;
 
-  const [connecting, setConnecting] = React.useState(false);
+  const [connecting, setConnecting] = useState(false);
   const handleOpponentSelected = async (decision: Decision) => {
     if (decision.type === "online") {
       setOpponentType(decision.type);

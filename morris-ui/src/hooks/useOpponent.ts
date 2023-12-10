@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { getNextMoveMinimax } from "morris-ai";
 import { Action, GameState, Player } from "morris-core";
 import {
@@ -23,7 +23,7 @@ export const useOpponent = (
   onDecision: (action: Action) => void,
   ai: AIID
 ): UseOpponentReturn => {
-  const [status, setStatus] = React.useState<OpponentStatus>("waiting");
+  const [status, setStatus] = useState<OpponentStatus>("waiting");
 
   const nextMoveFnByDifficulty: Record<AIID, NextMoveFunction> = {
     rand: getNextMoveRandom,
@@ -32,7 +32,7 @@ export const useOpponent = (
   };
   const nextMoveFn = nextMoveFnByDifficulty[ai];
 
-  React.useEffect(() => {
+  useEffect(() => {
     let timer: number | undefined = undefined;
     // If it is our turn
     if (state.turn.player === player) {

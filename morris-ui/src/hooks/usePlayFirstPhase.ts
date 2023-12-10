@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { getNextMoveRandom } from "morris-ai";
 import { Action, GameState, reducer } from "morris-core";
 

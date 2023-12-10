@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 
 // Contexts
@@ -7,11 +7,11 @@ import { useSocket } from "context";
 export const MultiplayerPanel = () => {
   const [socket] = useSocket();
 
-  const [roomId, setRoomId] = React.useState<string>();
-  const [roomToJoin, setRoomToJoin] = React.useState<string>();
-  const [typingRoomId, setTypingRoomId] = React.useState(false);
+  const [roomId, setRoomId] = useState<string>();
+  const [roomToJoin, setRoomToJoin] = useState<string>();
+  const [typingRoomId, setTypingRoomId] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     socket?.on("joined", (room) => {
       console.log("joined: " + room);
       setRoomId(room);

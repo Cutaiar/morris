@@ -1,4 +1,3 @@
-import React from "react";
 import styled, { keyframes, useTheme } from "styled-components";
 
 // Types

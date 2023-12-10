@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 // Style
 import { defaultTheme, GlobalStyle } from "theme";

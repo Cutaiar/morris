@@ -19,7 +19,7 @@ export const DebugGameState = (props: DebugGameStateProps) => {
 // Consider using Prism to syntax highlight this code
 // https://blog.logrocket.com/guide-syntax-highlighting-react/
 const GameStateObject = styled.code`
-  font-size: var(--morris-font-size-small);
+  font-size: ${({ theme }) => theme.fontSizes.small};
   white-space: pre-wrap;
 `;
 

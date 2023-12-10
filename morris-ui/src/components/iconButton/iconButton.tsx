@@ -90,7 +90,7 @@ const Root = styled.button<{ $fill?: boolean; hasText?: boolean }>`
   align-items: center;
   border-style: none;
   color: currentColor;
-  font-size: var(--morris-font-size-medium);
+  font-size: ${({ theme }) => theme.fontSizes.medium};
   font-family: inherit;
   box-sizing: border-box;
   transition: transform 0.2s ease;

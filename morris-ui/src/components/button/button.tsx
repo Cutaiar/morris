@@ -4,13 +4,12 @@ import styled from "styled-components";
 // Components
 import { Loader } from "components";
 
-export interface ButtonProps
-  extends React.PropsWithChildren<{
-    onClick?: () => void;
-    disabled?: boolean;
-    primary?: boolean;
-    loading?: boolean;
-  }> {}
+export type ButtonProps = React.PropsWithChildren<{
+  onClick?: () => void;
+  disabled?: boolean;
+  primary?: boolean;
+  loading?: boolean;
+}>;
 
 export const Button = (props: ButtonProps) => {
   const { onClick, disabled, primary, loading, children } = props;
@@ -48,7 +47,7 @@ const Root = styled.button<{ primary?: boolean }>`
   padding: 8px;
   border-width: 1px;
   border-color: currentColor;
-  font-size: var(--morris-font-size-medium);
+  font-size: ${({ theme }) => theme.fontSizes.medium};
   font-family: inherit;
 
   &:hover {

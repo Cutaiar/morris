@@ -19,10 +19,10 @@ interface UseOpponentReturn {
 export const useOpponent = (
   state: GameState,
   player: Player,
+  speed: number /** Thinking time in MS */,
   onDecision: (action: Action) => void,
   ai: AIID
 ): UseOpponentReturn => {
-  const opponentThinkingTime = 1000;
   const [status, setStatus] = React.useState<OpponentStatus>("waiting");
 
   const nextMoveFnByDifficulty: Record<AIID, NextMoveFunction> = {
@@ -44,7 +44,7 @@ export const useOpponent = (
           onDecision(action);
           setStatus("waiting");
         }
-      }, opponentThinkingTime);
+      }, speed);
     }
 
     // Clean up the timer in the case one was running when the host component unmounted

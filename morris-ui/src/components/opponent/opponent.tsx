@@ -18,12 +18,13 @@ import { AIID } from "morris-ai";
 export interface OpponentProps extends HasSound {
   state: GameState;
   player: Player;
+  speed: number;
   updateGameState: React.Dispatch<Action>;
   ai: AIID;
 }
 
 export const Opponent: React.FC<OpponentProps> = (props) => {
-  const { state, player, updateGameState, sound, ai } = props;
+  const { state, player, speed, updateGameState, sound, ai } = props;
 
   const [play] = useSound(opponentSound);
 
@@ -32,7 +33,7 @@ export const Opponent: React.FC<OpponentProps> = (props) => {
     updateGameState(action);
   };
 
-  const { status } = useOpponent(state, player, handleDecision, ai);
+  const { status } = useOpponent(state, player, speed, handleDecision, ai);
 
   return (
     <Root>

@@ -31,6 +31,7 @@ import { useMount } from "react-use";
 // Core
 import { AIID } from "morris-ai";
 import { Player } from "morris-core";
+import { Slider } from "components/Slider";
 
 /** The root of morris gameplay. Should be wrapped in required providers and placed in the `App` component. */
 export const Game = () => {
@@ -62,6 +63,7 @@ export const Game = () => {
   const [oppAI, setOppAI] = React.useState<AIID>();
   /** Display name for the opponent */
   const [opponentName, setOpponentName] = React.useState<string>();
+  const [opponentSpeed, setOpponentSpeed] = React.useState<number>(1000);
 
   /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
@@ -142,6 +144,7 @@ export const Game = () => {
             {opponent && opponentType === "ai" && oppAI && (
               <Opponent
                 state={gameState}
+                speed={opponentSpeed}
                 player={opponent}
                 updateGameState={updateGameState}
                 sound={!mute}
@@ -191,7 +194,6 @@ export const Game = () => {
               {isAdvanced && (
                 <AdvancedMenu>
                   <code>{`phase: ${gameState.phase}`}</code>
-
                   <Toggle
                     checked={opponentType === "local"}
                     onChange={(c) => setOpponentType(c ? "local" : "ai")}
@@ -207,15 +209,21 @@ export const Game = () => {
                     checked={reduceMotion ?? false}
                     onChange={setReduceMotion}
                   />
-
                   <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
-
+                  <Slider
+                    min={1}
+                    max={1000}
+                    value={opponentSpeed}
+                    onChange={(e) => setOpponentSpeed(Number(e.target.value))}
+                    suffix={(v) => {
+                      return v === 1 ? "instant" : `${v} ms`;
+                    }}
+                    label="opponent speed"
+                  />
                   <Button onClick={() => updateGameState({ type: "reset" })}>
                     Reset Game
                   </Button>
-
                   <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
-
                   <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
                     Skip phase 1
                   </Button>

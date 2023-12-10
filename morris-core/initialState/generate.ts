@@ -219,7 +219,7 @@ const generateMills = (sg: StateGraph): Mill[] => {
 /**
  * Helper to split an array into evenly sized chunks
  */
-const spliceIntoChunks = (arr: unknown[], chunkSize: number) => {
+const spliceIntoChunks = (arr: any[], chunkSize: number) => {
   const res = [];
   while (arr.length > 0) {
     const chunk = arr.splice(0, chunkSize);

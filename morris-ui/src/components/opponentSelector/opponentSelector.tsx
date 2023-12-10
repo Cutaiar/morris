@@ -54,6 +54,7 @@ const OpponentSelectorRoot = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-width: 100%;
 `;
 
 const OpponentSelectorTitle = styled.h1`

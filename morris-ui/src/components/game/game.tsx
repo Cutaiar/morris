@@ -309,8 +309,9 @@ const Controls = styled.div`
   align-items: flex-start;
   justify-content: center;
   gap: 24px;
-  height: fit-content;
   width: fit-content;
+  min-width: 200px;
+  max-width: 400px;
   padding: 24px;
   border-radius: 8px;
   border-style: solid;

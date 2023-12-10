@@ -12,7 +12,6 @@ import {
 
 // Hooks
 import { useDebug } from "hooks";
-import { useMeasure } from "react-use";
 
 // Sound
 import { useSound } from "use-sound";
@@ -64,7 +63,6 @@ export const Board: React.FC<BoardProps> = (props) => {
   const { onPlay, gameState, disabled } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
-  const [ref, { width }] = useMeasure<SVGSVGElement>();
   const theme = useTheme();
 
   // We can calculate the number of rings based on the graph defined in state
@@ -75,12 +73,15 @@ export const Board: React.FC<BoardProps> = (props) => {
   // Throw if ringCount is outside supported range (component should be used inside ErrorBoundary)
   validateRingCount(ringCount);
 
+  // This is a magic value that makes the board look good
+  const size = 400;
+
   // We use this in the ring size calculation to pad the outer ring from the edge of the svg
-  const paddedSize = width * 0.9;
-  const pointRadius = width * 0.035;
+  const paddedSize = size * 0.9;
+  const pointRadius = size * 0.035;
 
   // Build ring sizes based on ringCount
-  const rings = !width
+  const rings = !size
     ? []
     : new Array(ringCount).fill(undefined).map((_, i) => ({
         size: paddedSize * (i + 1) * (1 / ringCount),
@@ -136,7 +137,7 @@ export const Board: React.FC<BoardProps> = (props) => {
 
   // Render these three rings and the two sets of connections between them
   return (
-    <svg ref={ref} viewBox={`0 0 ${width} ${width}`}>
+    <svg viewBox={`0 0 ${size} ${size}`}>
       {rings.map((ring, i) => {
         const nextRing = rings[i + 1];
         // Short circuit if there is no outer ring to draw a connection to.
@@ -147,7 +148,7 @@ export const Board: React.FC<BoardProps> = (props) => {
           <Connections
             innerSize={ring.size}
             outerSize={nextRing.size}
-            vbsize={width}
+            vbsize={size}
             stroke={theme.palette.neutral}
             key={i}
             theme={theme}
@@ -159,7 +160,7 @@ export const Board: React.FC<BoardProps> = (props) => {
       {rings.reverse().map((ring) => (
         <Ring
           size={ring.size}
-          vbsize={width}
+          vbsize={size}
           stroke={theme.palette.neutral}
           pointRadius={pointRadius}
           onClick={onClick}

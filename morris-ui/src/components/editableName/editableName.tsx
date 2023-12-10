@@ -15,7 +15,7 @@ interface EditableNameProps {
  * Renders an editable name
  */
 export const EditableName = (props: EditableNameProps) => {
-  const { name, onNameChange, editing, fill } = props;
+  const { name, onNameChange, editing } = props;
 
   const size = name?.length || 1;
 

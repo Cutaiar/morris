@@ -34,7 +34,7 @@ export const useSocket = (): [
 /**
  * Connects to a socket using socket.io
  */
-export const SocketProvider = (props: React.PropsWithChildren<{}>) => {
+export const SocketProvider = (props: React.PropsWithChildren) => {
   const [socket, setSocket] = React.useState<Socket | undefined>();
 
   const connect = (query?: SocketQuery) => {

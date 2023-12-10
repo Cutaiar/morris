@@ -61,7 +61,7 @@ const generateIds = (numberOfRings: number) => {
     "z"
   ];
   const wrap = alphabet.length;
-  let ids = [];
+  const ids = [];
   const numIdsNeeded = numberOfRings * numberOfPointsInRing;
 
   for (let i = 0; i < numIdsNeeded; i++) {
@@ -82,7 +82,7 @@ const generateStateGraph = (numberOfRings: number): StateGraph => {
 
   // Assign ids to stategraph inner to outer, starting top left point going clockwise
   let i = 0;
-  let stateGraph: StateGraph = {};
+  const stateGraph: StateGraph = {};
   while (i < numberOfPoints) {
     const ring = Math.floor(i / numberOfPointsInRing);
 
@@ -167,7 +167,7 @@ const generateMills = (sg: StateGraph): Mill[] => {
   const lengthOfMill = 3;
   const numberOfMillsInRing = 4;
 
-  let final: Mill[] = [];
+  const final: Mill[] = [];
   let arr: string[] = [];
   let i = 0;
   while (final.length < numberOfMillsInRing * numberOfRings) {
@@ -219,7 +219,7 @@ const generateMills = (sg: StateGraph): Mill[] => {
 /**
  * Helper to split an array into evenly sized chunks
  */
-const spliceIntoChunks = (arr: any[], chunkSize: number) => {
+const spliceIntoChunks = (arr: unknown[], chunkSize: number) => {
   const res = [];
   while (arr.length > 0) {
     const chunk = arr.splice(0, chunkSize);

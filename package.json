@@ -11,7 +11,9 @@
   "scripts": {
     "ui": "pnpm --filter morris-ui start",
     "server": "pnpm --filter morris-server server",
-    "dev": "concurrently --kill-others-on-fail \"pnpm server\" \"pnpm ui\""
+    "dev": "concurrently --kill-others-on-fail \"pnpm server\" \"pnpm ui\"",
+    "lint": "eslint . --report-unused-disable-directives",
+    "format": "prettier . --write"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",

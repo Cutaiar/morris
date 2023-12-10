@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled, { DefaultTheme, useTheme } from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 // Types
 import { Player } from "hooks/useGameState";

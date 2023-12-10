@@ -35,9 +35,9 @@ const Root = styled.div`
 `;
 
 const Slider = styled.div`
-  background-color: var(--morris-palette-surface);
+  background-color: ${({ theme }) => theme.palette.surface};
   border-width: 1px;
-  border-color: var(--morris-palette-neutral);
+  border-color: ${({ theme }) => theme.palette.neutral};
   border-style: solid;
   position: absolute;
   border-radius: 100px;
@@ -59,7 +59,7 @@ const Knob = styled.div`
   border-radius: 50%;
   left: 2px;
   top: 2px;
-  background-color: var(--morris-palette-neutral);
+  background-color: ${({ theme }) => theme.palette.neutral};
 `;
 
 const TextLabel = styled.label`
@@ -79,11 +79,11 @@ const ToggleLabel = styled.label`
   }
 
   & input[type="checkbox"]:checked + ${Slider} {
-    background-color: var(--morris-palette-neutral);
+    background-color: ${({ theme }) => theme.palette.neutral};
 
     & ${Knob} {
       left: calc(100% - 10px - 2px);
-      background-color: var(--morris-palette-surface);
+      background-color: ${({ theme }) => theme.palette.surface};
     }
   }
 `;

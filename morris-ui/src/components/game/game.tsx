@@ -1,4 +1,5 @@
-import React from "react";
+import { useState } from "react";
+import styled from "styled-components";
 
 // Components
 import {
@@ -13,7 +14,7 @@ import {
   OpponentType,
   Decision,
   Loader,
-  Toggle,
+  Toggle
 } from "components";
 
 // Hooks
@@ -23,17 +24,14 @@ import {
   usePrefs,
   useSocketGameState,
   useGameState,
-  useBuildSkipPhaseOneFunc,
+  useBuildSkipPhaseOneFunc
 } from "hooks";
 import { useMount } from "react-use";
-
-// Style
-import { fontSizes, palette } from "theme";
-import styled from "styled-components";
 
 // Core
 import { AIID } from "morris-ai";
 import { Player } from "morris-core";
+import { Slider } from "components/Slider";
 
 /** The root of morris gameplay. Should be wrapped in required providers and placed in the `App` component. */
 export const Game = () => {
@@ -53,18 +51,19 @@ export const Game = () => {
   useMount(() => syncDebug());
 
   /**  If advanced controls are open or not */
-  const [isAdvanced, setIsAdvanced] = React.useState(false);
+  const [isAdvanced, setIsAdvanced] = useState(false);
 
   /** The local users player (always "a") */
-  const [player, setPlayer] = React.useState<Player>();
+  const [player, setPlayer] = useState<Player>();
   /** The opponents player (always "b") */
-  const [opponent, setOpponent] = React.useState<Player>();
+  const [opponent, setOpponent] = useState<Player>();
   /** The type of opponent the user is playing against*/
-  const [opponentType, setOpponentType] = React.useState<OpponentType>();
+  const [opponentType, setOpponentType] = useState<OpponentType>();
   /** Which AI is the player playing against */
-  const [oppAI, setOppAI] = React.useState<AIID>();
+  const [oppAI, setOppAI] = useState<AIID>();
   /** Display name for the opponent */
-  const [opponentName, setOpponentName] = React.useState<string>();
+  const [opponentName, setOpponentName] = useState<string>();
+  const [opponentSpeed, setOpponentSpeed] = useState<number>(1000);
 
   /** Prefs related setup */
   const [prefs, setPref, resetPrefs] = usePrefs();
@@ -84,7 +83,7 @@ export const Game = () => {
   const updateGameState =
     opponentType === "online" ? updateSocketGameState : updateLocalGameState;
 
-  const [connecting, setConnecting] = React.useState(false);
+  const [connecting, setConnecting] = useState(false);
   const handleOpponentSelected = async (decision: Decision) => {
     if (decision.type === "online") {
       setOpponentType(decision.type);
@@ -145,6 +144,7 @@ export const Game = () => {
             {opponent && opponentType === "ai" && oppAI && (
               <Opponent
                 state={gameState}
+                speed={opponentSpeed}
                 player={opponent}
                 updateGameState={updateGameState}
                 sound={!mute}
@@ -152,9 +152,7 @@ export const Game = () => {
               />
             )}
             {opponentType === "local" && (
-              <label style={{ fontSize: fontSizes.medium, color: palette.neutral }}>
-                opponent is local
-              </label>
+              <OpponentLabel>opponent is local</OpponentLabel>
             )}
           </Controls>
 
@@ -168,7 +166,8 @@ export const Game = () => {
               sound={!mute}
               disabled={
                 // Disable the board if the opponent is online or ai and it's not their turn, or if there is no opponent
-                (opponentType !== "local" && player !== gameState.turn.player) ||
+                (opponentType !== "local" &&
+                  player !== gameState.turn.player) ||
                 !opponent
               }
             />
@@ -188,18 +187,13 @@ export const Game = () => {
                 {
                   name: "settings",
                   tooltip: "Settings and advanced",
-                  onClick: () => setIsAdvanced((prev) => !prev),
-                },
+                  onClick: () => setIsAdvanced((prev) => !prev)
+                }
               ]}
             >
               {isAdvanced && (
-                <div
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}
-                >
-                  <label
-                    style={{ fontSize: fontSizes.medium }}
-                  >{`phase: ${gameState.phase}`}</label>
-
+                <AdvancedMenu>
+                  <code>{`phase: ${gameState.phase}`}</code>
                   <Toggle
                     checked={opponentType === "local"}
                     onChange={(c) => setOpponentType(c ? "local" : "ai")}
@@ -215,28 +209,25 @@ export const Game = () => {
                     checked={reduceMotion ?? false}
                     onChange={setReduceMotion}
                   />
-
                   <Toggle label={"Debug"} checked={debug} onChange={setDebug} />
-
+                  <Slider
+                    min={1}
+                    max={1000}
+                    value={opponentSpeed}
+                    onChange={(e) => setOpponentSpeed(Number(e.target.value))}
+                    suffix={(v) => {
+                      return v === 1 ? "instant" : `${v} ms`;
+                    }}
+                    label="opponent speed"
+                  />
                   <Button onClick={() => updateGameState({ type: "reset" })}>
                     Reset Game
                   </Button>
-
                   <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
-
                   <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
                     Skip phase 1
                   </Button>
-
-                  {/* Temporarily adding a slider to control the number of rings */}
-                  {/* <Slider
-                min={minRings}
-                max={maxRings}
-                value={ringCount}
-                onChange={(e) => setRingCount(Number(e.target.value))}
-                ringCount={ringCount}
-              /> */}
-                </div>
+                </AdvancedMenu>
               )}
             </PlayerCard>
           </Controls>
@@ -257,10 +248,22 @@ export const Game = () => {
   );
 };
 
+const OpponentLabel = styled.label`
+  font-size: ${({ theme }) => theme.fontSizes.medium};
+  color: ${({ theme }) => theme.palette.neutral};
+`;
+
+const AdvancedMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
 const BoardContainer = styled.div`
   max-width: 400px;
   width: 100%;
-`
+`;
+
 /** Take viewport height and layout full-width rows */
 const AppContainer = styled.div`
   display: flex;
@@ -284,7 +287,8 @@ const GameContainer = styled.div`
     flex-direction: column;
     align-items: center;
   }
-`
+`;
+
 /** Set the background, layout full height rows*/
 const Main = styled.div`
   background-color: ${({ theme }) => theme.palette.background};
@@ -313,8 +317,9 @@ const Controls = styled.div`
   align-items: flex-start;
   justify-content: center;
   gap: 24px;
-  height: fit-content;
   width: fit-content;
+  min-width: 200px;
+  max-width: 400px;
   padding: 24px;
   border-radius: 8px;
   border-style: solid;

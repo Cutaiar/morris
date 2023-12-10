@@ -11,7 +11,7 @@ import {
   Player,
   PointID,
   RemoveAction,
-  Turn,
+  Turn
 } from "./types";
 
 /**
@@ -206,7 +206,7 @@ const nextTurn = (state: GameState): Turn => {
     ...state.turn,
     type: isRemoval ? "remove" : "regular",
     player: isRemoval ? currentPlayer : opponent,
-    count: state.turn.count + 1,
+    count: state.turn.count + 1
   };
 };
 
@@ -367,7 +367,7 @@ export const nextValidMoves = (
       const validMovesByOccupiedPoint = Object.fromEntries<PointID[]>(
         pointsOccupiedByCurrentPlayer.map<[string, PointID[]]>((kv) => [
           kv[0],
-          kv[1].neighbors.filter((n) => cIsValidMove(kv[0], n)),
+          kv[1].neighbors.filter((n) => cIsValidMove(kv[0], n))
         ])
       );
 
@@ -400,14 +400,14 @@ const nextStateAfterPlace = (state: GameState, action: PlaceAction) => {
       // Occupy the "to" location with the player who made this play
       [action.to]: {
         ...state.stateGraph[action.to],
-        occupancy: currentPlayer,
-      },
+        occupancy: currentPlayer
+      }
     },
     // Remove 1 man from the current players remaining men
     remainingMen: {
       ...state.remainingMen,
-      [currentPlayer]: state.remainingMen[currentPlayer] - 1,
-    },
+      [currentPlayer]: state.remainingMen[currentPlayer] - 1
+    }
   };
 
   // Update the mills in game state
@@ -450,13 +450,13 @@ const nextStateAfterMove = (state: GameState, action: MoveAction) => {
       // Occupy the "to" location with the player who made this play
       [action.to]: {
         ...state.stateGraph[action.to],
-        occupancy: currentPlayer,
+        occupancy: currentPlayer
       },
       [action.from]: {
         ...state.stateGraph[action.from],
-        occupancy: undefined,
-      },
-    },
+        occupancy: undefined
+      }
+    }
   };
 
   // Update the mills in game state
@@ -497,9 +497,9 @@ const nextStateAfterRemove = (state: GameState, action: RemoveAction) => {
       // Remove the man at "to" location
       [action.to]: {
         ...state.stateGraph[action.to],
-        occupancy: undefined,
-      },
-    },
+        occupancy: undefined
+      }
+    }
   };
 
   // Update the mills in game state (because it is possible that this removal broke a mill)

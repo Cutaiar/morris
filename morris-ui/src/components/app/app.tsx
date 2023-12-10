@@ -1,11 +1,11 @@
-import React from "react";
+import * as React from "react";
 
 // Style
-import { defaultTheme, palette } from "theme";
-import { ThemeProvider } from "styled-components";
+import { defaultTheme, GlobalStyle } from "theme";
+import { ThemeProvider, useTheme } from "styled-components";
 
 // Components
-import GithubCorner from "react-github-corner";
+import GithubCorner, { GithubCornerProps } from "react-github-corner";
 import { Game } from "components";
 
 // Hooks
@@ -24,16 +24,27 @@ export const App: React.FC = () => {
       <SocketProvider>
         <ThemeProvider theme={defaultTheme}>
           <Game />
-          <GithubCorner
+          <ThemedGithubCorner
             href="https://github.com/Cutaiar/morris"
-            bannerColor={palette.neutral}
-            octoColor={palette.background}
             size={85}
             direction="right"
             {...openInNewTabProps}
           />
+          <GlobalStyle />
         </ThemeProvider>
       </SocketProvider>
     </PrefsProvider>
+  );
+};
+
+// TODO: is this the easiest way to theme the component without moving it in the three?
+const ThemedGithubCorner = (props: GithubCornerProps) => {
+  const theme = useTheme();
+  return (
+    <GithubCorner
+      bannerColor={theme.palette.neutral}
+      octoColor={theme.palette.background}
+      {...props}
+    />
   );
 };

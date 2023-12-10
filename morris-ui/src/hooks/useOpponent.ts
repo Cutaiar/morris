@@ -1,11 +1,11 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { getNextMoveMinimax } from "morris-ai";
 import { Action, GameState, Player } from "morris-core";
 import {
   AIID,
   getNextMoveRandom,
   getNextMoveSmart,
-  NextMoveFunction,
+  NextMoveFunction
 } from "morris-ai";
 
 type OpponentStatus = "waiting" | "thinking";
@@ -19,20 +19,20 @@ interface UseOpponentReturn {
 export const useOpponent = (
   state: GameState,
   player: Player,
+  speed: number /** Thinking time in MS */,
   onDecision: (action: Action) => void,
   ai: AIID
 ): UseOpponentReturn => {
-  const opponentThinkingTime = 1000;
-  const [status, setStatus] = React.useState<OpponentStatus>("waiting");
+  const [status, setStatus] = useState<OpponentStatus>("waiting");
 
   const nextMoveFnByDifficulty: Record<AIID, NextMoveFunction> = {
     rand: getNextMoveRandom,
     smart: getNextMoveSmart,
-    minimax: getNextMoveMinimax,
+    minimax: getNextMoveMinimax
   };
   const nextMoveFn = nextMoveFnByDifficulty[ai];
 
-  React.useEffect(() => {
+  useEffect(() => {
     let timer: number | undefined = undefined;
     // If it is our turn
     if (state.turn.player === player) {
@@ -44,7 +44,7 @@ export const useOpponent = (
           onDecision(action);
           setStatus("waiting");
         }
-      }, opponentThinkingTime);
+      }, speed);
     }
 
     // Clean up the timer in the case one was running when the host component unmounted

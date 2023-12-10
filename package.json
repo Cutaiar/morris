@@ -11,12 +11,19 @@
   "scripts": {
     "ui": "pnpm --filter morris-ui start",
     "server": "pnpm --filter morris-server server",
-    "dev": "concurrently --kill-others-on-fail \"pnpm server\" \"pnpm ui\""
-  },
-  "dependencies": {
-    "typescript": "^4.6.4"
+    "dev": "concurrently --kill-others-on-fail \"pnpm server\" \"pnpm ui\"",
+    "lint": "eslint . --report-unused-disable-directives",
+    "format": "prettier . --write"
   },
   "devDependencies": {
-    "concurrently": "^7.2.2"
+    "@tsconfig/recommended": "^1.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.1.0",
+    "@typescript-eslint/parser": "^5.1.0",
+    "concurrently": "^7.2.2",
+    "eslint": "^8.14.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.6.2",
+    "typescript": "^4.4.4"
   }
 }

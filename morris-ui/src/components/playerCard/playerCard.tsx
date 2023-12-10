@@ -1,10 +1,8 @@
-import React from "react";
+import * as React from "react";
+import styled, { useTheme } from "styled-components";
 
 // Types
 import { Player } from "hooks/useGameState";
-
-// Style
-import { fontSizes, palette } from "theme";
 
 // Components
 import {
@@ -12,12 +10,14 @@ import {
   IconButton,
   IconButtonProps,
   Chip,
-  EditableName,
+  EditableName
 } from "components";
 import { ToRemove } from "./ToRemove";
 
 // Hooks
 import { useKey } from "react-use";
+
+import { getChipColor } from "utils";
 
 export type PlayerCardProps = React.PropsWithChildren<{
   /** Which player is this. undefined if not determined yet */
@@ -54,12 +54,11 @@ export const PlayerCard = (props: PlayerCardProps) => {
     remainingMen,
     onNameChange,
     toolbarIcons,
-    local,
+    local
   } = props;
 
   const isMyTurn = player === turn;
   const isRemovalTurn = remove && isMyTurn;
-  const nameColor = isMyTurn ? palette.neutralLight : palette.neutral;
 
   const [isEditing, setIsEditing] = React.useState(false);
   const [nameState, setNameState] = React.useState<string | undefined>(
@@ -79,43 +78,28 @@ export const PlayerCard = (props: PlayerCardProps) => {
   useKey("Enter", () => isEditing && onAcceptName(nameState), undefined, [
     nameState,
     onNameChange,
-    isEditing,
+    isEditing
   ]);
+
+  const theme = useTheme();
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: fontSizes.medium,
-          gap: 10,
-        }}
-      >
+      <Title isMyTurn={isMyTurn}>
         <EditableName
           name={nameState}
           onNameChange={setNameState}
-          color={nameColor}
           editing={isEditing}
         />
-        <Chip color={getChipColor(player)} emphasis={isMyTurn} />
+        <Chip color={getChipColor(theme, player)} emphasis={isMyTurn} />
         {isRemovalTurn && <ToRemove />}
-      </div>
+      </Title>
       {/* TODO: Shimmer */}
       <RemainingMen
         remainingMenCount={remainingMen ?? defaultRemainingMenCount}
         player={player}
       />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "end",
-          alignItems: "center",
-          width: "100%",
-          gap: 8,
-        }}
-      >
+      <Toolbar>
         {toolbarIcons?.map((props, i) => (
           <IconButton key={i} {...props} />
         ))}
@@ -148,16 +132,26 @@ export const PlayerCard = (props: PlayerCardProps) => {
             />
           )
         )}
-      </div>
+      </Toolbar>
       {props.children}
     </>
   );
 };
 
-const getChipColor = (player?: Player) => {
-  return player
-    ? player === "a"
-      ? palette.primary
-      : palette.secondary
-    : palette.neutral;
-};
+const Toolbar = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+`;
+
+const Title = styled.div<{ isMyTurn?: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: ${({ theme }) => theme.fontSizes.large};
+  gap: 10px;
+  color: ${({ isMyTurn, theme }) =>
+    isMyTurn ? theme.palette.neutralLight : theme.palette.neutral};
+`;

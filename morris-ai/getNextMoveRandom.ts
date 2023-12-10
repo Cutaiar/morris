@@ -21,7 +21,7 @@ export const getNextMoveRandomRecursive: NextMoveFunction = (
       action = {
         type: "move",
         from: getRandomProperty(state.stateGraph),
-        to: getRandomProperty(state.stateGraph),
+        to: getRandomProperty(state.stateGraph)
       };
     }
   }
@@ -49,7 +49,7 @@ export const getNextMoveRandom: NextMoveFunction = (gameState: GameState) => {
     const to = getRandomElement(moves);
     action = {
       type: gameState.turn.type === "remove" ? "remove" : "place",
-      to,
+      to
     };
   } else {
     const nonEmptyMoves = Object.entries(moves)

@@ -1,7 +1,4 @@
-import React from "react";
-
-// Style
-import { palette } from "theme";
+import styled from "styled-components";
 
 interface ChipProps {
   /** The player this chip represents */
@@ -16,17 +13,14 @@ interface ChipProps {
  * TODO: State for player loading
  */
 export const Chip = (props: ChipProps) => {
-  const { color, emphasis } = props;
-
-  return (
-    <div
-      style={{
-        minWidth: 20,
-        minHeight: 20,
-        borderRadius: "50%",
-        background: color,
-        border: emphasis ? `1px solid ${palette.neutral}` : undefined,
-      }}
-    ></div>
-  );
+  return <Root {...props} />;
 };
+
+const Root = styled.div<ChipProps>`
+  min-width: 20px;
+  min-height: 20px;
+  border-radius: 50%;
+  background: ${({ color }) => color};
+  border: ${({ emphasis, theme }) =>
+    emphasis && `1px solid ${theme.palette.neutral}`};
+`;

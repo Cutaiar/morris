@@ -1,4 +1,4 @@
-import React from "react";
+import { useReducer } from "react";
 import { reducer } from "morris-core";
 import { initialStateNine } from "morris-core/initialState";
 
@@ -6,7 +6,7 @@ import { initialStateNine } from "morris-core/initialState";
  * A reducer-like hook which holds the entire state of the game
  */
 export const useGameState = () => {
-  return React.useReducer(reducer, initialStateNine);
+  return useReducer(reducer, initialStateNine);
   // return React.useReducer(reducer, 3, generate);
 };
 

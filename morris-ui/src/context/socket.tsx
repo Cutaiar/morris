@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { io, Socket } from "socket.io-client";
 
 // TODO: switch between dev and prod dynamically
@@ -34,7 +34,7 @@ export const useSocket = (): [
 /**
  * Connects to a socket using socket.io
  */
-export const SocketProvider = (props: React.PropsWithChildren<{}>) => {
+export const SocketProvider = (props: React.PropsWithChildren) => {
   const [socket, setSocket] = React.useState<Socket | undefined>();
 
   const connect = (query?: SocketQuery) => {

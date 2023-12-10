@@ -1,17 +1,15 @@
-import React from "react";
-
-// Theme
-import { fontSizes, palette } from "theme";
+import * as React from "react";
+import styled, { useTheme } from "styled-components";
 
 // Components
 import { Button, Chip, EditableName, IconButton } from "components";
 import { FiPlus } from "react-icons/fi";
 
-import { AIID } from "morris-ai";
-
 // Tabs
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "./custom-tabs-style.css";
+
+import { AIID } from "morris-ai";
 import { useKey } from "react-use";
 
 export type OpponentType = "ai" | "local" | "online";
@@ -52,40 +50,49 @@ export interface OpponentSelectorProps {
   onDecision: (decision: Decision) => void;
 }
 
+const OpponentSelectorRoot = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+`;
+
+const OpponentSelectorTitle = styled.h1`
+  color: ${({ theme }) => theme.palette.neutral};
+  font-size: ${({ theme }) => theme.fontSizes.large};
+  margin: 0;
+`;
+
 export const OpponentSelector = (props: OpponentSelectorProps) => {
   const { onDecision } = props;
 
-  const buttonStyle: React.CSSProperties = {marginBottom: 4}
-
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <h1 style={{ fontSize: fontSizes.large, color: palette.neutral, margin: 0 }}>
-        Choose an opponent
-      </h1>
-        <Tabs>
-          <TabList style={{ display: "flex", gap: 8 }}>
-            <Tab>
-              <IconButton style={buttonStyle} name={"eye"} text={"AI"} />
-            </Tab>
-            <Tab>
-              <IconButton style={buttonStyle} name={"users"} text={"Local"} />
-            </Tab>
-            <Tab>
-              <IconButton style={buttonStyle} name={"wifi"} text={"Online"} />
-            </Tab>
-          </TabList>
+    <OpponentSelectorRoot>
+      <OpponentSelectorTitle>Choose an opponent</OpponentSelectorTitle>
+      <Tabs>
+        <TabList>
+          <Tab>
+            <IconButton name={"eye"} text={"AI"} />
+          </Tab>
+          <Tab>
+            <IconButton name={"users"} text={"Local"} />
+          </Tab>
+          <Tab>
+            <IconButton name={"wifi"} text={"Online"} />
+          </Tab>
+        </TabList>
 
-          <TabPanel>
-            <AIPanel onDecision={onDecision} />
-          </TabPanel>
-          <TabPanel>
-            <LocalPanel onDecision={onDecision} />
-          </TabPanel>
-          <TabPanel>
-            <OnlinePanel onDecision={onDecision} />
-          </TabPanel>
-        </Tabs>
-    </div>
+        <TabPanel>
+          <AIPanel onDecision={onDecision} />
+        </TabPanel>
+        <TabPanel>
+          <LocalPanel onDecision={onDecision} />
+        </TabPanel>
+        <TabPanel>
+          <OnlinePanel onDecision={onDecision} />
+        </TabPanel>
+      </Tabs>
+    </OpponentSelectorRoot>
   );
 };
 
@@ -95,12 +102,16 @@ interface MakesDecision {
 
 const AIPanel: React.FC<MakesDecision> = (props) => {
   // TODO: These AI opponents should probably be stored somewhere else
+
+  const theme = useTheme();
+  const color = theme.palette.secondary;
+
   return (
     <OpponentList
       opponents={[
-        { id: "rand", name: "Random", color: palette.secondary },
-        { id: "smart", name: "Smart", color: palette.secondary },
-        { id: "minimax", name: "Minimax", color: palette.secondary },
+        { id: "rand", name: "Random", color },
+        { id: "smart", name: "Smart", color },
+        { id: "minimax", name: "Minimax", color }
       ]}
       onSelectOpponent={(id) =>
         props.onDecision({ type: "ai", ai: id as AIID })
@@ -111,8 +122,10 @@ const AIPanel: React.FC<MakesDecision> = (props) => {
 
 const LocalPanel: React.FC<MakesDecision> = (props) => {
   // TODO: These should be in local storage, but we probably need a new context and system for this
+  const theme = useTheme();
+
   const fakeOpponents = [
-    { name: "Opponent", id: "opponent", color: palette.secondary },
+    { name: "Opponent", id: "opponent", color: theme.palette.secondary }
   ];
   const [opponents, setOpponents] =
     React.useState<OpponentListItemProps[]>(fakeOpponents);
@@ -132,21 +145,21 @@ const LocalPanel: React.FC<MakesDecision> = (props) => {
   );
 };
 
+const OnlinePanelRoot = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 24px;
+`;
+
 const OnlinePanel: React.FC<MakesDecision> = (props) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        boxSizing: "border-box",
-        padding: 24,
-      }}
-    >
+    <OnlinePanelRoot>
       <Button onClick={() => props.onDecision({ type: "online" })}>
         Connect
       </Button>
-    </div>
+    </OnlinePanelRoot>
   );
 };
 
@@ -157,19 +170,24 @@ interface OpponentListItemProps {
   onClick?: () => void;
 }
 
+const ListItem = styled.li`
+  list-style-type: none;
+  margin-top: 8px;
+`;
+
 /**
  * A single item in the `OpponentList`.
  */
 const OpponentListItem: React.FC<OpponentListItemProps> = (props) => {
   return (
-    <li
-      style={{
-        listStyleType: "none",
-        marginTop: 8,
-      }}
-    >
-      <IconButton onClick={props.onClick}style={{width: "100%"}} text={props.name} End={() => <Chip color={props.color} />}/> 
-    </li>
+    <ListItem>
+      <IconButton
+        onClick={props.onClick}
+        fill
+        text={props.name}
+        End={() => <Chip color={props.color} />}
+      />
+    </ListItem>
   );
 };
 
@@ -179,13 +197,18 @@ interface OpponentListProps {
   onAdd?: (newOpp: OpponentListItemProps) => void;
 }
 
+const OpponentListRoot = styled.ol`
+  padding: 0;
+  font-size: ${({ theme }) => theme.fontSizes.large};
+`;
+
 /**
  * A list of opponents to play against. They could be local or AI.
  */
 const OpponentList: React.FC<OpponentListProps> = (props) => {
   const { onAdd, opponents, onSelectOpponent } = props;
   return (
-    <ol style={{ padding: 0, fontSize: fontSizes.large }}>
+    <OpponentListRoot>
       {onAdd && <AddExperience onAdd={onAdd} />}
       {opponents.map((o, i) => (
         <OpponentListItem
@@ -194,7 +217,7 @@ const OpponentList: React.FC<OpponentListProps> = (props) => {
           onClick={() => onSelectOpponent(o.id)}
         />
       ))}
-    </ol>
+    </OpponentListRoot>
   );
 };
 
@@ -202,16 +225,31 @@ interface AddExperienceProps {
   onAdd: (newOpponent: OpponentListItemProps) => void;
 }
 
+const AddExperienceRoot = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  color: ${({ theme }) => theme.palette.neutralLight};
+  font-size: ${({ theme }) => theme.fontSizes.medium};
+`;
+
+/**
+ * UI allowing user to add a new local player
+ */
 const AddExperience: React.FC<AddExperienceProps> = (props) => {
   const [adding, setAdding] = React.useState(false);
   const [nameState, setNameState] = React.useState("");
+
+  const theme = useTheme();
 
   const onAcceptName = (name?: string) => {
     name &&
       props.onAdd({
         id: name,
         name,
-        color: palette.secondary,
+        color: theme.palette.secondary
       });
     setAdding(false);
     setNameState("");
@@ -219,25 +257,15 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
 
   useKey("Enter", () => adding && onAcceptName(nameState), undefined, [
     nameState,
-    adding,
+    adding
   ]);
 
   return adding ? (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "end",
-        alignItems: "center",
-        width: "100%",
-        gap: 8
-      }}
-    >
+    <AddExperienceRoot>
       <EditableName
         name={nameState}
         onNameChange={setNameState}
-        color={palette.neutralLight}
         editing={true}
-        style={{fontSize: fontSizes.medium}}
         fill
       />
       <>
@@ -256,16 +284,10 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
           }}
         />
       </>
-    </div>
+    </AddExperienceRoot>
   ) : (
-    <li
-      onClick={() => setAdding(true)}
-      style={{
-        listStyleType: "none",
-        marginTop: 8,
-      }}
-    >
-      <IconButton style={{width: "100%"}}  text="Add a player" End={() => <FiPlus />}/>
-    </li>
+    <ListItem onClick={() => setAdding(true)}>
+      <IconButton fill text="Add a player" End={() => <FiPlus />} />
+    </ListItem>
   );
 };

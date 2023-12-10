@@ -25,7 +25,7 @@ export const getNextMoveSmart: NextMoveFunction = (state: GameState) => {
       );
       // Get all the points next to those (and dedup using Set)
       const potentialPlacements = [
-        ...new Set(myOccupiedPoints.flatMap((p) => p[1].neighbors)),
+        ...new Set(myOccupiedPoints.flatMap((p) => p[1].neighbors))
       ];
 
       // If I had no occupied spots, pick one at random, otherwise pick a random neighbor spot
@@ -41,7 +41,7 @@ export const getNextMoveSmart: NextMoveFunction = (state: GameState) => {
       action = {
         type: "move",
         from: getRandomProperty(state.stateGraph),
-        to: getRandomProperty(state.stateGraph),
+        to: getRandomProperty(state.stateGraph)
       };
     }
   }

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { getNextMoveRandom } from "morris-ai";
 import { Action, GameState, reducer } from "morris-core";
 
@@ -49,153 +49,153 @@ const targetGameState: GameState = {
   turn: {
     count: 19,
     player: "a",
-    type: "regular",
+    type: "regular"
   },
   stateGraph: {
     a: {
       neighbors: ["b", "h"],
-      occupancy: "b",
+      occupancy: "b"
     },
     b: {
       neighbors: ["a", "c", "j"],
-      occupancy: "b",
+      occupancy: "b"
     },
     c: {
       neighbors: ["b", "d"],
-      occupancy: "a",
+      occupancy: "a"
     },
     d: {
       neighbors: ["c", "e", "l"],
-      occupancy: "a",
+      occupancy: "a"
     },
     e: {
-      neighbors: ["d", "f"],
+      neighbors: ["d", "f"]
     },
     f: {
       neighbors: ["e", "g", "n"],
-      occupancy: "b",
+      occupancy: "b"
     },
     g: {
       neighbors: ["f", "h"],
-      occupancy: "a",
+      occupancy: "a"
     },
     h: {
       neighbors: ["g", "a", "p"],
-      occupancy: "a",
+      occupancy: "a"
     },
     i: {
       neighbors: ["j", "p"],
-      occupancy: "b",
+      occupancy: "b"
     },
     j: {
-      neighbors: ["i", "k", "b", "r"],
+      neighbors: ["i", "k", "b", "r"]
     },
     k: {
       neighbors: ["j", "l"],
-      occupancy: "a",
+      occupancy: "a"
     },
     l: {
       neighbors: ["k", "m", "d", "t"],
-      occupancy: "a",
+      occupancy: "a"
     },
     m: {
-      neighbors: ["l", "n"],
+      neighbors: ["l", "n"]
     },
     n: {
       neighbors: ["m", "o", "f", "v"],
-      occupancy: "a",
+      occupancy: "a"
     },
     o: {
-      neighbors: ["n", "p"],
+      neighbors: ["n", "p"]
     },
     p: {
       neighbors: ["o", "i", "h", "x"],
-      occupancy: "b",
+      occupancy: "b"
     },
     q: {
-      neighbors: ["r", "x"],
+      neighbors: ["r", "x"]
     },
     r: {
       neighbors: ["q", "s", "j"],
-      occupancy: "b",
+      occupancy: "b"
     },
     s: {
       neighbors: ["r", "t"],
-      occupancy: "a",
+      occupancy: "a"
     },
     t: {
       neighbors: ["s", "u", "l"],
-      occupancy: "b",
+      occupancy: "b"
     },
     u: {
-      neighbors: ["t", "v"],
+      neighbors: ["t", "v"]
     },
     v: {
       neighbors: ["u", "w", "n"],
-      occupancy: "a",
+      occupancy: "a"
     },
     w: {
       neighbors: ["v", "x"],
-      occupancy: "b",
+      occupancy: "b"
     },
     x: {
       neighbors: ["w", "q", "p"],
-      occupancy: "b",
-    },
+      occupancy: "b"
+    }
   },
   remainingMen: {
     a: 0,
-    b: 0,
+    b: 0
   },
   mills: [
     {
-      points: ["a", "b", "c"],
+      points: ["a", "b", "c"]
     },
     {
-      points: ["c", "d", "e"],
+      points: ["c", "d", "e"]
     },
     {
-      points: ["e", "f", "g"],
+      points: ["e", "f", "g"]
     },
     {
-      points: ["g", "h", "a"],
+      points: ["g", "h", "a"]
     },
     {
-      points: ["i", "j", "k"],
+      points: ["i", "j", "k"]
     },
     {
-      points: ["k", "l", "m"],
+      points: ["k", "l", "m"]
     },
     {
-      points: ["m", "n", "o"],
+      points: ["m", "n", "o"]
     },
     {
-      points: ["o", "p", "i"],
+      points: ["o", "p", "i"]
     },
     {
-      points: ["q", "r", "s"],
+      points: ["q", "r", "s"]
     },
     {
-      points: ["s", "t", "u"],
+      points: ["s", "t", "u"]
     },
     {
-      points: ["u", "v", "w"],
+      points: ["u", "v", "w"]
     },
     {
-      points: ["w", "x", "q"],
+      points: ["w", "x", "q"]
     },
     {
-      points: ["b", "j", "r"],
+      points: ["b", "j", "r"]
     },
     {
-      points: ["d", "l", "t"],
+      points: ["d", "l", "t"]
     },
     {
-      points: ["f", "n", "v"],
+      points: ["f", "n", "v"]
     },
     {
-      points: ["h", "p", "x"],
-    },
+      points: ["h", "p", "x"]
+    }
   ],
   nextMoves: {
     c: [],
@@ -206,6 +206,6 @@ const targetGameState: GameState = {
     l: ["m"],
     n: ["m", "o"],
     s: [],
-    v: ["u"],
-  },
+    v: ["u"]
+  }
 };

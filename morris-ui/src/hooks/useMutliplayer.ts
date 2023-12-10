@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useSocket } from "context";
 import { Player } from "./useGameState";
 
@@ -14,7 +14,7 @@ export const useMultiplayer = (
   const [socket, connectSocket] = useSocket();
 
   // So far, this is the canonical way to set up a listener on a socket state
-  React.useEffect(() => {
+  useEffect(() => {
     if (socket && !socket.hasListeners("opponentConnected")) {
       socket.on("opponentConnected", (info: OpponentInfo) =>
         onOpponentConnected?.(info)

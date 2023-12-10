@@ -17,8 +17,8 @@ interface Players {
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
-  },
+    origin: "*"
+  }
 });
 
 const players: Players = { a: null, b: null };
@@ -44,7 +44,7 @@ io.on("connection", function (socket: Socket) {
     socket.emit("opponentConnected", { name: players.a.name, player: "a" }); // Tell b that a is already connected
     players.a.socket.emit("opponentConnected", {
       name: players.b.name,
-      player: "b",
+      player: "b"
     }); // Tell a that b connected
   } else {
     socket.disconnect();

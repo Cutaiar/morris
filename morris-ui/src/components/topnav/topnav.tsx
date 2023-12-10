@@ -1,28 +1,24 @@
-import React from "react";
-
-// Style
-import { fontSizes, fontWeights, palette } from "theme";
-
-const style: Record<string, React.CSSProperties> = {
-  root: {
-    width: "100%",
-    height: "10vh",
-    padding: "25px",
-    background: palette.background,
-    display: "flex",
-    alignItems: "center"
-  },
-  siteTitle: {
-    fontSize: fontSizes.hero,
-    fontWeight: fontWeights.bold,
-    color: palette.neutral
-  },
-};
+import styled from "styled-components";
 
 export const TopNav = () => {
   return (
-    <div style={style.root}>
-      <span style={style.siteTitle}>morris</span>
-    </div>
+    <Root>
+      <Title>morris</Title>
+    </Root>
   );
 };
+
+const Root = styled.div`
+  width: 100%;
+  height: 10vh;
+  padding: 25px;
+  background: ${({ theme }) => theme.palette.background};
+  display: flex;
+  align-items: center;
+`;
+
+const Title = styled.span`
+  font-size: ${({ theme }) => theme.fontSizes.hero};
+  font-weight: ${({ theme }) => theme.fontWeights.bold};
+  color: ${({ theme }) => theme.palette.neutral};
+`;

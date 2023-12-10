@@ -1,4 +1,5 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import styled from "styled-components";
 
 // Contexts
 import { useSocket } from "context";
@@ -6,11 +7,11 @@ import { useSocket } from "context";
 export const MultiplayerPanel = () => {
   const [socket] = useSocket();
 
-  const [roomId, setRoomId] = React.useState<string>();
-  const [roomToJoin, setRoomToJoin] = React.useState<string>();
-  const [typingRoomId, setTypingRoomId] = React.useState(false);
+  const [roomId, setRoomId] = useState<string>();
+  const [roomToJoin, setRoomToJoin] = useState<string>();
+  const [typingRoomId, setTypingRoomId] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     socket?.on("joined", (room) => {
       console.log("joined: " + room);
       setRoomId(room);
@@ -18,7 +19,7 @@ export const MultiplayerPanel = () => {
   }, []);
 
   return (
-    <div className="MPPanel">
+    <Root>
       {roomId ? (
         "Room: " + roomId
       ) : (
@@ -48,10 +49,23 @@ export const MultiplayerPanel = () => {
           )}
         </>
       )}
-    </div>
+    </Root>
   );
 };
 
 const randomRoomId = () =>
   Math.random().toString(36).substring(2, 4) +
   Math.random().toString(36).substring(2, 4);
+
+const Root = styled.div`
+  background-color: ${({ theme }) => theme.palette.neutralDark};
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  height: fit-content;
+  width: fit-content;
+  padding: 20px;
+  border-radius: 10px;
+`;

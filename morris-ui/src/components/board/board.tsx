@@ -1,15 +1,14 @@
-import React from "react";
+import * as React from "react";
+import { DefaultTheme, useTheme } from "styled-components";
+
 import {
   GameState,
   Occupancy,
   Point,
   PointID,
   isValidSelection,
-  Action,
+  Action
 } from "morris-core";
-
-// Style
-import { palette } from "theme";
 
 // Hooks
 import { useDebug } from "hooks";
@@ -18,7 +17,6 @@ import { useDebug } from "hooks";
 import { useSound } from "use-sound";
 import clickSound from "sound/octave-tap/tap-warm.mp3";
 import hoverSound from "sound/octave-tap/tap-toothy.mp3";
-import { useMeasure } from "react-use";
 
 /** Extend this interface to allow your component to support optional sound */
 export interface HasSound {
@@ -27,7 +25,6 @@ export interface HasSound {
 }
 
 export interface BoardProps extends HasSound {
-
   /** The current state of the game including adjacency, occupancy, turn, and more */
   gameState: GameState;
 
@@ -66,7 +63,7 @@ export const Board: React.FC<BoardProps> = (props) => {
   const { onPlay, gameState, disabled } = props;
 
   const [selectedPoint, setSelectedPoint] = React.useState<PointID>();
-  const [ref, { width }] = useMeasure<SVGSVGElement>();
+  const theme = useTheme();
 
   // We can calculate the number of rings based on the graph defined in state
   const numberOfPointsInRing = 8;
@@ -76,30 +73,35 @@ export const Board: React.FC<BoardProps> = (props) => {
   // Throw if ringCount is outside supported range (component should be used inside ErrorBoundary)
   validateRingCount(ringCount);
 
+  // This is a magic value that makes the board look good
+  const size = 400;
+
   // We use this in the ring size calculation to pad the outer ring from the edge of the svg
-  const paddedSize = width * 0.9;
-  const pointRadius = width * 0.035;
+  const paddedSize = size * 0.9;
+  const pointRadius = size * 0.035;
 
   // Build ring sizes based on ringCount
-  const rings = !width ? [] : new Array(ringCount).fill(undefined).map((_, i) => ({
-    size: paddedSize * (i + 1) * (1 / ringCount),
+  const rings = !size
+    ? []
+    : new Array(ringCount).fill(undefined).map((_, i) => ({
+        size: paddedSize * (i + 1) * (1 / ringCount),
 
-    // This distributes 8 points from the state graph to each ring, moving from inner to outer
-    // Here, we also take some information from the gameState and store it with the point for convenient display
-    points: Object.entries(gameState.stateGraph)
-      .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
-      .map<[PointID, PointForDisplay]>((p) => [
-        p[0],
-        {
-          ...p[1],
-          next: selectedPoint
-            ? !Array.isArray(gameState.nextMoves) &&
-              gameState.nextMoves[selectedPoint].includes(p[0])
-            : Array.isArray(gameState.nextMoves) &&
-              gameState.nextMoves.includes(p[0]),
-        },
-      ]),
-  }));
+        // This distributes 8 points from the state graph to each ring, moving from inner to outer
+        // Here, we also take some information from the gameState and store it with the point for convenient display
+        points: Object.entries(gameState.stateGraph)
+          .slice(i * numberOfPointsInRing, (i + 1) * numberOfPointsInRing)
+          .map<[PointID, PointForDisplay]>((p) => [
+            p[0],
+            {
+              ...p[1],
+              next: selectedPoint
+                ? !Array.isArray(gameState.nextMoves) &&
+                  gameState.nextMoves[selectedPoint].includes(p[0])
+                : Array.isArray(gameState.nextMoves) &&
+                  gameState.nextMoves.includes(p[0])
+            }
+          ])
+      }));
 
   // When any point is clicked, dispatch an action noting so.
   // Action depends on the phase of the game and type of turn -- should tis rule be external to board?
@@ -135,7 +137,7 @@ export const Board: React.FC<BoardProps> = (props) => {
 
   // Render these three rings and the two sets of connections between them
   return (
-    <svg ref={ref} viewBox={`0 0 ${width} ${width}`}>
+    <svg viewBox={`0 0 ${size} ${size}`}>
       {rings.map((ring, i) => {
         const nextRing = rings[i + 1];
         // Short circuit if there is no outer ring to draw a connection to.
@@ -146,9 +148,10 @@ export const Board: React.FC<BoardProps> = (props) => {
           <Connections
             innerSize={ring.size}
             outerSize={nextRing.size}
-            vbsize={width}
-            stroke={palette.neutral}
+            vbsize={size}
+            stroke={theme.palette.neutral}
             key={i}
+            theme={theme}
           />
         );
       })}
@@ -157,8 +160,8 @@ export const Board: React.FC<BoardProps> = (props) => {
       {rings.reverse().map((ring) => (
         <Ring
           size={ring.size}
-          vbsize={width}
-          stroke={palette.neutral}
+          vbsize={size}
+          stroke={theme.palette.neutral}
           pointRadius={pointRadius}
           onClick={onClick}
           key={ring.size}
@@ -166,18 +169,22 @@ export const Board: React.FC<BoardProps> = (props) => {
           selectedPoint={selectedPoint}
           sound={sound}
           disabled={disabled}
+          theme={theme}
         />
       ))}
     </svg>
   );
 };
 
-type ConnectionsProps = {
+interface UsesTheme {
+  theme: DefaultTheme;
+}
+interface ConnectionsProps extends UsesTheme {
   outerSize: number;
   innerSize: number;
   vbsize: number;
   stroke: string;
-};
+}
 
 /**
  * Represents the 4 connecting lines between two rings (innerSize & outerSize)
@@ -220,7 +227,7 @@ const Connections = (props: ConnectionsProps) => {
   );
 };
 
-interface RingProps extends HasSound {
+interface RingProps extends HasSound, UsesTheme {
   size: number;
   vbsize: number;
   stroke: string;
@@ -245,6 +252,7 @@ const Ring = (props: RingProps) => {
     points,
     selectedPoint,
     disabled,
+    theme
   } = props;
   const offset = vbsize - size;
   const origin = offset / 2;
@@ -258,7 +266,7 @@ const Ring = (props: RingProps) => {
     { cx: size + offset / 2, cy: size + origin },
     { cx: origin + size / 2, cy: size + origin },
     { cx: offset / 2, cy: size + origin },
-    { cx: offset / 2, cy: size / 2 + origin },
+    { cx: offset / 2, cy: size / 2 + origin }
   ];
 
   return (
@@ -283,13 +291,14 @@ const Ring = (props: RingProps) => {
           key={point[0]}
           sound={sound}
           disabled={disabled}
+          theme={theme}
         />
       ))}
     </g>
   );
 };
 
-interface SVGPointProps extends HasSound {
+interface SVGPointProps extends HasSound, UsesTheme {
   cx: number;
   cy: number;
   r: number;
@@ -308,6 +317,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
     onClick,
     sound: propsSound,
     disabled,
+    theme,
     ...rest
   } = props;
   const sound = propsSound ?? false;
@@ -315,8 +325,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
   const [debug] = useDebug(); // TODO how can we use this and be portable?
 
   const pointFill = (occupancy?: Occupancy) => {
-    if (!occupancy) return palette.surface;
-    return occupancy === "a" ? palette.primary : palette.secondary;
+    if (!occupancy) return theme.palette.surface;
+    return occupancy === "a" ? theme.palette.primary : theme.palette.secondary;
   };
 
   const [playHover] = useSound(hoverSound);
@@ -338,7 +348,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
     <g>
       <circle
         {...rest}
-        stroke={palette.neutral}
+        stroke={theme.palette.neutral}
         strokeWidth={selected ? 3 : 1}
         fill={pointFill(point.occupancy)}
         cursor={disabled ? "not-allowed" : "pointer"}
@@ -371,7 +381,7 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           cy={rest.cy}
           r={5}
           fill={"transparent"}
-          stroke={palette.neutral}
+          stroke={theme.palette.neutral}
           pointerEvents="none"
         >
           <animate
@@ -390,8 +400,8 @@ const SVGPoint: React.FC<SVGPointProps> = (props) => {
           x={props.cx}
           y={props.cy}
           textAnchor="middle"
-          stroke={palette.neutralDark}
-          fill={palette.neutralDark}
+          stroke={theme.palette.neutralDark}
+          fill={theme.palette.neutralDark}
           alignmentBaseline="middle"
           fontSize={props.r}
           cursor={"default"}

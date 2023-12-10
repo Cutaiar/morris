@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { createStateContext, useLocalStorage } from "react-use";
 
 interface Prefs {
@@ -11,7 +11,7 @@ interface Prefs {
 export const defaultPrefs = {
   mute: false,
   reduceMotion: false,
-  name: "Me",
+  name: "Me"
 };
 
 const LOCAL_STORAGE_KEY = "morris-prefs";
@@ -36,7 +36,7 @@ export const usePrefs = () => {
     useLocalStorage<Prefs>(LOCAL_STORAGE_KEY, defaultPrefs);
 
   // Sync stateContext `prefs` with `localStoragePrefs`
-  React.useEffect(() => {
+  useEffect(() => {
     if (localStoragePrefs) {
       setPrefs(localStoragePrefs);
     }

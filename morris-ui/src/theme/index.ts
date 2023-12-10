@@ -1,8 +1,1 @@
-export {
-  palette,
-  confetti,
-  fontSizes,
-  fontWeights,
-  defaultTheme,
-  injectStyleVars
-} from "./theme";
+export { defaultTheme, injectStyleVars, GlobalStyle } from "./theme";

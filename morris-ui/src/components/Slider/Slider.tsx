@@ -22,7 +22,7 @@ export const Slider: React.FC<SliderProps> = (props) => {
     <Root>
       {label && <label>{label}</label>}
       <SliderContainer>
-        <SliderInput name={"slider"} {...rest} />
+        <SliderInput name={"slider"} value={value} {...rest} />
         <label>{s}</label>
       </SliderContainer>
     </Root>

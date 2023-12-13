@@ -8,7 +8,7 @@ import { useWindowSize } from "react-use";
 
 // Components
 import Confetti from "react-confetti";
-import { Button } from "components";
+import { IconButton } from "components";
 
 export interface WinnerModalProps {
   /** cb for when the "play again" button is selected */
@@ -38,7 +38,7 @@ export const WinnerModal = (props: WinnerModalProps) => {
       />
       <Surface winner={winner}>
         <Title>{`${winnerName} wins.`}</Title>
-        <Button onClick={onPlayAgain}>Play again</Button>
+        <IconButton onClick={onPlayAgain} text="Play again" />
       </Surface>
     </Root>
   );

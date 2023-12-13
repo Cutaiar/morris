@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { FallbackProps } from "react-error-boundary";
 
-import { Button } from "components";
+import { IconButton } from "components";
 
 export const ErrorFallback = (props: FallbackProps) => {
   const { error, resetErrorBoundary } = props;
@@ -10,9 +10,7 @@ export const ErrorFallback = (props: FallbackProps) => {
     <Root>
       <b>An error occurred:</b>
       <pre>{error.message}</pre>
-      <Button primary onClick={resetErrorBoundary}>
-        Refresh
-      </Button>
+      <IconButton onClick={resetErrorBoundary} text="Refresh" />
     </Root>
   );
 };

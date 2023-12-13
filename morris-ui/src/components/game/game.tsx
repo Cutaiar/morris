@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 // Components
 import {
-  Button,
   PlayerCard,
   WinnerModal,
   DebugGameState,
@@ -14,7 +13,8 @@ import {
   OpponentType,
   Decision,
   Loader,
-  Toggle
+  Toggle,
+  IconButton
 } from "components";
 
 // Hooks
@@ -220,13 +220,22 @@ export const Game = () => {
                     }}
                     label="opponent speed"
                   />
-                  <Button onClick={() => updateGameState({ type: "reset" })}>
-                    Reset Game
-                  </Button>
-                  <Button onClick={() => resetPrefs()}>Reset Prefs</Button>
-                  <Button disabled={!opponent} onClick={() => skipPhaseOne()}>
-                    Skip phase 1
-                  </Button>
+                  <IconButton
+                    onClick={() => updateGameState({ type: "reset" })}
+                    text="Reset Game"
+                    name="RefreshCcw"
+                  />
+                  <IconButton
+                    onClick={() => resetPrefs()}
+                    text="Reset Prefs"
+                    name="RefreshCcw"
+                  />
+                  <IconButton
+                    onClick={() => skipPhaseOne()}
+                    disabled={!opponent}
+                    text="Skip Phase 1"
+                    name="SkipForward"
+                  />
                 </AdvancedMenu>
               )}
             </PlayerCard>

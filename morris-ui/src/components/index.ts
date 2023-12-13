@@ -1,5 +1,4 @@
 // Component library
-export { Button } from "./button/button";
 export { Loader } from "./loader/loader";
 export { IconButton } from "./iconButton/iconButton";
 export { Toggle } from "./toggle/toggle";

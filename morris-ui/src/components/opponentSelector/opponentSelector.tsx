@@ -2,7 +2,7 @@ import * as React from "react";
 import styled, { useTheme } from "styled-components";
 
 // Components
-import { Button, Chip, EditableName, IconButton } from "components";
+import { Chip, EditableName, IconButton } from "components";
 import { Plus } from "react-feather";
 
 // Tabs
@@ -156,9 +156,10 @@ const OnlinePanelRoot = styled.div`
 const OnlinePanel: React.FC<MakesDecision> = (props) => {
   return (
     <OnlinePanelRoot>
-      <Button onClick={() => props.onDecision({ type: "online" })}>
-        Connect
-      </Button>
+      <IconButton
+        onClick={() => props.onDecision({ type: "online" })}
+        text="Connect"
+      />
     </OnlinePanelRoot>
   );
 };

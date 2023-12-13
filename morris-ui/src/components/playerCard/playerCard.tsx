@@ -106,14 +106,14 @@ export const PlayerCard = (props: PlayerCardProps) => {
         {isEditing ? (
           <>
             <IconButton
-              name="check"
+              name="Check"
               onClick={() => {
                 onAcceptName(nameState);
               }}
               disabled={(nameState?.length ?? 0) === 0}
             />
             <IconButton
-              name="x"
+              name="X"
               onClick={() => {
                 setNameState(name);
                 setIsEditing(false);
@@ -123,7 +123,7 @@ export const PlayerCard = (props: PlayerCardProps) => {
         ) : (
           local && (
             <IconButton
-              name="edit"
+              name="Edit"
               tooltip={
                 player ? "You can't edit during a game" : "Edit your profile"
               }

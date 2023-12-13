@@ -97,12 +97,12 @@ importers:
       react-error-boundary:
         specifier: ^3.1.4
         version: 3.1.4(react@18.2.0)
+      react-feather:
+        specifier: ^2.0.10
+        version: 2.0.10(react@18.2.0)
       react-github-corner:
         specifier: ^2.5.0
         version: 2.5.0(react@18.2.0)
-      react-icons:
-        specifier: ^4.4.0
-        version: 4.8.0(react@18.2.0)
       react-tabs:
         specifier: ^6.0.0
         version: 6.0.0(react@18.2.0)
@@ -139,7 +139,7 @@ importers:
         version: 2.4.0(vite@4.1.4)
       vite-tsconfig-paths:
         specifier: ^4.0.5
-        version: 4.0.5(typescript@4.9.5)
+        version: 4.0.5
 
 packages:
 
@@ -3034,17 +3034,18 @@ packages:
       react: 18.2.0
     dev: false
 
-  /react-github-corner@2.5.0(react@18.2.0):
-    resolution: {integrity: sha512-ofds9l6n61LJc6ML+jSE6W9ZSQvATcMR9evnHPXua1oDYj289HKODnVqFUB/g2a4ieBjDHw416iHP3MjqnU76Q==}
-    engines: {node: '>= 4.0.0'}
+  /react-feather@2.0.10(react@18.2.0):
+    resolution: {integrity: sha512-BLhukwJ+Z92Nmdcs+EMw6dy1Z/VLiJTzEQACDUEnWMClhYnFykJCGWQx+NmwP/qQHGX/5CzQ+TGi8ofg2+HzVQ==}
     peerDependencies:
-      react: '*'
+      react: '>=16.8.6'
     dependencies:
+      prop-types: 15.8.1
       react: 18.2.0
     dev: false
 
-  /react-icons@4.8.0(react@18.2.0):
-    resolution: {integrity: sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg==}
+  /react-github-corner@2.5.0(react@18.2.0):
+    resolution: {integrity: sha512-ofds9l6n61LJc6ML+jSE6W9ZSQvATcMR9evnHPXua1oDYj289HKODnVqFUB/g2a4ieBjDHw416iHP3MjqnU76Q==}
+    engines: {node: '>= 4.0.0'}
     peerDependencies:
       react: '*'
     dependencies:
@@ -3624,7 +3625,7 @@ packages:
     resolution: {integrity: sha512-Z86EW+fFFh/IFB1fqQ3/+7Zpf9t2ebOAxNI/V6Wo7r5gqiqtxmgTlQ1qbqQcjLKYeSHPTsEmvlJUDg/EuL0uHQ==}
     dev: false
 
-  /tsconfck@2.0.3(typescript@4.9.5):
+  /tsconfck@2.0.3:
     resolution: {integrity: sha512-o3DsPZO1+C98KqHMdAbWs30zpxD30kj8r9OLA4ML1yghx4khNDzaaShNalfluh8ZPPhzKe3qyVCP1HiZszSAsw==}
     engines: {node: ^14.13.1 || ^16 || >=18}
     hasBin: true
@@ -3633,8 +3634,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-    dependencies:
-      typescript: 4.9.5
     dev: true
 
   /tslib@1.14.1:
@@ -3770,12 +3769,12 @@ packages:
       - supports-color
     dev: true
 
-  /vite-tsconfig-paths@4.0.5(typescript@4.9.5):
+  /vite-tsconfig-paths@4.0.5:
     resolution: {integrity: sha512-/L/eHwySFYjwxoYt1WRJniuK/jPv+WGwgRGBYx3leciR5wBeqntQpUE6Js6+TJemChc+ter7fDBKieyEWDx4yQ==}
     dependencies:
       debug: 4.3.4(supports-color@5.5.0)
       globrex: 0.1.2
-      tsconfck: 2.0.3(typescript@4.9.5)
+      tsconfck: 2.0.3
     transitivePeerDependencies:
       - supports-color
       - typescript

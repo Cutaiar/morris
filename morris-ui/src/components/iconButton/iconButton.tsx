@@ -1,18 +1,8 @@
 import styled from "styled-components";
 
-// Icons
-import { IconType } from "react-icons";
-import {
-  FiEye,
-  FiCheck,
-  FiEdit,
-  FiSettings,
-  FiUsers,
-  FiWifi,
-  FiX
-} from "react-icons/fi";
+import * as Icon from "react-feather";
 
-type IconName = "edit" | "settings" | "check" | "x" | "eye" | "users" | "wifi"; // TODO import feather directly to support all icons
+type IconName = keyof typeof Icon;
 
 export interface IconButtonProps {
   name?: IconName;
@@ -26,17 +16,8 @@ export interface IconButtonProps {
 
 export const IconButton = (props: IconButtonProps) => {
   const { name, disabled, onClick, tooltip, text, fill, End } = props;
-  const icons: Record<IconName, IconType> = {
-    edit: FiEdit,
-    settings: FiSettings,
-    check: FiCheck,
-    x: FiX,
-    eye: FiEye,
-    users: FiUsers,
-    wifi: FiWifi
-  };
 
-  const Icon = name ? icons[name] : () => null;
+  const I = name && Icon[name] ? Icon[name] : () => null;
 
   return (
     <Root
@@ -48,7 +29,7 @@ export const IconButton = (props: IconButtonProps) => {
     >
       <Outer>
         <Inner hasText={!!text}>
-          <Icon />
+          <I />
           {text && <ButtonText hasIcon={!!name}>{text}</ButtonText>}
         </Inner>
         {End?.()}
@@ -80,6 +61,7 @@ const Root = styled.button<{ $fill?: boolean; hasText?: boolean }>`
   border-radius: 4px;
   background: transparent;
   min-width: ${({ $fill }) => ($fill ? `100%` : `30px`)};
+  max-width: ${({ $fill }) => !$fill && "fit-content"};
   min-height: 30px;
   padding: 0px;
   padding-inline: ${(p) =>

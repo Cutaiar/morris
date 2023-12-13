@@ -185,7 +185,7 @@ export const Game = () => {
               remainingMen={player ? gameState.remainingMen[player] : undefined}
               toolbarIcons={[
                 {
-                  name: "settings",
+                  name: "Settings",
                   tooltip: "Settings and advanced",
                   onClick: () => setIsAdvanced((prev) => !prev)
                 }

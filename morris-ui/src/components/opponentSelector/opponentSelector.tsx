@@ -72,13 +72,13 @@ export const OpponentSelector = (props: OpponentSelectorProps) => {
       <Tabs>
         <TabList>
           <Tab>
-            <IconButton name={"eye"} text={"AI"} />
+            <IconButton name={"Eye"} text={"AI"} />
           </Tab>
           <Tab>
-            <IconButton name={"users"} text={"Local"} />
+            <IconButton name={"Users"} text={"Local"} />
           </Tab>
           <Tab>
-            <IconButton name={"wifi"} text={"Online"} />
+            <IconButton name={"Wifi"} text={"Online"} />
           </Tab>
         </TabList>
 
@@ -270,14 +270,14 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
       />
       <>
         <IconButton
-          name="check"
+          name="Check"
           onClick={() => {
             onAcceptName(nameState);
           }}
           disabled={(nameState?.length ?? 0) === 0}
         />
         <IconButton
-          name="x"
+          name="X"
           onClick={() => {
             setNameState("");
             setAdding(false);

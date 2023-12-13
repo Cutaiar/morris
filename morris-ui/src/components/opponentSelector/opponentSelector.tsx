@@ -3,7 +3,7 @@ import styled, { useTheme } from "styled-components";
 
 // Components
 import { Button, Chip, EditableName, IconButton } from "components";
-import { FiPlus } from "react-icons/fi";
+import { Plus } from "react-feather";
 
 // Tabs
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -287,7 +287,7 @@ const AddExperience: React.FC<AddExperienceProps> = (props) => {
     </AddExperienceRoot>
   ) : (
     <ListItem onClick={() => setAdding(true)}>
-      <IconButton fill text="Add a player" End={() => <FiPlus />} />
+      <IconButton fill text="Add a player" End={() => <Plus />} />
     </ListItem>
   );
 };

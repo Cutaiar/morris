@@ -2,6 +2,7 @@
 export { Loader } from "./loader/loader";
 export { IconButton } from "./iconButton/iconButton";
 export { Toggle } from "./toggle/toggle";
+export { Slider } from "./Slider/Slider";
 
 // Morris specific components
 export { App } from "./app/app";

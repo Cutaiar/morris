@@ -14,7 +14,8 @@ import {
   Decision,
   Loader,
   Toggle,
-  IconButton
+  IconButton,
+  Slider
 } from "components";
 
 // Hooks
@@ -31,7 +32,6 @@ import { useMount } from "react-use";
 // Core
 import { AIID } from "morris-ai";
 import { Player } from "morris-core";
-import { Slider } from "components/Slider";
 
 /** The root of morris gameplay. Should be wrapped in required providers and placed in the `App` component. */
 export const Game = () => {

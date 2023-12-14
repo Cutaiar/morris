@@ -17,7 +17,7 @@ export const countMenOnBoard = (state: GameState, occupancy: Occupancy) =>
 
 /**
  * Use like Array.filter, but get a handle on the elements "filtered out"
- * TODO: Use generics
+ * TODO: named array return?
  */
 export const partition = <T>(
   array: T[],
